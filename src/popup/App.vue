@@ -13,7 +13,7 @@ export default {
 </script>
 
 <style>
-html {
+body {
     width: 400px;
     height: 400px;
 }

@@ -1,0 +1,6 @@
+background.js?fe77:35 {message from content script: {…}}message from content script: {arrayObject: Array(16), arrayType: "rawTopics", type: "jmCap", logObj: {…}}__proto__: Object
+background.js?fe77:35 {message from content script: {…}}message from content script: arrayObject: (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]arrayType: "rawResults"logObj: {xhrDef: {…}, xhrOpenRequestUrl: "/smf/retrieve?SMAS=false&group=jobs&location=top&page=find-work-home", xhrSendResponseUrl: "https://www.upwork.com/ab/find-work/api/feeds/search?user_location_match=1", zErrors: Array(0)}type: "jmCap"__proto__: Object__proto__: Object
+temp1
+{message from content script: {…}}message from content script: {arrayObject: Array(10), arrayType: "rawResults", type: "jmCap", logObj: {…}}__proto__: Object
+temp2
+{message from content script: {…}}message from content script: {arrayObject: Array(16), arrayType: "rawTopics", type: "jmCap", logObj: {…}}__proto__: Object

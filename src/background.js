@@ -1,5 +1,4 @@
 import store from './store'
+import addListeners from './shared/backgroundEvents/addListeners.js'
 
-browser.browserAction.onClicked.addListener(function (tab) {  console.log(`Hello ${store.getters.foo}!`)
-
-})
+addListeners();

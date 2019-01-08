@@ -1,0 +1,39 @@
+
+
+{type: "xhrAjaxMsg", arrayType: "rawTopics", arrayObject: Array(19)}
+arrayObject: Array(19)
+0: {id: 2919870, name: "Chrome Extension", q: "Chrome Extension", category: null, categories: null, …}
+1: {id: 2919873, name: "C#", q: "C#", category: null, categories: null, …}
+2: {id: 2919875, name: "ASP.NET MVC", q: "ASP.NET MVC", category: null, categories: null, …}
+3: {id: 2920063, name: "Web app", q: "(title:(web app) OR title:(web application)) AND NOT PHP AND NOT Angular AND NOT AngularJS", category: null, categories: null, …}
+4: {id: 2921449, name: "full stack", q: ""full stack" OR "full-stack" AND NOT PHP AND NOT A…lar AND NOT AngularJS AND NOT iOS AND NOT Android", category: null, categories: null, …}
+5: {id: 2928408, name: "Excel .NET", q: "Excel .NET", category: null, categories: null, …}
+6: {id: 2928429, name: ""C#"", q: ""C#"", category: null, categories: null, …}
+7: {id: 2928441, name: "REST API", q: "REST API", category: null, categories: null, …}
+8: {id: 2929710, name: ""Access" AND (ms OR microsoft OR VBA)", q: ""Access" AND (ms OR microsoft OR VBA)", category: null, categories: null, …}
+9: {id: 2930180, name: "Any / Data Extraction / ETL", q: null, category: null, categories: null, …}
+10: {id: 2937360, name: "Any / Technical Support", q: null, category: null, categories: null, …}
+11: {id: 2943162, name: ""vue.js" OR "vuejs"", q: ""vue.js" OR "vuejs"", category: null, categories: null, …}
+12: {id: 2957145, name: "("vue.js" OR "vuejs") AND "c#"", q: "("vue.js" OR "vuejs") AND "c#"", category: null, categories: null, …}
+13: {id: 3097512, name: "Kendo", q: "Kendo OR Telerik AND NOT PHP AND NOT Angular AND NOT AngularJS", category: null, categories: null, …}
+14: {id: 3997964, name: ""vue.js" OR "vuejs" AND ASP.NET Core", q: ""vue.js" OR "vuejs" AND ASP.NET Core", category: null, categories: null, …}
+15: {id: 4091169, name: "vba", q: "vba", category: null, categories: null, …}
+16: {id: "dflt0", name: "U.S. Only"}
+17: {id: "dflt1", name: "My Job Feed"}
+18: {id: "dflt2", name: "Recommended"}
+length: 19
+
+
+{type: "xhrAjaxMsg", arrayType: "rawResults", arrayObject: Array(10), topicId: "0L1"}
+arrayObject: Array(10)
+0: {ciphertext: "~01e9e7af4fe2e5bd9e", publishedOn: "2018-12-29T20:09:01+00:00", recno: 215058755, title: "Need to load csv to Office365 for access via Mac's"}
+1: {ciphertext: "~0123535d46891e27bb", publishedOn: "2018-12-29T19:38:36+00:00", recno: 215058625, title: "Connect Office 365 Sharepoint Site to on-premise SQL Database."}
+2: {ciphertext: "~01a4448219fde50fe0", publishedOn: "2018-12-29T16:42:39+00:00", recno: 215057893, title: "Easy Writing Web App"}
+3: {ciphertext: "~0130fae604bb5c1725", publishedOn: "2018-12-29T05:21:59+00:00", recno: 215055836, title: "Hardware Integration with C# application."}
+4: {ciphertext: "~01bfb8da73369f0c51", publishedOn: "2018-12-29T02:46:49+00:00", recno: 215055417, title: "Gradebook - Excel workfile with two worksheets"}
+5: {ciphertext: "~016344c88cf521fa8c", publishedOn: "2018-12-29T02:12:45+00:00", recno: 215055289, title: "Xamarin TUTOR needed to walk me through an existing Xam. Native project"}
+6: {ciphertext: "~01754a021bdd6f02e5", publishedOn: "2018-12-28T21:47:25+00:00", recno: 215054238, title: "Programmer needed to develop a web-based  Software  that is currently running on a Msft 98 Access DB"}
+7: {ciphertext: "~01694229bc4ec2813d", publishedOn: "2018-12-28T21:40:08+00:00", recno: 215054207, title: "Looking for a C# / Web Developer for Projects"}
+8: {ciphertext: "~012fc53061713b6e8a", publishedOn: "2018-12-28T21:17:21+00:00", recno: 215053709, title: "Senior Web Developer Needed for Startup Music Platform"}
+9: {ciphertext: "~0164dbb3dede7b5c39", publishedOn: "2018-12-28T21:14:58+00:00", recno: 215054071, title: "Experienced Developer with knowledge of C# and UiPath to assist project"}
+length: 10

@@ -1,0 +1,28 @@
+message from content script:
+arrayObject: Array(10)
+0:
+ciphertext: "~01452f944013e5cc6d"
+createdOn: "2019-01-03T00:18:01+00:00"
+publishedOn: "2019-01-03T00:18:01+00:00"
+recno: 215081084
+title: "Website Developer"
+__proto__: Object
+1: {ciphertext: "~018e5adbe9ba396ba5", createdOn: "2019-01-03T00:09:30+00:00", publishedOn: "2019-01-03T00:09:30+00:00", recno: 215081389, title: "Microsoft Office expert needed to automate content between Word &amp; Excel"}
+2: {ciphertext: "~01832f99de6699d4f0", createdOn: "2019-01-02T22:44:41+00:00", publishedOn: "2019-01-02T22:44:41+00:00", recno: 215080877, title: "Zoho CRM API Integration Project"}
+3: {ciphertext: "~0125b42a5ad568a203", createdOn: "2019-01-02T22:22:58+00:00", publishedOn: "2019-01-02T22:22:58+00:00", recno: 215080254, title: "Take a pre-existing app and make a web application."}
+4: {ciphertext: "~014d4c5c238de74614", createdOn: "2019-01-02T22:07:47+00:00", publishedOn: "2019-01-02T22:07:47+00:00", recno: 215080128, title: "Creative MS Word, PowerPoint and Adobe to Type to Create a Sales Practices and On-boarding Handbook"}
+5: {ciphertext: "~0191f5ce968f3219d1", createdOn: "2019-01-02T22:04:06+00:00", publishedOn: "2019-01-02T22:04:06+00:00", recno: 215080581, title: "Looking for Android and IOS/iPhone developers"}
+6: {ciphertext: "~01ca3fad0cd5919fb7", createdOn: "2019-01-02T22:00:21+00:00", publishedOn: "2019-01-02T22:00:21+00:00", recno: 215080546, title: ".NET MVC/AngularJS Development and Support."}
+7: {ciphertext: "~0182118ea507627505", createdOn: "2019-01-02T20:33:09+00:00", publishedOn: "2019-01-02T20:33:09+00:00", recno: 215079878, title: "C# Developer for Cross platform Mobile App"}
+8: {ciphertext: "~0114d7cb366cee1ec8", createdOn: "2019-01-02T19:24:16+00:00", publishedOn: "2019-01-02T19:24:16+00:00", recno: 215079258, title: "Developer needed for Bootstrap or similar responsive technology template implementation"}
+9: {ciphertext: "~0151d9003a8116b131", createdOn: "2019-01-02T19:03:55+00:00", publishedOn: "2019-01-02T19:03:55+00:00", recno: 215079077, title: "Assessment assignment using excel, access and word"}
+length: 10
+__proto__: Array(0)
+arrayType: "rawResults"
+logObj:
+xhrDef: {defId: "rawResults", urlSignature: "/api/feeds/search", capture: {…}}
+xhrOpenRequestUrl: "/smf/retrieve?SMAS=false&group=jobs&location=top&page=find-work-home"
+xhrSendResponseUrl: "https://www.upwork.com/ab/find-work/api/feeds/search?user_location_match=1"
+zErrors: []
+__proto__: Object
+type: "jmCap"

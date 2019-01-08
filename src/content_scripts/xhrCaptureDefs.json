@@ -1,0 +1,20 @@
+{
+    "defs": [
+      {
+         "defId": "rawTopics",
+         "urlSignature": "/api/feeds/topics",
+         "capture": {
+            "targetAryProp": "data",
+            "targetSubProps": ["id", "name", "q", "created_time", "updated_time"]
+         }
+      },
+      {
+         "defId": "rawResults",
+         "urlSignature": "/api/feeds/search",
+         "capture": {
+            "targetAryProp": "results",
+            "targetSubProps": ["ciphertext", "createdOn", "publishedOn", "recno", "title"]
+         }
+      }
+   ]
+}
