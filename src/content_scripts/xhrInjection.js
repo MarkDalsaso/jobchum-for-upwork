@@ -98,7 +98,7 @@ jmUtils.xhrMp = (function(open, send) {
       var returnObj = {
          arrayObject: objAry,
          arrayType: xhrDef.defId,
-         type: 'jmCap'
+         type: 'xhr-capture'
       };
 
       // if harvesting "rawResults" then append topicId (if present)
@@ -122,8 +122,7 @@ jmUtils.xhrMp = (function(open, send) {
       window.postMessage(returnObj, '*');
    }
 
-   // Use query-string lib to grab a value from query string in url
-   //   nicked from https://css-tricks.com/snippets/javascript/get-url-variables/
+   // regEx to pluck val from querystring. Nicked from https://css-tricks.com/snippets/javascript/get-url-variables/
    function getQueryStringValue(url, qsName) {
       var qsVal = url.match(new RegExp("[\?\&]" + qsName + "=([^\&]*)(\&?)","i"));
       return qsVal ? qsVal[1] : qsVal;

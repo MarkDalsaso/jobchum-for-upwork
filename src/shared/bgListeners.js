@@ -1,11 +1,11 @@
 import store from '../store'
-import browserInfo from './browserInfo.js';
+import * as utils from './utils.js'
 
 export default addListeners;
 
 // Add all background event listeners (by 'browser' or by 'chrome')
 function addListeners() {
-   if (browserInfo.supportsBrowserNamespace) {
+   if (utils.supportsBrowserNamespace) {
       // add 'browser' message listener
       browser.runtime.onMessage.addListener(handleMessage);
       browser.runtime.onInstalled.addListener(handleInstall)
@@ -26,7 +26,7 @@ function handleInstall (details) {
 function handleMessage(message, sender, sendResponse) {
    if (message && message.type) {
       switch (message.type) {
-         case 'jmCap':
+         case 'xhr-capture':
             switch (message.arrayType) {
                case 'rawTopics':
                   //processTopics(message.arrayObject);
@@ -40,10 +40,17 @@ function handleMessage(message, sender, sendResponse) {
             break;
          case 'activate_icon':
             // this guarantees popup click works correctly for page action
-            chrome.pageAction.show(sender.tab.id);
+            if (utils.supportsBrowserNamespace) {
+               browser.pageAction.show(sender.tab.id);
+            } 
+            else if (chrome) {
+               chrome.pageAction.show(sender.tab.id);
+            }
             break;
       }
-      sendResponse('message received by background');
-      console.log({ 'message from content script': message });
+
+      utils.logMsg({ 'msg. from content script': message });
+      sendResponse('msg. was received by background');  // testing only (not req.)
+      
    }
 }

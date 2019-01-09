@@ -1,4 +1,2 @@
-import store from './store'
-import addListeners from './shared/backgroundListeners.js'
-
+import addListeners from './shared/bgListeners.js'
 addListeners();

@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import * as utils from '../shared/utils.js'
 Vue.use(Vuex);
 
 const rootContainerName = 'jmStore';
@@ -29,7 +30,7 @@ export default new Vuex.Store({
       */
       loadTopics(state, payload) {
          state.topics = payload;
-         console.log({ 'loadTopics mutation has fired': state.topics });
+         utils.logMsg({ 'loadTopics mutation has fired': state.topics })
       },
       loadResults(state, payload) {
          state.results = payload;
@@ -57,11 +58,11 @@ export default new Vuex.Store({
             if ( (Object.keys(results)).length === 0 ) {
                let p2 = browser.storage.local.set( {[rootContainerName]: jmInitialState} );
                p2.then( () => {
-                  logMsg({ 'Browser storage initialized': jmInitialState });
+                  utils.logMsg({ 'Browser storage initialized': jmInitialState });
                })
             }
           })
-         .catch(logErr);
+         .catch(utils.logErr);
       },
       // processTopics: ({ commit }, payload) => {
       //    browser.storage.local.set({ topics: payload })
@@ -78,12 +79,6 @@ export default new Vuex.Store({
       }
    }
 });
-
-function initState() {
-   return 
-}
-function logMsg(msg) { console.log({msg: msg}); }
-function logErr(err) { console.log({err: err}); }
 
 /* NOTE: see: C:\Users\MarkD\Desktop\0 Training And Learning\1 - Modern JS Development\Vue.js\Udemy\Vue JS 2 The Complete Guide\3AxiosModuleProject
          'store.js' module for great examples on commiting and
