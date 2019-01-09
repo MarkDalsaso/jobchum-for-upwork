@@ -1,28 +1,33 @@
 {
-  "manifest_version": 2,
-  "name": "jm-v2-2",
-  "homepage_url": "http://localhost/",
-  "description": "A Vue Browser Extension",
-  "icons": {
-    "16": "icons/16.png",
-    "48": "icons/48.png",
-    "128": "icons/128.png"
-  },
-  "permissions": [
-    "activeTab",
-    "<all_urls>",
-    "*://*/*"
-  ],
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
-  "browser_action": {
-    "default_popup": "popup/popup.html",
-    "default_title": "jm-v2-2",
-    "default_icon": {
-      "19": "icons/19.png",
-      "38": "icons/38.png"
-    }
-  }
+   "name": "jobMonkey",
+   "version": "2.2.1",
+   "manifest_version": 2,
+   "homepage_url": "http://www.we-is.com/jobMonkey",
+   "description": "This extension augments the Upwork \"Find Work\" user interface.",
+   "permissions": [
+      "tabs",
+      "storage",
+       "*://www.upwork.com/*"
+   ],
+   "background": {
+      "scripts": ["background.js"]
+   },   
+   "content_scripts": [
+      {
+         "matches": ["*://www.upwork.com/ab/find-work/*"],
+         "js": ["content_scripts/x1.js"],
+         "run_at": "document_start"
+      }
+   ],
+   "page_action": {
+      "default_popup": "popup/popup.html",
+      "default_title": "JobMonkey for Upwork",
+      "default_icon": "icons/jm48.png"
+   },
+   "web_accessible_resources": ["content_scripts/x2.js"],
+   "icons": {
+      "16": "icons/jm16.png",
+      "48": "icons/jm48.png",
+      "128": "icons/jm128.png"
+   }
 }

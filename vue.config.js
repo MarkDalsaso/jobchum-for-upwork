@@ -22,9 +22,8 @@ module.exports = {
         },
         contentScripts: {
           entries: {
-            'content_scripts/content-script': [
-              'src/content_scripts/content-script.js'
-            ]
+            'content_scripts/x1': ['src/content_scripts/xhrCs.js'],
+            'content_scripts/x2': ['src/content_scripts/xhrInjection.js']
           }
         }
       }

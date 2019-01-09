@@ -1,19 +1,25 @@
 <template>
-  <p>Hello world!</p>
+  <p>{{ browserStorage }}</p>
 </template>
 
 <script>
+  import store from "../../../store";
   export default {
     data() {
-      return {};
+      return {
+        browserStorage: {}
+      };
     },
     mounted() {
-      // browser.runtime.sendMessage({})
-      if (chrome) {
-         chrome.runtime.sendMessage({})
-      } else {
-         browser.runtime.sendMessage({})
-      }
+      browser.storage.local
+        .get("jmStore")
+        .then(results => {
+          console.log(results);
+          this.browserStorage = results;
+        })
+        .catch(err => {
+          console.log({ err: err });
+        });
     }
   };
 </script>

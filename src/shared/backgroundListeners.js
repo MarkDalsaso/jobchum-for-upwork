@@ -1,6 +1,5 @@
-import browserInfo from '../browserInfo.js';
-import processTopics from './processTopics.js';
-import processResults from './processResults.js';
+import store from '../store'
+import browserInfo from './browserInfo.js';
 
 export default addListeners;
 
@@ -9,11 +8,18 @@ function addListeners() {
    if (browserInfo.supportsBrowserNamespace) {
       // add 'browser' message listener
       browser.runtime.onMessage.addListener(handleMessage);
+      browser.runtime.onInstalled.addListener(handleInstall)
    } 
    else if (chrome) {
       // add 'chrome' message listener
       chrome.runtime.onMessage.addListener(handleMessage);
+      chrome.runtime.onInstalled.addListener(handleInstall)
    }
+}
+
+// handle Install
+function handleInstall (details) {
+   store.dispatch('initBrowserStorage');
 }
 
 // handle all extension messages
@@ -23,10 +29,12 @@ function handleMessage(message, sender, sendResponse) {
          case 'jmCap':
             switch (message.arrayType) {
                case 'rawTopics':
-                  processTopics(message.arrayObject);
+                  //processTopics(message.arrayObject);
+                  store.dispatch('processTopics', message.arrayObject);
                   break;
                case 'rawResults':
-                  processResults(message.arrayObject, message.topicId);
+                  //processResults(message.arrayObject, message.topicId);
+                  store.dispatch('processResults', message.arrayObject);
                   break;
             }
             break;

@@ -1,26 +1,21 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-Vue.use(Vuex)
+import Vue from 'vue';
+import Vuex from 'vuex';
+Vue.use(Vuex);
 
-/* See 'misc_backup\store_original_folder' for details
-export default new Vuex.Store({
-  state: { foo: 'bar' },
-  getters,
-  mutations,
-  actions
-})
-*/
+const rootContainerName = 'jmStore';
+const jmInitialState = {
+   'topics': [],
+   'results': [],
+   'settings': {} 
+};
 
 export default new Vuex.Store({
    // The 'source of truth' that drives the app
-   state: {
-      topics: [],
-      results: []
-   },
+   state: jmInitialState,
    getters: {
       // 'getters' get something from state (and optionally tweak it ),
-      // and return it. It's a disciplied alternative to directly 
-      // accesseing the 'state' (to faciltate DRY) 
+      // and return it. It's a disciplied alternative to directly
+      // accesseing the 'state' (to faciltate DRY)
       allTopics: state => state.topics,
       allResults: state => state.results
    },
@@ -32,13 +27,15 @@ export default new Vuex.Store({
       abstracted ensuring that the actual change in state can be 
       tracked.
       */
-      loadTopics (state, payload) {
+      loadTopics(state, payload) {
          state.topics = payload;
-         console.log({'loadTopics mutation has fired': state.topics})
+         console.log({ 'loadTopics mutation has fired': state.topics });
       },
-      loadResults (state, payload) {
+      loadResults(state, payload) {
          state.results = payload;
-      }      
+      },
+      initFromLocalStore(state, payload) {
+      }
    },
    actions: {
       /* purpose
@@ -52,30 +49,41 @@ export default new Vuex.Store({
       loadTopics: commit => { commit.commit('loadTopics'); }
       concise syntax (use destructuring to extract only the 'commit' method)
       */
-      loadTopics: ( { commit }, payload) => { 
-           // Bulk storage set to persist updated individual, 'topic_' key/value objects
-           chrome.storage.local.set( { "topics": payload } , function () {
-            if (chrome.runtime.lastError) {
-                console.log(chrome.runtime.lastError.message);
+
+     initBrowserStorage: ({ commit }) => {
+         let p1 = browser.storage.local.get(rootContainerName);
+         p1.then(results => {
+            // if no 'own' prop's in 'jmStore' assume it's empty and initialize.
+            if ( (Object.keys(results)).length === 0 ) {
+               let p2 = browser.storage.local.set( {[rootContainerName]: jmInitialState} );
+               p2.then( () => {
+                  logMsg({ 'Browser storage initialized': jmInitialState });
+               })
             }
-            else {
-               commit('loadTopics', payload )
-            }
-        });         
+          })
+         .catch(logErr);
       },
-      loadResults: ( { commit }, payload) => { 
-         // Bulk storage set to persist updated individual, 'topic_' key/value objects
-         chrome.storage.local.set( { "results": payload } , function () {
-          if (chrome.runtime.lastError) {
-              console.log(chrome.runtime.lastError.message);
-          }
-          else {
-             commit('loadResults', payload )
-          }
-      });         
-    }
+      // processTopics: ({ commit }, payload) => {
+      //    browser.storage.local.set({ topics: payload })
+      //       .then( () => {
+      //          commit('loadTopics', payload);  //resolve
+      //       })
+      //       .catch(logErr);
+      // },
+      processTopics: ({ commit }, payload) => {
+         // unimplemented
+      },
+      processResults: ({ commit }, payload) => {
+         // unimplemented
+      }
    }
-})
+});
+
+function initState() {
+   return 
+}
+function logMsg(msg) { console.log({msg: msg}); }
+function logErr(err) { console.log({err: err}); }
 
 /* NOTE: see: C:\Users\MarkD\Desktop\0 Training And Learning\1 - Modern JS Development\Vue.js\Udemy\Vue JS 2 The Complete Guide\3AxiosModuleProject
          'store.js' module for great examples on commiting and
