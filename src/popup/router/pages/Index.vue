@@ -4,6 +4,7 @@
 
 <script>
   import store from "../../../store";
+  import * as utils from "../../../shared/utils.js";
   export default {
     data() {
       return {
@@ -11,14 +12,13 @@
       };
     },
     mounted() {
-      browser.storage.local
-        .get("jmStore")
+      browser.storage.local.get(null)
         .then(results => {
-          console.log(results);
+          utils.logMsg(results);
           this.browserStorage = results;
         })
         .catch(err => {
-          console.log({ err: err });
+          utils.logErr(err);
         });
     }
   };

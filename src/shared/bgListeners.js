@@ -19,7 +19,8 @@ function addListeners() {
 
 // handle Install
 function handleInstall (details) {
-   store.dispatch('initBrowserStorage');
+   // NOTE: The following may not be needed, perhaps init when 'processTopics' fires
+   //store.dispatch('initBrowserStorage');
 }
 
 // handle all extension messages
@@ -29,12 +30,11 @@ function handleMessage(message, sender, sendResponse) {
          case 'xhr-capture':
             switch (message.arrayType) {
                case 'rawTopics':
-                  //processTopics(message.arrayObject);
-                  store.dispatch('processTopics', message.arrayObject);
+                  store.dispatch('updateTopics', message.arrayObject);
                   break;
                case 'rawResults':
-                  //processResults(message.arrayObject, message.topicId);
-                  store.dispatch('processResults', message.arrayObject);
+                  //store.dispatch('updateResults', message);
+                  store.dispatch('updateTopicResults', { topicId: message.topicId, results: message.arrayObject });
                   break;
             }
             break;
@@ -48,9 +48,8 @@ function handleMessage(message, sender, sendResponse) {
             }
             break;
       }
-
-      utils.logMsg({ 'msg. from content script': message });
-      sendResponse('msg. was received by background');  // testing only (not req.)
+      //utils.logMsg({ 'msg. from content script': message });
+      sendResponse('msg. type: \'' + message.type + '\', received and processed by background.');  // testing only (not req.)
       
    }
 }

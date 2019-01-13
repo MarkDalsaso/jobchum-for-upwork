@@ -1,86 +1,147 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import * as utils from '../shared/utils.js'
+import * as utils from '../shared/utils.js';
 Vue.use(Vuex);
 
-const rootContainerName = 'jmStore';
+const rootTopicsKey = 'jmTopics';
 const jmInitialState = {
-   'topics': [],
-   'results': [],
-   'settings': {} 
+   settings: {},
+   topics: []
 };
 
 export default new Vuex.Store({
    // The 'source of truth' that drives the app
    state: jmInitialState,
    getters: {
-      // 'getters' get something from state (and optionally tweak it ),
-      // and return it. It's a disciplied alternative to directly
-      // accesseing the 'state' (to faciltate DRY)
-      allTopics: state => state.topics,
-      allResults: state => state.results
+      topics: state => state.topics,
+      settings: state => state.settings,
+      getTopicById: (state) => (id) => {
+         return state.topics.find(topic => topic.id === id);
+      }
    },
    mutations: {
-      /* purpose
-      Used to change state immediately (synchronously) via a commit.
-      A commit is typically called via a mutation, so that changes 
-      relying on asynchronous call (xhr, db, chrome.store) are properly
-      abstracted ensuring that the actual change in state can be 
-      tracked.
-      */
-      loadTopics(state, payload) {
+      topics(state, payload) {
          state.topics = payload;
-         utils.logMsg({ 'loadTopics mutation has fired': state.topics })
       },
-      loadResults(state, payload) {
-         state.results = payload;
-      },
-      initFromLocalStore(state, payload) {
+      settings(state, payload) {
+         state.settings = payload;
       }
    },
    actions: {
-      /* purpose
-      Allows asynchronous tasks to safely commit (via mutations), The 
-      best-practise is to 'dispatch' action, instead of committing
-      mutations directly
-      */
-
-      /* syntax(s)
-      verbose syntax using 'commit'
-      loadTopics: commit => { commit.commit('loadTopics'); }
-      concise syntax (use destructuring to extract only the 'commit' method)
-      */
-
-     initBrowserStorage: ({ commit }) => {
-         let p1 = browser.storage.local.get(rootContainerName);
-         p1.then(results => {
-            // if no 'own' prop's in 'jmStore' assume it's empty and initialize.
-            if ( (Object.keys(results)).length === 0 ) {
-               let p2 = browser.storage.local.set( {[rootContainerName]: jmInitialState} );
-               p2.then( () => {
-                  utils.logMsg({ 'Browser storage initialized': jmInitialState });
-               })
-            }
-          })
-         .catch(utils.logErr);
+      updateTopics: ({ state, getters, commit, dispatch }, payload) => {
+         let p1 = initRootValueFromStorage('topics');
+         p1.then(topicsAry => {
+            return updateTopics(payload, topicsAry);
+         })
+         .then(updatedTopicsAry => {
+            let p2 = browser.storage.local.set( {'topics': updatedTopicsAry} );
+            p2.then( () => {
+               commit('topics', updatedTopicsAry);
+               utils.logMsg({ 'updateTopics action has mutated \'topics\'': updatedTopicsAry });
+            });        
+         })
+         .catch(err => { utils.logErr(err); });
       },
-      // processTopics: ({ commit }, payload) => {
-      //    browser.storage.local.set({ topics: payload })
-      //       .then( () => {
-      //          commit('loadTopics', payload);  //resolve
-      //       })
-      //       .catch(logErr);
-      // },
-      processTopics: ({ commit }, payload) => {
-         // unimplemented
-      },
-      processResults: ({ commit }, payload) => {
-         // unimplemented
+      updateTopicResults: ({ getters, commit }, payload) => {
+         if ('topicId' in payload && typeof payload.topicId != "undefined") {
+            let p1 = initRootValueFromStorage('topics');
+            p1.then(topicsAry => {
+               commit('topics', topicsAry);   // reset topic state to insure 'topice' getters work
+               let topicId = Number(payload.topicId);
+               if (topicId == NaN) {
+                  utils.logErr("Non-numeric topic id's are not supported.")
+               } else {
+                  //let currentTopicResults = getters.getTopicResultsById(topicId);
+                  let currentTopic = getters.getTopicById(topicId);
+                  let updatedTopicResults = updateTopicResults(payload.results, currentTopic);
+                  topicsAry.find(topic => topic.id === topicId).results = updatedTopicResults
+                  let p2 = browser.storage.local.set( {'topics': topicsAry} );
+                  p2.then( () => {
+                     commit('topics', topicsAry);    // commit updated topics
+                     utils.logMsg({ 'updateTopicResults action has mutated \'topics\'': topicsAry });
+                  });
+               }
+            })
+            .catch(err => { utils.logErr(err); });
+         }
       }
    }
 });
+
+// Process the captured xhrResults array.
+function updateTopicResults(xhrResults, currentTopic) {
+   // Check for lost state (may need to always call Ext storage)
+   let updatedTopicResults = currentTopic.results;
+   for (let i = 0, len = xhrResults.length; i < len; i++ ) {
+      let xhrResult = xhrResults[i];
+      if ( !resultTooOld(currentTopic.custom.daysOldIgnore, xhrResult.publishedOn) ) {
+         if ( !(currentTopic.results.find(r => r.recno === xhrResult.recno)) ) {
+            updatedTopicResults.push(xhrResult);
+         }
+      }
+   }
+   return updatedTopicResults;
+}
+
+function resultTooOld(days, jsonDate) {
+   let rtn = false;
+   try {
+      let curDate = new Date();
+      let date = new Date(jsonDate);
+      let datePlusDays = date.setDate(date.getDate() + days);
+      if (curDate > datePlusDays) { 
+         rtn = true;
+      }
+   } catch (err) {
+      utils.logErr(err);
+   }
+   return rtn;
+}
+
+// Process the captured xhrTopics array and return updated topics array.
+function updateTopics(xhrTopics, currentTopics) {
+   let rtnAry = [], xhrTopic = {}, curTopic = {};
+   for (let i = 0, len = xhrTopics.length; i < len; i++ ) {
+      xhrTopic = xhrTopics[i];
+      curTopic = currentTopics.find(t => t.id === xhrTopic.id);
+      if (curTopic) {
+         // Add new topic, preserve existing 'custom' and 'results' props from 'curTopic'
+         rtnAry.push(new Topic(xhrTopic.id, xhrTopic, curTopic.custom, curTopic.results));
+      } else {
+         // Add new Topic
+         rtnAry.push(new Topic(xhrTopic.id, xhrTopic));
+      }
+   }
+   return rtnAry;
+}
+
+// Topic object constructor
+function Topic(id, captured, custom = {enabled: false, qInterval: 10, qLastRequest: 0, daysOldIgnore: 14}, results = []) {
+   return { id, captured, custom, results };
+}
+
+function initRootValueFromStorage(rootKeyName) {
+   return new Promise(function(resolve, reject) {
+      let prm = browser.storage.local.get(rootKeyName)
+      prm.then(obj => {
+         if (Object.keys(obj).length == 0)
+            return resolve(jmInitialState[rootKeyName]);
+         else
+            // NOTE: "get" returns Object with items in their key-value 
+            //       mappings. So assign topics to the value of key where,
+            //       rootTopicsKey is constant equal to 'jmTopics'         
+            return resolve(obj[rootKeyName]);
+      }).catch(err => { reject(err) });
+   })
+}
 
 /* NOTE: see: C:\Users\MarkD\Desktop\0 Training And Learning\1 - Modern JS Development\Vue.js\Udemy\Vue JS 2 The Complete Guide\3AxiosModuleProject
          'store.js' module for great examples on commiting and
          dispatching and proper handling of asynchronous storage calls
 */
+
+// NOTE: see https://weblog.west-wind.com/posts/2014/Jan/06/JavaScript-JSON-Date-Parsing-and-real-Dates#Decoding-the-Date
+//       for date decoding. Needed for new {daysOldIgnore: 14} property
+
+// NOTE: see https://www.andygup.net/fastest-way-to-find-an-item-in-a-javascript-array/
+//       for fast JS Array search, and fiddle here: http://jsfiddle.net/agup/Y8SBL/11/

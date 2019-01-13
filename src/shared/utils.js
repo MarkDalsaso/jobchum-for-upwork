@@ -21,11 +21,11 @@ export function getManifest() {
 }
 
 export function logMsg(msg) {
-   let x = msg instanceof Object ? msg : { 'msg': msg }
-   console.log(x);
+   let m = msg instanceof Object ? msg : { 'msg': msg }
+   console.log(m);
 }
 
 export function logErr(err) {
-   let x = err instanceof Object ? err : { 'err': err }
-   console.log(x);
+   let m = err instanceof Object ? err : { 'err': err }
+   console.log(m);
 }
