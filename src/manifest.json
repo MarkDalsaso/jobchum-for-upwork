@@ -1,9 +1,9 @@
 {
    "name": "jobMonkey",
-   "version": "2.2.1",
+   "version": "2.2.0",
    "manifest_version": 2,
    "homepage_url": "http://www.we-is.com/jobMonkey",
-   "description": "This extension augments the Upwork \"Find Work\" user interface.",
+   "description": "This extension augments the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/). To insure proper initialization of jobMonkey, the  \"Find Work\" page will need to reloaded after the extension is installed.",
    "permissions": [
       "tabs",
       "storage",

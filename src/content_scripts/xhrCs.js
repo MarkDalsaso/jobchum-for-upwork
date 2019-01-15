@@ -29,11 +29,7 @@ function createAndInjectMonkeyPatch() {
    // Create script node
    const injectionRelativePath = 'content_scripts/x2.js';
    let injection = document.createElement('script');
-   if (utils.supportsBrowserNamespace) {
-      injection.src = browser.runtime.getURL(injectionRelativePath);
-   } else if (chrome) {
-      injection.src = chrome.runtime.getURL(injectionRelativePath);
-   }
+   injection.src = browser.runtime.getURL(injectionRelativePath);
    // Inject script node
    (document.head || document.documentElement).appendChild(injection);
    injection.onload = function() {

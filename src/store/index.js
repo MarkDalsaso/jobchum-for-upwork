@@ -46,15 +46,15 @@ export default new Vuex.Store({
          if ('topicId' in payload && typeof payload.topicId != "undefined") {
             let p1 = initRootValueFromStorage('topics');
             p1.then(topicsAry => {
-               commit('topics', topicsAry);   // reset topic state to insure 'topice' getters work
                let topicId = Number(payload.topicId);
                if (topicId == NaN) {
                   utils.logErr("Non-numeric topic id's are not supported.")
                } else {
-                  //let currentTopicResults = getters.getTopicResultsById(topicId);
-                  let currentTopic = getters.getTopicById(topicId);
+                  let currentTopic = topicsAry.find(topic => topic.id === topicId);
                   let updatedTopicResults = updateTopicResults(payload.results, currentTopic);
-                  topicsAry.find(topic => topic.id === topicId).results = updatedTopicResults
+                  let topic = topicsAry.find(topic => topic.id === topicId);
+                  topic.results = updatedTopicResults;
+                  topic.custom.qLastRequest = Date.now();
                   let p2 = browser.storage.local.set( {'topics': topicsAry} );
                   p2.then( () => {
                      commit('topics', topicsAry);    // commit updated topics
@@ -115,8 +115,8 @@ function updateTopics(xhrTopics, currentTopics) {
    return rtnAry;
 }
 
-// Topic object constructor
-function Topic(id, captured, custom = {enabled: false, qInterval: 10, qLastRequest: 0, daysOldIgnore: 14}, results = []) {
+// Topic object constructor (NOTE: some of these defaults should come from settings)
+function Topic(id, captured, custom = {enabled: false, qInterval: 10, qLastRequest: 0, daysOldIgnore: 7}, results = []) {
    return { id, captured, custom, results };
 }
 
