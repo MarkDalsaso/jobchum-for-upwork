@@ -1,25 +1,32 @@
 <template>
-  <p>{{ browserStorage }}</p>
+  <div>
+    <p>topics: {{ topics }}</p>
+    <br>
+    <div>
+      <button @click="initStore()">Init. Store</button>
+    </div>
+  </div>
 </template>
 
 <script>
-  import store from "../../../store";
+  //import store from "../../../store";
   import * as utils from "../../../shared/utils.js";
   export default {
     data() {
-      return {
-        browserStorage: {}
-      };
+      return {};
     },
-    mounted() {
-      browser.storage.local.get(null)
-        .then(results => {
-          utils.logMsg(results);
-          this.browserStorage = results;
-        })
-        .catch(err => {
-          utils.logErr(err);
-        });
+    created () {
+      //this.$store.dispatch('getFromBrowserStorage', 'topics')
+    },
+    methods: {
+       initStore () {
+          this.$store.dispatch('getFromBrowserStorage', 'topics')
+       }
+    },
+    computed: {
+      topics () { 
+         return this.$store.getters.topics;
+      }
     }
   };
 </script>

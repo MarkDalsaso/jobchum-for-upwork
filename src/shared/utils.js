@@ -40,4 +40,4 @@ function setDevMode() {
    return inDevMode;
 }
 
-logMsg({'deveMode': devMode})
+//logMsg({'deveMode': devMode})

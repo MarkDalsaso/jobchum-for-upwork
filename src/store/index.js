@@ -28,9 +28,9 @@ export default new Vuex.Store({
       }
    },
    actions: {
-      updateTopics: ({ state, getters, commit, dispatch }, payload) => {
-         let p1 = initRootValueFromStorage('topics');
-         p1.then(topicsAry => {
+      updateTopics: ({ dispatch, commit, state, getters }, payload) => {
+         dispatch('getFromBrowserStorage', 'topics')
+         .then(topicsAry => {
             return updateTopics(payload, topicsAry);
          })
          .then(updatedTopicsAry => {
@@ -42,10 +42,10 @@ export default new Vuex.Store({
          })
          .catch(err => { utils.logErr(err); });
       },
-      updateTopicResults: ({ getters, commit }, payload) => {
+      updateTopicResults: ({ dispatch, commit }, payload) => {
          if ('topicId' in payload && typeof payload.topicId != "undefined") {
-            let p1 = initRootValueFromStorage('topics');
-            p1.then(topicsAry => {
+            dispatch('getFromBrowserStorage', 'topics')
+            .then(topicsAry => {
                let topicId = Number(payload.topicId);
                if (topicId == NaN) {
                   utils.logErr("Non-numeric topic id's are not supported.")
@@ -64,6 +64,20 @@ export default new Vuex.Store({
             })
             .catch(err => { utils.logErr(err); });
          }
+      },
+      getFromBrowserStorage({commit}, rootKeyName) {
+         // NOTE: 'rootKeyName' is the payload and is a string
+         return new Promise(function(resolve, reject) {
+            browser.storage.local.get(rootKeyName)
+            .then(obj => {
+               if (Object.keys(obj).length == 0)
+                  return resolve(jmInitialState[rootKeyName]);
+               else
+                  // NOTE: "get" returns key-value mappings, (not just the value).
+                  commit(rootKeyName, obj[rootKeyName]);    // refresh store     
+                  return resolve(obj[rootKeyName]);
+            }).catch(err => { utils.logErr(err); });
+         })
       }
    }
 });
@@ -118,21 +132,6 @@ function updateTopics(xhrTopics, currentTopics) {
 // Topic object constructor (NOTE: some of these defaults should come from settings)
 function Topic(id, captured, custom = {enabled: false, qInterval: 10, qLastRequest: 0, daysOldIgnore: 7}, results = []) {
    return { id, captured, custom, results };
-}
-
-function initRootValueFromStorage(rootKeyName) {
-   return new Promise(function(resolve, reject) {
-      let prm = browser.storage.local.get(rootKeyName)
-      prm.then(obj => {
-         if (Object.keys(obj).length == 0)
-            return resolve(jmInitialState[rootKeyName]);
-         else
-            // NOTE: "get" returns Object with items in their key-value 
-            //       mappings. So assign topics to the value of key where,
-            //       rootTopicsKey is constant equal to 'jmTopics'         
-            return resolve(obj[rootKeyName]);
-      }).catch(err => { reject(err) });
-   })
 }
 
 /* NOTE: see: C:\Users\MarkD\Desktop\0 Training And Learning\1 - Modern JS Development\Vue.js\Udemy\Vue JS 2 The Complete Guide\3AxiosModuleProject
