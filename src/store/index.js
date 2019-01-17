@@ -4,15 +4,9 @@ import * as utils from '../shared/utils.js';
 import jmSettings from "../shared/settings.json";
 Vue.use(Vuex);
 
-//const rootTopicsKey = 'jmTopics';  // may not be needed anymore
-const jmInitialState = {
-   settings: {},
-   topics: []
-};
-
 export default new Vuex.Store({
    // The 'source of truth' that drives the app
-   state: jmInitialState,
+   state: { settings: {}, topics: [] },
    getters: {
       topics: state => state.topics,
       settings: state => state.settings,
@@ -29,7 +23,7 @@ export default new Vuex.Store({
       }
    },
    actions: {
-      updateTopics: ({ dispatch, commit, state, getters }, payload) => {
+      updateTopics: ({ dispatch, commit }, payload) => {
          dispatch('getFromBrowserStorage', 'topics')
          .then(topicsAry => {
             return updateTopics(payload, topicsAry);
@@ -73,17 +67,18 @@ export default new Vuex.Store({
             utils.logMsg({ 'updateSettingss mutated \'settings\'': settingsObj });
          });
       },
-      getFromBrowserStorage({commit}, rootKeyName) {
+      getFromBrowserStorage({commit, state}, rootKeyName) {
          // NOTE: 'rootKeyName' is the payload and is a string
          return new Promise(function(resolve, reject) {
             browser.storage.local.get(rootKeyName)
             .then(obj => {
-               if (Object.keys(obj).length == 0)
-                  return resolve(jmInitialState[rootKeyName]);
-               else
-                  // NOTE: "get" returns key-value mappings, (not just the value).
+               if (Object.keys(obj).length > 0) {
                   commit(rootKeyName, obj[rootKeyName]);    // refresh store     
                   return resolve(obj[rootKeyName]);
+               }
+               else {
+                  return resolve(state[rootKeyName]);
+               }
             }).catch(err => { utils.logErr(err); });
          })
       },
@@ -103,8 +98,12 @@ export default new Vuex.Store({
          dispatch('initializeSettings')
          dispatch('getFromBrowserStorage', 'topics')
       },
-      wipeExtensionState() {
+      wipeExtensionState({commit}) {
          browser.storage.local.clear()
+         .then (() => { 
+            commit('settings', {});
+            commit('topics', []);
+          })
          .catch(err => { utils.logErr(err); });
       }
    }
@@ -161,14 +160,3 @@ function updateTopics(xhrTopics, currentTopics) {
 function Topic(id, captured, custom = {enabled: false, qInterval: 10, qLastRequest: 0, daysOldIgnore: 7}, results = []) {
    return { id, captured, custom, results };
 }
-
-/* NOTE: see: C:\Users\MarkD\Desktop\0 Training And Learning\1 - Modern JS Development\Vue.js\Udemy\Vue JS 2 The Complete Guide\3AxiosModuleProject
-         'store.js' module for great examples on commiting and
-         dispatching and proper handling of asynchronous storage calls
-*/
-
-// NOTE: see https://weblog.west-wind.com/posts/2014/Jan/06/JavaScript-JSON-Date-Parsing-and-real-Dates#Decoding-the-Date
-//       for date decoding. Needed for new {daysOldIgnore: 14} property
-
-// NOTE: see https://www.andygup.net/fastest-way-to-find-an-item-in-a-javascript-array/
-//       for fast JS Array search, and fiddle here: http://jsfiddle.net/agup/Y8SBL/11/
