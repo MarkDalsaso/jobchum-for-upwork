@@ -20,11 +20,15 @@
          }
       ]
    },
-   "userDefaults": {
+   "jobMonkeyUi": {
       "isOn": true,
       "panelOpen": false,
       "playSound": true,
-      "ignoreTopicsDaysOld": 14
+      "topic": {
+         "enabled": false,
+         "qInterval": 10,
+         "daysOldIgnore": 7
+      }
    },
    "psm": {
       "host": "www.upwork.com",

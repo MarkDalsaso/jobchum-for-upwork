@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import * as utils from '../shared/utils.js';
+import jmSettings from "../shared/settings.json";
 Vue.use(Vuex);
 
-const rootTopicsKey = 'jmTopics';
+//const rootTopicsKey = 'jmTopics';  // may not be needed anymore
 const jmInitialState = {
    settings: {},
    topics: []
@@ -55,8 +56,8 @@ export default new Vuex.Store({
                   let topic = topicsAry.find(topic => topic.id === topicId);
                   topic.results = updatedTopicResults;
                   topic.custom.qLastRequest = Date.now();
-                  let p2 = browser.storage.local.set( {'topics': topicsAry} );
-                  p2.then( () => {
+                  browser.storage.local.set( {'topics': topicsAry} )
+                  .then( () => {
                      commit('topics', topicsAry);    // commit updated topics
                      utils.logMsg({ 'updateTopicResults action has mutated \'topics\'': topicsAry });
                   });
@@ -64,6 +65,13 @@ export default new Vuex.Store({
             })
             .catch(err => { utils.logErr(err); });
          }
+      },
+      updateSettings: ({ commit }, settingsObj) => {
+         browser.storage.local.set( {'settings': settingsObj} )
+         .then( () => {
+            commit('settings', settingsObj);    // commit updated settings
+            utils.logMsg({ 'updateSettingss mutated \'settings\'': settingsObj });
+         });
       },
       getFromBrowserStorage({commit}, rootKeyName) {
          // NOTE: 'rootKeyName' is the payload and is a string
@@ -78,6 +86,26 @@ export default new Vuex.Store({
                   return resolve(obj[rootKeyName]);
             }).catch(err => { utils.logErr(err); });
          })
+      },
+      initializeSettings({dispatch, commit}) {
+         dispatch('getFromBrowserStorage','settings')
+         .then(settingsValueObj => {
+            if ((Object.keys(settingsValueObj).length == 0)) {
+               browser.storage.local.set( {'settings': jmSettings}).
+               then( () => {
+                  commit('settings', jmSettings);
+                  utils.logMsg('default settings saved to browser');
+               });                
+            }
+         })
+      },
+      initVuexState({dispatch}) {
+         dispatch('initializeSettings')
+         dispatch('getFromBrowserStorage', 'topics')
+      },
+      wipeExtensionState() {
+         browser.storage.local.clear()
+         .catch(err => { utils.logErr(err); });
       }
    }
 });

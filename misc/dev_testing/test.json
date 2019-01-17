@@ -1,363 +1,329 @@
 {
+   "settings": {
+      "jobMonkeyUi": {
+         "isOn": true,
+         "panelOpen": false,
+         "playSound": true,
+         "topic": { "daysOldIgnore": 7, "enabled": false, "qInterval": 10 }
+      },
+      "mainAlarm": {
+         "info": { "delayInMinutes": 0.01, "periodInMinutes": 0.25 },
+         "name": "overdueCheckAlarm"
+      },
+      "notification": {
+         "audioFile": "jmSound.mp3",
+         "iconFile": "jmIcon128.png"
+      },
+      "psm": { "host": "www.upwork.com", "path": "/ab/find-work" },
+      "requeryBaseUrl": "https://www.upwork.com/ab/find-work/",
+      "upworkUi": {
+         "nonCustomTopicsSelector": "[data-topic-list=''] > ul > li:not([data-ng-repeat]",
+         "reloadOnAutoFeed": "false *not implemented, reload on greeen auto feed msg",
+         "standardSerachDefs": [
+            {
+               "NOTE1": "Do not think these should work like custom, saved search topics",
+               "NOTE2": "Technically they would have to search thru all custom ones prior to notification"
+            },
+            {
+               "buttonName": "Domestic",
+               "winLocHrefUrl": "https://www.upwork.com/ab/find-work/domestic"
+            },
+            {
+               "buttonName": "My Job Feed",
+               "winLocHrefUrl": "https://www.upwork.com/ab/find-work/domestic"
+            }
+         ],
+         "topicsSelector": "[data-topic-list=''] > ul > li"
+      }
+   },
    "topics": [
       {
-         "id": 2919870,
          "captured": {
+            "created_time": "2017-05-10T02:17:59+0000",
             "id": 2919870,
             "name": "Chrome Extension",
             "q": "Chrome Extension",
-            "created_time": "2017-05-10T02:17:59+0000",
             "updated_time": "2018-03-15T11:53:05+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 1547482405589,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
-         "results": [
-            {
-               "ciphertext": "~01b3bce320eb90fd93",
-               "createdOn": "2019-01-14T16:01:13+00:00",
-               "publishedOn": "2019-01-14T16:01:13+00:00",
-               "recno": 215179120,
-               "title": "Developer needed for creating a marketing site (with CMS) for an up and coming SaaS product."
-            },
-            {
-               "ciphertext": "~01377ba05559765a1c",
-               "createdOn": "2019-01-14T11:25:12+00:00",
-               "publishedOn": "2019-01-14T11:25:12+00:00",
-               "recno": 215177421,
-               "title": "Javascript/Jquery expert to join an existing Chrome extension project"
-            },
-            {
-               "ciphertext": "~0110c414b12b58a85a",
-               "createdOn": "2019-01-14T10:34:37+00:00",
-               "publishedOn": "2019-01-14T10:34:37+00:00",
-               "recno": 215176683,
-               "title": "Page Scraper Browser Extension"
-            },
-            {
-               "ciphertext": "~011a827cd484837027",
-               "createdOn": "2019-01-14T06:17:43+00:00",
-               "publishedOn": "2019-01-14T06:17:43+00:00",
-               "recno": 215175661,
-               "title": "Convert Website pages into PDF about 80 pages"
-            },
-            {
-               "ciphertext": "~01ced477fbeb3585cd",
-               "createdOn": "2019-01-14T06:15:23+00:00",
-               "publishedOn": "2019-01-14T06:15:23+00:00",
-               "recno": 215175359,
-               "title": "Health &amp; Wellness Blogger for start up"
-            },
-            {
-               "ciphertext": "~0198add692540b44d9",
-               "createdOn": "2019-01-14T05:05:38+00:00",
-               "publishedOn": "2019-01-14T05:05:38+00:00",
-               "recno": 215175318,
-               "title": "UI/UX Design &amp; Responsive website for a cleaning company"
-            },
-            {
-               "ciphertext": "~0135ab06decdc2cd2a",
-               "createdOn": "2019-01-14T05:05:04+00:00",
-               "publishedOn": "2019-01-14T05:05:04+00:00",
-               "recno": 215175009,
-               "title": "Windows Desktop app development"
-            },
-            {
-               "ciphertext": "~0136b9ac2de10e93fa",
-               "createdOn": "2019-01-14T02:31:58+00:00",
-               "publishedOn": "2019-01-14T02:31:58+00:00",
-               "recno": 215174538,
-               "title": "Chrome Extension Developer"
-            },
-            {
-               "ciphertext": "~01783f5d3653b0a601",
-               "createdOn": "2019-01-13T21:32:31+00:00",
-               "publishedOn": "2019-01-13T21:32:31+00:00",
-               "recno": 215173146,
-               "title": "Convert chrome extension to Firefox"
-            },
-            {
-               "ciphertext": "~01ad8707f3b3f3c99a",
-               "createdOn": "2019-01-13T19:17:09+00:00",
-               "publishedOn": "2019-01-13T19:17:09+00:00",
-               "recno": 215172142,
-               "title": "Web Programmer/Developer needed for process automation"
-            }
-         ]
+         "id": 2919870,
+         "results": []
       },
       {
-         "id": 2919873,
          "captured": {
+            "created_time": "2017-05-10T02:19:42+0000",
             "id": 2919873,
             "name": "C#",
             "q": "C#",
-            "created_time": "2017-05-10T02:19:42+0000",
             "updated_time": "2018-03-15T11:53:05+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2919873,
          "results": []
       },
       {
-         "id": 2919875,
          "captured": {
+            "created_time": "2017-05-10T02:20:22+0000",
             "id": 2919875,
             "name": "ASP.NET MVC",
             "q": "ASP.NET MVC",
-            "created_time": "2017-05-10T02:20:22+0000",
             "updated_time": "2018-03-15T11:53:06+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2919875,
          "results": []
       },
       {
-         "id": 2920063,
          "captured": {
+            "created_time": "2017-05-10T04:17:49+0000",
             "id": 2920063,
             "name": "Web app",
             "q": "(title:(web app) OR title:(web application)) AND NOT PHP AND NOT Angular AND NOT AngularJS",
-            "created_time": "2017-05-10T04:17:49+0000",
             "updated_time": "2018-03-15T11:53:05+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2920063,
          "results": []
       },
       {
-         "id": 2921449,
          "captured": {
+            "created_time": "2017-05-10T15:11:27+0000",
             "id": 2921449,
             "name": "full stack",
             "q": "\"full stack\" OR \"full-stack\" AND NOT PHP AND NOT Angular AND NOT AngularJS AND NOT iOS AND NOT Android",
-            "created_time": "2017-05-10T15:11:27+0000",
             "updated_time": "2018-03-15T11:53:20+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2921449,
          "results": []
       },
       {
-         "id": 2928408,
          "captured": {
+            "created_time": "2017-05-13T02:01:03+0000",
             "id": 2928408,
             "name": "Excel .NET",
             "q": "Excel .NET",
-            "created_time": "2017-05-13T02:01:03+0000",
             "updated_time": "2018-03-15T11:54:15+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2928408,
          "results": []
       },
       {
-         "id": 2928429,
          "captured": {
+            "created_time": "2017-05-13T02:27:30+0000",
             "id": 2928429,
             "name": "\"C#\"",
             "q": "\"C#\"",
-            "created_time": "2017-05-13T02:27:30+0000",
             "updated_time": "2018-03-15T11:54:15+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2928429,
          "results": []
       },
       {
-         "id": 2928441,
          "captured": {
+            "created_time": "2017-05-13T02:39:45+0000",
             "id": 2928441,
             "name": "REST API",
             "q": "REST API",
-            "created_time": "2017-05-13T02:39:45+0000",
             "updated_time": "2018-03-15T11:54:15+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2928441,
          "results": []
       },
       {
-         "id": 2929710,
          "captured": {
+            "created_time": "2017-05-13T16:22:06+0000",
             "id": 2929710,
             "name": "\"Access\" AND (ms OR microsoft OR VBA)",
             "q": "\"Access\" AND (ms OR microsoft OR VBA)",
-            "created_time": "2017-05-13T16:22:06+0000",
             "updated_time": "2018-03-15T11:54:25+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2929710,
          "results": []
       },
       {
-         "id": 2930180,
          "captured": {
+            "created_time": "2017-05-13T20:39:51+0000",
             "id": 2930180,
             "name": "Any / Data Extraction / ETL",
             "q": null,
-            "created_time": "2017-05-13T20:39:51+0000",
             "updated_time": "2018-03-15T11:54:29+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2930180,
          "results": []
       },
       {
-         "id": 2937360,
          "captured": {
+            "created_time": "2017-05-16T21:41:03+0000",
             "id": 2937360,
             "name": "Any / Technical Support",
             "q": null,
-            "created_time": "2017-05-16T21:41:03+0000",
             "updated_time": "2018-03-15T11:55:25+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2937360,
          "results": []
       },
       {
-         "id": 2943162,
          "captured": {
+            "created_time": "2017-05-19T01:26:56+0000",
             "id": 2943162,
             "name": "\"vue.js\" OR \"vuejs\"",
             "q": "\"vue.js\" OR \"vuejs\"",
-            "created_time": "2017-05-19T01:26:56+0000",
             "updated_time": "2018-03-15T11:56:15+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2943162,
          "results": []
       },
       {
-         "id": 2957145,
          "captured": {
+            "created_time": "2017-05-24T16:31:44+0000",
             "id": 2957145,
             "name": "(\"vue.js\" OR \"vuejs\") AND \"c#\"",
             "q": "(\"vue.js\" OR \"vuejs\") AND \"c#\"",
-            "created_time": "2017-05-24T16:31:44+0000",
             "updated_time": "2018-03-15T11:58:02+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 2957145,
          "results": []
       },
       {
-         "id": 3097512,
          "captured": {
+            "created_time": "2017-07-21T16:12:31+0000",
             "id": 3097512,
             "name": "Kendo",
             "q": "Kendo OR Telerik AND NOT PHP AND NOT Angular AND NOT AngularJS",
-            "created_time": "2017-07-21T16:12:31+0000",
             "updated_time": "2018-03-15T12:16:31+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 3097512,
          "results": []
       },
       {
-         "id": 3997964,
          "captured": {
+            "created_time": "2018-10-31T16:05:08+0000",
             "id": 3997964,
             "name": "\"vue.js\" OR \"vuejs\" AND ASP.NET Core",
             "q": "\"vue.js\" OR \"vuejs\" AND ASP.NET Core",
-            "created_time": "2018-10-31T16:05:08+0000",
             "updated_time": "2018-10-31T16:05:08+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 3997964,
          "results": []
       },
       {
-         "id": 4091169,
          "captured": {
+            "created_time": "2018-12-29T05:07:49+0000",
             "id": 4091169,
             "name": "vba",
             "q": "vba",
-            "created_time": "2018-12-29T05:07:49+0000",
             "updated_time": "2018-12-29T05:07:49+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 4091169,
          "results": []
       },
       {
-         "id": 4110441,
          "captured": {
+            "created_time": "2019-01-10T19:19:14+0000",
             "id": 4110441,
             "name": "jquery",
             "q": "jquery",
-            "created_time": "2019-01-10T19:19:14+0000",
             "updated_time": "2019-01-10T19:19:14+0000"
          },
          "custom": {
+            "daysOldIgnore": 7,
             "enabled": false,
             "qInterval": 10,
-            "qLastRequest": 0,
-            "daysOldIgnore": 7
+            "qLastRequest": 0
          },
+         "id": 4110441,
          "results": []
       }
    ]

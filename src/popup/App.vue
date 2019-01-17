@@ -5,16 +5,16 @@
 </template>
 
 <script>
-export default {
-  data () {
-    return {}
-  }
-}
+  export default {
+    data() {
+      return {};
+    }
+  };
 </script>
 
-<style>
-body {
+ <style>
+  /* body {
     width: 400px;
     height: 400px;
-}
+  } */
 </style>

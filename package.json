@@ -8,6 +8,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "json-formatter-js": "^2.2.1",
     "vue": "^2.5.21",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",

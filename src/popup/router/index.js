@@ -2,13 +2,13 @@
 //       entry point for a folder/directory. So this file "index.js" becomes
 //       "router" as imported into in "popup.js"
 
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import routes from './routes'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import routes from './routes';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 // Instantiate "new" router instance, assignin routes
 export default new VueRouter({
-  routes
-})
+   routes
+});
