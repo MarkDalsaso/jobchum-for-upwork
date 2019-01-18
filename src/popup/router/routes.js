@@ -1,11 +1,12 @@
 // This file contains the route (or page), to component mappings. Each
 // path requires a vue component, which must be referenced (note imports)
 
-import PageIndex from './pages/Index'    // 
+import PopupHomePage from './pages/Index';
+import SettingsPage from './pages/Settings';
+import ToolsPage from './pages/Tools';
 
 export default [
-  {
-    path: '/',
-    component: PageIndex
-  }
-]
+   { path: '/', component: PopupHomePage },
+   { path: '/settings', component: SettingsPage },
+   { path: '/tools', component: ToolsPage }
+];

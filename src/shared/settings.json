@@ -1,10 +1,8 @@
- {
+{
    "upworkUi": {
       "topicsSelector": "[data-topic-list=''] > ul > li",
-      "nonCustomTopicsSelector":
-         "[data-topic-list=''] > ul > li:not([data-ng-repeat]",
-      "reloadOnAutoFeed":
-         "false  *not implemented, reload on greeen auto feed msg",
+      "nonCustomTopicsSelector": "[data-topic-list=''] > ul > li:not([data-ng-repeat]",
+      "reloadOnAutoFeed": "false  *not implemented, reload on greeen auto feed msg",
       "standardSerachDefs": [
          {
             "NOTE1": "Do not think these should work like custom, saved search topics",
@@ -46,4 +44,4 @@
       "audioFile": "jmSound.mp3",
       "iconFile": "jmIcon128.png"
    }
- }
+}

@@ -1,34 +1,30 @@
 {
-  "name": "jm-v2-2",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service build --mode development --watch",
-    "serve-nw": "vue-cli-service build --mode development",
-    "build": "vue-cli-service build"
-  },
-  "dependencies": {
-    "json-formatter-js": "^2.2.1",
-    "vue": "^2.5.21",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
-    "webextension-polyfill": "^0.3.0"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.2.0",
-    "@vue/cli-service": "^3.2.0",
-    "imports-loader": "^0.8.0",
-    "vue-cli-plugin-browser-extension": "^0.12.1",
-    "vue-template-compiler": "^2.5.21"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+   "name": "jm-v2-2",
+   "version": "0.1.0",
+   "private": true,
+   "scripts": {
+      "serve": "vue-cli-service build --mode development --watch",
+      "serve-nw": "vue-cli-service build --mode development",
+      "build": "vue-cli-service build"
+   },
+   "dependencies": {
+      "json-formatter-js": "^2.2.1",
+      "vue": "^2.5.21",
+      "vue-router": "^3.0.1",
+      "vuex": "^3.0.1",
+      "webextension-polyfill": "^0.3.0"
+   },
+   "devDependencies": {
+      "@vue/cli-plugin-babel": "^3.2.0",
+      "@vue/cli-service": "^3.2.0",
+      "imports-loader": "^0.8.0",
+      "vue-cli-plugin-browser-extension": "^0.12.1",
+      "vue-template-compiler": "^2.5.21"
+   },
+   "postcss": {
+      "plugins": {
+         "autoprefixer": {}
+      }
+   },
+   "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }

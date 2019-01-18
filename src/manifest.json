@@ -4,19 +4,13 @@
    "manifest_version": 2,
    "homepage_url": "http://www.we-is.com/jobMonkey",
    "description": "This extension augments the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/). To insure proper initialization of jobMonkey, the  \"Find Work\" page will need to reloaded after the extension is installed.",
-   "permissions": [
-      "tabs",
-      "storage",
-       "*://www.upwork.com/*"
-   ],
+   "permissions": ["tabs", "storage", "*://www.upwork.com/*"],
    "background": {
       "scripts": ["background.js"]
-   },   
+   },
    "content_scripts": [
       {
-         "matches": [
-            "*://www.upwork.com/ab/find-work/*" 
-         ],
+         "matches": ["*://www.upwork.com/ab/find-work/*"],
          "js": ["content_scripts/x1.js"],
          "run_at": "document_start"
       }
