@@ -15,7 +15,31 @@ export function logErr(err) {
    console.log(m);
 }
 
+export function storeInfo(type, name, value) {
+   let length = "n/a"
+   if (Array.isArray(value)) {
+      length = value.length
+   } else if (typeof value === 'object') {
+      length = Object.keys(value).length
+   }
+   return { 
+      [type]: {
+         "0-key": name,
+         "1-target": value,
+         "2-typeof target": typeof value,
+         "3-length of target": length
+      }
+   }
+}
+
 export const devMode = setDevMode();
+
+// Always sync-up main alarm to the main switch
+export function syncAlarmToMainSwitch(settings) {
+   settings.jobMonkeyUi.isOn ?
+      browser.alarms.create(settings.mainAlarm.name, settings.mainAlarm.info) :
+      browser.alarms.clear(settings.mainAlarm.name)
+}
 
 // NOTE: Not completely tested
 // Determine if extentions is in develeopment mode by testing for existence

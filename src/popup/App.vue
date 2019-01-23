@@ -8,11 +8,15 @@
 <script>
    import Header from "./router/Header.vue";
    export default {
-      // data() { return {}; },
       components: {
          popupHeader: Header
       }
    };
+   window.onunhandledrejection = (event => {
+     console.log(event.type);
+     console.log(event.reason.message);
+     console.log(rejected === event.promise);
+   })
 </script>
 
  <style>

@@ -1,330 +1,291 @@
-{
-   "settings": {
-      "jobMonkeyUi": {
-         "isOn": true,
-         "panelOpen": false,
-         "playSound": true,
-         "topic": { "daysOldIgnore": 7, "enabled": false, "qInterval": 10 }
-      },
-      "mainAlarm": {
-         "info": { "delayInMinutes": 0.01, "periodInMinutes": 0.25 },
-         "name": "overdueCheckAlarm"
-      },
-      "notification": {
-         "audioFile": "jmSound.mp3",
-         "iconFile": "jmIcon128.png"
-      },
-      "psm": { "host": "www.upwork.com", "path": "/ab/find-work" },
-      "requeryBaseUrl": "https://www.upwork.com/ab/find-work/",
-      "upworkUi": {
-         "nonCustomTopicsSelector": "[data-topic-list=''] > ul > li:not([data-ng-repeat]",
-         "reloadOnAutoFeed": "false *not implemented, reload on greeen auto feed msg",
-         "standardSerachDefs": [
-            {
-               "NOTE1": "Do not think these should work like custom, saved search topics",
-               "NOTE2": "Technically they would have to search thru all custom ones prior to notification"
-            },
-            {
-               "buttonName": "Domestic",
-               "winLocHrefUrl": "https://www.upwork.com/ab/find-work/domestic"
-            },
-            {
-               "buttonName": "My Job Feed",
-               "winLocHrefUrl": "https://www.upwork.com/ab/find-work/domestic"
-            }
-         ],
-         "topicsSelector": "[data-topic-list=''] > ul > li"
-      }
-   },
-   "topics": [
-      {
-         "captured": {
-            "created_time": "2017-05-10T02:17:59+0000",
-            "id": 2919870,
-            "name": "Chrome Extension",
-            "q": "Chrome Extension",
-            "updated_time": "2018-03-15T11:53:05+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2919870,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-10T02:19:42+0000",
-            "id": 2919873,
-            "name": "C#",
-            "q": "C#",
-            "updated_time": "2018-03-15T11:53:05+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2919873,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-10T02:20:22+0000",
-            "id": 2919875,
-            "name": "ASP.NET MVC",
-            "q": "ASP.NET MVC",
-            "updated_time": "2018-03-15T11:53:06+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2919875,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-10T04:17:49+0000",
-            "id": 2920063,
-            "name": "Web app",
-            "q": "(title:(web app) OR title:(web application)) AND NOT PHP AND NOT Angular AND NOT AngularJS",
-            "updated_time": "2018-03-15T11:53:05+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2920063,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-10T15:11:27+0000",
-            "id": 2921449,
-            "name": "full stack",
-            "q": "\"full stack\" OR \"full-stack\" AND NOT PHP AND NOT Angular AND NOT AngularJS AND NOT iOS AND NOT Android",
-            "updated_time": "2018-03-15T11:53:20+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2921449,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-13T02:01:03+0000",
-            "id": 2928408,
-            "name": "Excel .NET",
-            "q": "Excel .NET",
-            "updated_time": "2018-03-15T11:54:15+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2928408,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-13T02:27:30+0000",
-            "id": 2928429,
-            "name": "\"C#\"",
-            "q": "\"C#\"",
-            "updated_time": "2018-03-15T11:54:15+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2928429,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-13T02:39:45+0000",
-            "id": 2928441,
-            "name": "REST API",
-            "q": "REST API",
-            "updated_time": "2018-03-15T11:54:15+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2928441,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-13T16:22:06+0000",
-            "id": 2929710,
-            "name": "\"Access\" AND (ms OR microsoft OR VBA)",
-            "q": "\"Access\" AND (ms OR microsoft OR VBA)",
-            "updated_time": "2018-03-15T11:54:25+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2929710,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-13T20:39:51+0000",
-            "id": 2930180,
-            "name": "Any / Data Extraction / ETL",
-            "q": null,
-            "updated_time": "2018-03-15T11:54:29+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2930180,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-16T21:41:03+0000",
-            "id": 2937360,
-            "name": "Any / Technical Support",
-            "q": null,
-            "updated_time": "2018-03-15T11:55:25+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2937360,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-19T01:26:56+0000",
-            "id": 2943162,
-            "name": "\"vue.js\" OR \"vuejs\"",
-            "q": "\"vue.js\" OR \"vuejs\"",
-            "updated_time": "2018-03-15T11:56:15+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2943162,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-05-24T16:31:44+0000",
-            "id": 2957145,
-            "name": "(\"vue.js\" OR \"vuejs\") AND \"c#\"",
-            "q": "(\"vue.js\" OR \"vuejs\") AND \"c#\"",
-            "updated_time": "2018-03-15T11:58:02+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 2957145,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2017-07-21T16:12:31+0000",
-            "id": 3097512,
-            "name": "Kendo",
-            "q": "Kendo OR Telerik AND NOT PHP AND NOT Angular AND NOT AngularJS",
-            "updated_time": "2018-03-15T12:16:31+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 3097512,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2018-10-31T16:05:08+0000",
-            "id": 3997964,
-            "name": "\"vue.js\" OR \"vuejs\" AND ASP.NET Core",
-            "q": "\"vue.js\" OR \"vuejs\" AND ASP.NET Core",
-            "updated_time": "2018-10-31T16:05:08+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 3997964,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2018-12-29T05:07:49+0000",
-            "id": 4091169,
-            "name": "vba",
-            "q": "vba",
-            "updated_time": "2018-12-29T05:07:49+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 4091169,
-         "results": []
-      },
-      {
-         "captured": {
-            "created_time": "2019-01-10T19:19:14+0000",
-            "id": 4110441,
-            "name": "jquery",
-            "q": "jquery",
-            "updated_time": "2019-01-10T19:19:14+0000"
-         },
-         "custom": {
-            "daysOldIgnore": 7,
-            "enabled": false,
-            "qInterval": 10,
-            "qLastRequest": 0
-         },
-         "id": 4110441,
-         "results": []
-      }
-   ]
-}
+[
+  {
+    "captured": {
+      "created_time": "2017-05-10T02:17:59+0000",
+      "id": 2919870,
+      "name": "Chrome Extension",
+      "q": "Chrome Extension",
+      "updated_time": "2018-03-15T11:53:05+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2919870,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-10T02:19:42+0000",
+      "id": 2919873,
+      "name": "C#",
+      "q": "C#",
+      "updated_time": "2018-03-15T11:53:05+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2919873,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-10T02:20:22+0000",
+      "id": 2919875,
+      "name": "ASP.NET MVC",
+      "q": "ASP.NET MVC",
+      "updated_time": "2018-03-15T11:53:06+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2919875,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-10T04:17:49+0000",
+      "id": 2920063,
+      "name": "Web app",
+      "q": "(title:(web app) OR title:(web application)) AND NOT PHP AND NOT Angular AND NOT AngularJS",
+      "updated_time": "2018-03-15T11:53:05+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2920063,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-10T15:11:27+0000",
+      "id": 2921449,
+      "name": "full stack",
+      "q": "\"full stack\" OR \"full-stack\" AND NOT PHP AND NOT Angular AND NOT AngularJS AND NOT iOS AND NOT Android",
+      "updated_time": "2018-03-15T11:53:20+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2921449,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-13T02:01:03+0000",
+      "id": 2928408,
+      "name": "Excel .NET",
+      "q": "Excel .NET",
+      "updated_time": "2018-03-15T11:54:15+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2928408,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-13T02:27:30+0000",
+      "id": 2928429,
+      "name": "\"C#\"",
+      "q": "\"C#\"",
+      "updated_time": "2018-03-15T11:54:15+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2928429,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-13T02:39:45+0000",
+      "id": 2928441,
+      "name": "REST API",
+      "q": "REST API",
+      "updated_time": "2018-03-15T11:54:15+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2928441,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-13T16:22:06+0000",
+      "id": 2929710,
+      "name": "\"Access\" AND (ms OR microsoft OR VBA)",
+      "q": "\"Access\" AND (ms OR microsoft OR VBA)",
+      "updated_time": "2018-03-15T11:54:25+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2929710,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-13T20:39:51+0000",
+      "id": 2930180,
+      "name": "Any / Data Extraction / ETL",
+      "q": null,
+      "updated_time": "2018-03-15T11:54:29+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2930180,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-16T21:41:03+0000",
+      "id": 2937360,
+      "name": "Any / Technical Support",
+      "q": null,
+      "updated_time": "2018-03-15T11:55:25+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2937360,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-19T01:26:56+0000",
+      "id": 2943162,
+      "name": "\"vue.js\" OR \"vuejs\"",
+      "q": "\"vue.js\" OR \"vuejs\"",
+      "updated_time": "2018-03-15T11:56:15+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2943162,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-05-24T16:31:44+0000",
+      "id": 2957145,
+      "name": "(\"vue.js\" OR \"vuejs\") AND \"c#\"",
+      "q": "(\"vue.js\" OR \"vuejs\") AND \"c#\"",
+      "updated_time": "2018-03-15T11:58:02+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 2957145,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2017-07-21T16:12:31+0000",
+      "id": 3097512,
+      "name": "Kendo",
+      "q": "Kendo OR Telerik AND NOT PHP AND NOT Angular AND NOT AngularJS",
+      "updated_time": "2018-03-15T12:16:31+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 3097512,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2018-10-31T16:05:08+0000",
+      "id": 3997964,
+      "name": "\"vue.js\" OR \"vuejs\" AND ASP.NET Core",
+      "q": "\"vue.js\" OR \"vuejs\" AND ASP.NET Core",
+      "updated_time": "2018-10-31T16:05:08+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 3997964,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2018-12-29T05:07:49+0000",
+      "id": 4091169,
+      "name": "vba",
+      "q": "vba",
+      "updated_time": "2018-12-29T05:07:49+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 4091169,
+    "results": []
+  },
+  {
+    "captured": {
+      "created_time": "2019-01-10T19:19:14+0000",
+      "id": 4110441,
+      "name": "jquery",
+      "q": "jquery",
+      "updated_time": "2019-01-10T19:19:14+0000"
+    },
+    "custom": {
+      "daysOldIgnore": 7,
+      "enabled": false,
+      "qInterval": 10,
+      "qLastRequest": 0
+    },
+    "id": 4110441,
+    "results": []
+  }
+]

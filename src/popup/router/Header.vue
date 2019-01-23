@@ -13,25 +13,15 @@
       </span>
       <nav>
          <div>
-            <router-link
-               to="/"
-               tag="button"
-               class="btn1"
-               active-class="active"
-               exact
-            >Topics</router-link>
-            <router-link
-               to="/settings"
-               tag="button"
-               class="btn1"
-               active-class="active"
-            >Settings</router-link>
-            <router-link
-               to="/tools"
-               tag="button"
-               class="btn1"
-               active-class="active"
-            >Tools</router-link>
+            <router-link to="/" tag="button" class="btn1" active-class="active" exact>
+               Topics
+            </router-link>
+            <router-link to="/settings" tag="button" class="btn1" active-class="active">
+               Settings
+            </router-link>
+            <router-link to="/tools" tag="button" class="btn1" active-class="active">
+               Tools
+            </router-link>
          </div>
       </nav>
    </header>
@@ -40,9 +30,6 @@
 <script>
    import * as utils from "../../shared/utils.js";
    export default {
-      data() {
-         return {};
-      },
       computed: {
          version() {
             let manifest = browser.runtime.getManifest();

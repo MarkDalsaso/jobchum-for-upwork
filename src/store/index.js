@@ -24,24 +24,20 @@ export default new Vuex.Store({
    },
    actions: {
       updateTopics: ({ dispatch, commit }, payload) => {
-         dispatch('getFromBrowserStorage', 'topics')
+         dispatch('fetchFromStorage', 'topics')
             .then(topicsAry => {
-               return updateTopics(payload, topicsAry);
+               return processTopics(payload, topicsAry);
             })
             .then(updatedTopicsAry => {
-               let p2 = browser.storage.local.set({ topics: updatedTopicsAry });
-               p2.then(() => {
-                  commit('topics', updatedTopicsAry);
-                  utils.logMsg({
-                     "updateTopics action has mutated 'topics'": updatedTopicsAry
-                  });
-               });
+               dispatch('persistToStorage', { topics: updatedTopicsAry } )
+               .then( () => {
+                  utils.logMsg("'topics' (TopicResults) mutated and persisted")
+                  //browser.runtime.sendMessage({'store-update': 'topic-results'})
+               })
             })
-            .catch(err => {
-               utils.logErr(err);
-            });
+            .catch(err => { utils.logErr(err); });
       },
-      updateTopicResults: ({ dispatch, commit }, payload) => {
+      updateTopicResults: ({ dispatch }, payload) => {
          if ('topicId' in payload && typeof payload.topicId != 'undefined') {
             dispatch('getFromBrowserStorage', 'topics')
                .then(topicsAry => {
@@ -49,89 +45,89 @@ export default new Vuex.Store({
                   if (topicId == NaN) {
                      utils.logErr("Non-numeric topic id's are not supported.");
                   } else {
-                     let currentTopic = topicsAry.find(
-                        topic => topic.id === topicId
-                     );
-                     let updatedTopicResults = updateTopicResults(
-                        payload.results,
-                        currentTopic
-                     );
+                     let currentTopic = topicsAry.find(topic => topic.id === topicId);
+                     let updatedTopicResults = processTopicResults(payload.results, currentTopic);
+                     let newTopicCount = updatedTopicResults.length - currentTopic.results.length;
+                     //if (newTopicCount > 0) { /*utils.logMsg({newTopicCount: newTopicCount})*/ }
                      let topic = topicsAry.find(topic => topic.id === topicId);
                      topic.results = updatedTopicResults;
                      topic.custom.qLastRequest = Date.now();
-                     browser.storage.local
-                        .set({ topics: topicsAry })
-                        .then(() => {
-                           commit('topics', topicsAry); // commit updated topics
-                           utils.logMsg({
-                              "updateTopicResults action has mutated 'topics'": topicsAry
-                           });
-                        });
+                     dispatch('persistToStorage', { topics: topicsAry } )
+                     .then( () => {
+                        utils.logMsg("'topics' (TopicResults) mutated and persisted")
+                        //browser.runtime.sendMessage({'store-update': 'topic-results'})
+                     })
                   }
                })
-               .catch(err => {
-                  utils.logErr(err);
-               });
+               .catch(err => { utils.logErr(err); });
          }
       },
-      updateSettings: ({ commit }, settingsObj) => {
-         browser.storage.local.set({ settings: settingsObj }).then(() => {
-            commit('settings', settingsObj); // commit updated settings
-            utils.logMsg({ "updateSettingss mutated 'settings'": settingsObj });
-         });
+      persistToStorage: ({ commit }, payload) => {
+         return new Promise(function(resolve) {
+            const rootKeyName = Object.keys(payload)[0];
+            const target = payload[rootKeyName];
+            browser.storage.local.set(payload).then(() => {
+               utils.logMsg(utils.storeInfo('after set', rootKeyName, target));
+               commit(rootKeyName, target);
+               resolve();
+            })
+         })
       },
-      getFromBrowserStorage({ commit, state }, rootKeyName) {
-         // NOTE: 'rootKeyName' is the payload and is a string
-         return new Promise(function(resolve, reject) {
+      fetchFromStorage({ commit, state }, rootKeyName) {
+         return new Promise(function(resolve) {
             browser.storage.local
                .get(rootKeyName)
                .then(obj => {
-                  if (Object.keys(obj).length > 0) {
+                  utils.logMsg(utils.storeInfo('after get', rootKeyName, obj));
+                  if (obj && typeof obj[rootKeyName] !== 'undefined') {
                      commit(rootKeyName, obj[rootKeyName]); // refresh store
-                     return resolve(obj[rootKeyName]);
-                  } else {
-                     return resolve(state[rootKeyName]);
                   }
+                  resolve(state[rootKeyName]);
                })
                .catch(err => {
                   utils.logErr(err);
                });
          });
       },
-      initializeSettings({ dispatch, commit }) {
-         dispatch('getFromBrowserStorage', 'settings').then(
-            settingsValueObj => {
-               if (Object.keys(settingsValueObj).length == 0) {
-                  browser.storage.local
-                     .set({ settings: jmSettings })
-                     .then(() => {
-                        commit('settings', jmSettings);
-                        utils.logMsg('default settings saved to browser');
-                     });
-               }
-            }
-         );
+      initState({ dispatch }) {
+         return new Promise(function(resolve) {
+            let p1 = dispatch('fetchFromStorage', 'settings');
+            let p2 = dispatch('fetchFromStorage', 'topics');
+            Promise.all([p1, p2])
+               .then(vals => {
+                  resolve()
+               })
+               .catch(err => {
+                  utils.logErr(err);
+               });
+         });
       },
-      initVuexState({ dispatch }) {
-         dispatch('initializeSettings');
-         dispatch('getFromBrowserStorage', 'topics');
+      initSettingsIfEmpty({ getters, dispatch }) {
+         return new Promise(function(resolve) {
+            if (Object.keys(getters.settings).length === 0) {
+               dispatch('persistToStorage', { settings: jmSettings })
+               .then( () => {
+                  utils.logMsg('default settings have been initialized');
+                  resolve();
+               });
+            } else {
+               resolve();
+            }
+         }).catch(err => { utils.logErr(err); });
       },
       wipeExtensionState({ commit }) {
-         browser.storage.local
-            .clear()
-            .then(() => {
-               commit('settings', {});
-               commit('topics', []);
-            })
-            .catch(err => {
-               utils.logErr(err);
-            });
+         browser.storage.local.clear()
+         .then(() => {
+            commit('settings', {});
+            commit('topics', []);
+         })
+         .catch(err => { utils.logErr(err); });
       }
    }
 });
 
 // Process the captured xhrResults array.
-function updateTopicResults(xhrResults, currentTopic) {
+function processTopicResults(xhrResults, currentTopic) {
    // Check for lost state (may need to always call Ext storage)
    let updatedTopicResults = currentTopic.results;
    for (let i = 0, len = xhrResults.length; i < len; i++) {
@@ -163,7 +159,7 @@ function resultTooOld(days, jsonDate) {
 }
 
 // Process the captured xhrTopics array and return updated topics array.
-function updateTopics(xhrTopics, currentTopics) {
+function processTopics(xhrTopics, currentTopics) {
    let rtnAry = [],
       xhrTopic = {},
       curTopic = {};
