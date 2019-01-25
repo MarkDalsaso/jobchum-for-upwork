@@ -1,18 +1,17 @@
-/* Utility functions
-         Usage import named exports individually:
+/* Utility functions. Usage: import named exports individually...
    import { devMode, logMsg, logErr } from 'utils.js'
          or ...
    import * as utils from 'utils.js'
 */
-
+import jmSettings from './settings.json';
 export function logMsg(msg) {
    let m = msg instanceof Object ? msg : { msg: msg };
    console.log(m);
 }
 
 export function logErr(err) {
-   let m = err instanceof Object ? err : { err: err };
-   console.log(m);
+   //let m = err instanceof Object ? err : { err: err };
+   console.log({ "Error": err });
 }
 
 export function storeInfo(type, name, value) {
@@ -62,4 +61,37 @@ function setDevMode() {
    return inDevMode;
 }
 
+export function reQueryById (topicId) {
+   browser.tabs.query({ url: jmSettings.requeryBaseUrl + "*" })
+   .then( (tabs) => {
+      if (tabs.length > 0) {
+         const codeObj = { 
+            code: "window.location.replace('" +
+               jmSettings.requeryBaseUrl +
+               topicId + "')"
+         }
+         browser.tabs.executeScript(tabs[0].id, codeObj)
+         .catch(err => { logErr(err); })
+      }
+   })
+}
+
+// Init and invoke basic notification
+export function doNotification(msgOptions,) {
+   browser.notifications.create(msgOptions)
+   .then( () => {
+      //logMsg("notification fired")
+   })
+   .catch(err => { logErr(err); })
+ }
+
+export function doSound (soundFile) {
+   if (soundFile) {
+      //var audio = new Audio(jmSettings.notification.audioFile);
+      let audio = new Audio(soundFile);
+      audio.play();
+   }
+}
+
 //logMsg({'deveMode': devMode})
+

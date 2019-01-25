@@ -42,6 +42,6 @@
    },
    "notification": {
       "audioFile": "jmSound.mp3",
-      "iconFile": "jmIcon128.png"
+      "iconFile": "jm128.png"
    }
 }

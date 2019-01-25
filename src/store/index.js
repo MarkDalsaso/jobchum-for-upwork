@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import * as utils from '../shared/utils.js';
 import jmSettings from '../shared/settings.json';
+import notificationIcon from '../shared/notificationIcon'
+import notificationMp3 from '../shared/notificationMp3'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -23,40 +25,43 @@ export default new Vuex.Store({
       }
    },
    actions: {
-      updateTopics: ({ dispatch, commit }, payload) => {
+      updateTopics: ({ dispatch, state }, payload) => {
          dispatch('fetchFromStorage', 'topics')
-            .then(topicsAry => {
-               return processTopics(payload, topicsAry);
+            .then( () => {
+               return processTopics(payload, state.topics);
             })
             .then(updatedTopicsAry => {
                dispatch('persistToStorage', { topics: updatedTopicsAry } )
                .then( () => {
-                  utils.logMsg("'topics' (TopicResults) mutated and persisted")
+                  //utils.logMsg("'topics' (TopicResults) mutated and persisted")
                   //browser.runtime.sendMessage({'store-update': 'topic-results'})
                })
             })
             .catch(err => { utils.logErr(err); });
       },
-      updateTopicResults: ({ dispatch }, payload) => {
+      updateTopicResults: ({ dispatch, getters, state }, payload) => {
          if ('topicId' in payload && typeof payload.topicId != 'undefined') {
-            dispatch('getFromBrowserStorage', 'topics')
-               .then(topicsAry => {
+            dispatch('fetchFromStorage', 'topics')
+               .then( () => {
                   let topicId = Number(payload.topicId);
                   if (topicId == NaN) {
                      utils.logErr("Non-numeric topic id's are not supported.");
                   } else {
-                     let currentTopic = topicsAry.find(topic => topic.id === topicId);
-                     let updatedTopicResults = processTopicResults(payload.results, currentTopic);
-                     let newTopicCount = updatedTopicResults.length - currentTopic.results.length;
-                     //if (newTopicCount > 0) { /*utils.logMsg({newTopicCount: newTopicCount})*/ }
-                     let topic = topicsAry.find(topic => topic.id === topicId);
-                     topic.results = updatedTopicResults;
-                     topic.custom.qLastRequest = Date.now();
-                     dispatch('persistToStorage', { topics: topicsAry } )
+                     let topic = getters.getTopicById(topicId)
+                     topic.custom.qLastRequest = Date.now()
+                     if (topic.custom.enabled) {  // process topic if it's enabled
+                        let newResults = newTopicResults(payload.results, topic);
+                        if (newResults.length > 0) {
+                           topic.results = topic.results.concat(newResults)
+                           doTopicsResultsNotification(topic, newResults)
+                        }
+                     }
+                     // Always persist (because qLastResult date needs to be updated)
+                     dispatch('persistToStorage', { topics: state.topics } )
                      .then( () => {
-                        utils.logMsg("'topics' (TopicResults) mutated and persisted")
-                        //browser.runtime.sendMessage({'store-update': 'topic-results'})
+                        //utils.logMsg("'topics' (TopicResults) mutated and persisted")
                      })
+                     .catch(err => { utils.logErr(err); });
                   }
                })
                .catch(err => { utils.logErr(err); });
@@ -67,26 +72,23 @@ export default new Vuex.Store({
             const rootKeyName = Object.keys(payload)[0];
             const target = payload[rootKeyName];
             browser.storage.local.set(payload).then(() => {
-               utils.logMsg(utils.storeInfo('after set', rootKeyName, target));
+               //utils.logMsg(utils.storeInfo('after set', rootKeyName, target));
                commit(rootKeyName, target);
                resolve();
             })
          })
       },
-      fetchFromStorage({ commit, state }, rootKeyName) {
+      fetchFromStorage({ dispatch, state, commit }, rootKeyName) {
          return new Promise(function(resolve) {
-            browser.storage.local
-               .get(rootKeyName)
-               .then(obj => {
-                  utils.logMsg(utils.storeInfo('after get', rootKeyName, obj));
-                  if (obj && typeof obj[rootKeyName] !== 'undefined') {
-                     commit(rootKeyName, obj[rootKeyName]); // refresh store
-                  }
-                  resolve(state[rootKeyName]);
-               })
-               .catch(err => {
-                  utils.logErr(err);
-               });
+            browser.storage.local.get(rootKeyName)
+            .then(obj => {
+               if (typeof obj[rootKeyName] !== 'undefined') {
+                  //utils.logMsg(utils.storeInfo('after get', rootKeyName, obj[rootKeyName]));
+                  commit(rootKeyName, obj[rootKeyName]);    // refresh store
+               }
+               resolve()
+            })
+            .catch(err => { utils.logErr(err); });
          });
       },
       initState({ dispatch }) {
@@ -127,20 +129,19 @@ export default new Vuex.Store({
 });
 
 // Process the captured xhrResults array.
-function processTopicResults(xhrResults, currentTopic) {
+function newTopicResults(xhrResults, currentTopic) {
    // Check for lost state (may need to always call Ext storage)
-   let updatedTopicResults = currentTopic.results;
+   let newResults = [];
    for (let i = 0, len = xhrResults.length; i < len; i++) {
+      let daysOldIgnore = currentTopic.custom.daysOldIgnore;
       let xhrResult = xhrResults[i];
-      if (
-         !resultTooOld(currentTopic.custom.daysOldIgnore, xhrResult.publishedOn)
-      ) {
+      if ( !resultTooOld(daysOldIgnore, xhrResult.publishedOn) ) {
          if (!currentTopic.results.find(r => r.recno === xhrResult.recno)) {
-            updatedTopicResults.push(xhrResult);
+            newResults.push(xhrResult);
          }
       }
    }
-   return updatedTopicResults;
+   return newResults;
 }
 
 function resultTooOld(days, jsonDate) {
@@ -192,4 +193,24 @@ function Topic(
    results = []
 ) {
    return { id, captured, custom, results };
+}
+
+function doTopicsResultsNotification(topic, newResults) {
+  	   
+   let msgOptions = {
+      type: 'basic',
+      title: newResults.length.toString() +  " new job(s) detected!",
+      iconUrl: jmSettings.notification.iconFile,
+      message: "for saved search: " + topic.captured.name
+   };
+
+   // override iconUrl with data url
+   msgOptions.iconUrl = notificationIcon
+   utils.doNotification(msgOptions)
+
+   // NOTE: future enhancement: use have playSound toggle via tipic options
+   if (jmSettings.jobMonkeyUi.playSound) {
+      utils.doSound(notificationMp3)
+   }
+   
 }

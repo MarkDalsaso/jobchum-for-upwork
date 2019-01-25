@@ -22,6 +22,7 @@
          v-bind:topic="topic"
          v-bind:index="index"
          v-bind:key="index"
+         @topic-modified="updateTopics($event)"
       ></topic>
    </div>
 </template>
@@ -50,6 +51,14 @@
          });
       },
       methods: {
+         updateTopics(evt) {
+            let topic = evt.topic
+            this.$store.dispatch('persistToStorage', {'topics': this.topics})
+            .then(() => {
+               //utils.logMsg({"topic updated": "name" + topic.captured.name})
+            })
+            .catch(err => { logErr(err); })
+         },
          testInit() {
             /* not impmented  */
          },

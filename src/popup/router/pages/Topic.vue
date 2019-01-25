@@ -5,17 +5,17 @@
             <td>
                <button
                   class="topic-name btn1"
-                  v-on:click="invokeSavedSearch"
+                  @click="reQueryTopic()"
                >{{ topic.captured.name }}</button>
             </td>
             <td class="enable-btn-col">
                <button class="btn1">
-                  <label v-bind:for="'enabled-checkbox_'+index">Enabled</label>
+                  <label :for="'enabled-checkbox_'+index">Enabled</label>
                   <input
                      type="checkbox"
-                     v-bind:id="'enabled-checkbox_'+index"
+                     :id="'enabled-checkbox_'+index"
                      v-model="topic.custom.enabled"
-                     v-on:change="rowChg(topic)"
+                     @change="rowChg()"
                   >
                </button>
             </td>
@@ -52,35 +52,15 @@
 </template>
 
 <script>
+import * as utils from "../../../shared/utils";
 export default {
   props: ["topic", "index"],
   methods: {
-    rowChg: function(topic) {
-      var key = topic.id;
-      var obj = {};
-      obj[key] = topic;
-      //chrome.storage.local.set(obj);
+    rowChg () {
+      this.$emit('topic-modified', {topic: this.topic});
     },
-    invokeSavedSearch: function(evt) {
-      // Unvoke saved search (ss)
-      var ssName = evt.currentTarget.textContent.trim();
-
-      //var ssCode = snippets.clickSavedSearchJs(ssName);
-      /*
-      chrome.tabs.executeScript(
-        null, // null means active tab
-        { code: ssCode },
-        //{ file: "js/testExeScript.js" },
-        function onExeResults(results) {
-          if (chrome.runtime.lastError) {
-            console.log(
-              "Error in 'chrome.tabs.executeScript': " +
-                chrome.runtime.lastError.message
-            );
-          }
-        }
-      );
-      */
+    reQueryTopic (evt) {
+      utils.reQueryById(this.topic.id)
     },
     lastQuery: function(dateInt) {
       return formatDateTime(dateInt);

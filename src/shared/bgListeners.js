@@ -19,7 +19,7 @@ function handleInstall (details) {
          utils.syncAlarmToMainSwitch(store.getters.settings)
       })
    })
-   .catch(err => { utils.logErr(err); }); ;
+   .catch(err => { utils.logErr(err); });
 }
 
 // handle all extension messages (from extension api)
@@ -27,24 +27,20 @@ function handleMessage(message, sender) {
    if (message && message.type) {
       switch (message.type) {
          case 'xhr-capture':
-            /*
-                NOTE: Once requeryMostOverdueTopic() working then test this out
-                      essentially, if main switch is off then skip ALL updates
-            */
-            //store.dispatch('fetchFromStorage', 'settings')
-            //.then(settings => {
-            //   if (settings.jobMonkeyUi.isOn) {
-                  switch (message.arrayType) {
-                     case 'rawTopics':
-                        store.dispatch('updateTopics', message.arrayObject);
-                        break;
-                     case 'rawResults':
-                        //store.dispatch('updateResults', message);
+            store.dispatch('fetchFromStorage', 'settings')
+            .then( () => {
+               switch (message.arrayType) {
+                  case 'rawTopics':
+                     store.dispatch('updateTopics', message.arrayObject);
+                     break;
+                  case 'rawResults':
+                     // NOTE: only update topic results if main switch is on
+                     if (store.getters.settings.jobMonkeyUi.isOn) {
                         store.dispatch('updateTopicResults', { topicId: message.topicId, results: message.arrayObject });
-                        break;
+                     }
+                     break;
                   }
-            //   }
-            //})
+            })
             break;
          case 'activate_icon':
             // this guarantees popup click works correctly for page action
@@ -56,23 +52,42 @@ function handleMessage(message, sender) {
    }
 }
 
-// Listen for "Main alarm"
+// Listen for "Main alarm" (settings.mainAlarm)
 function handleAlarms(alarm) {
    store.dispatch('fetchFromStorage', 'settings')
-   .then(settings => {
+   .then( () => {
+      const settings = store.getters.settings
       if ( alarm.name === settings.mainAlarm.name && settings.jobMonkeyUi.isOn ) {
             requeryMostOverdueTopic()
-         }
+      }
    });
 }
 
  // Logic requered find oldest overdue topic
  function requeryMostOverdueTopic () {
-   utils.logMsg("mainAlarm (requeryMostOverdueTopic) has fired")
-    /*
    store.dispatch('fetchFromStorage', 'topics')
-   .then(topics => {
-      utils.logMsg("mainAlarm has fired")
-   });
-   */
- }
+   .then( () => {
+      const topics = store.getters.topics
+      const overdueTopics = topics.filter(topic => {
+         let isOverdue = false	// default to not overedue
+         if (topic.custom.enabled) {
+            const interval = topic.custom.qInterval
+            const lastRequest = topic.custom.qLastRequest
+            const nextQuery = lastRequest + (interval * 60 * 1000)
+            isOverdue = (nextQuery < Date.now())
+         }
+         return isOverdue
+      })
+
+      if (overdueTopics.length === 0) return;  // nothing to do get out
+      overdueTopics.sort(function (a, b) {
+         return a.custom.qLastRequest - b.custom.qLastRequest;
+      });
+
+      utils.reQueryById(overdueTopics[0].id)
+      utils.logMsg({
+         "overdue topic id": overdueTopics[0].id,
+         "overdue topic name": overdueTopics[0].captured.name,
+      })
+   }).catch(err => { utils.logErr(err); })
+}
