@@ -10,6 +10,11 @@ sendPageActionTrigger();
 // listen for messages sent from injection/monkey patch (on DOM Window obj)
 window.addEventListener('message', sendXhrDataToBackground, false);
 
+// A dummy listener to foil error: "Could not establish connection. Receiving end does not exist."
+// browser.runtime.onMessage.addListener(() => {
+//    return Promise.resolve('dummy')
+// })
+
 // Use Ext. runtime messaging to send payload to background
 function sendXhrDataToBackground(event) {
    // May need a better way to verify msg sent from xhr injection code ???

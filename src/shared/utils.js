@@ -35,9 +35,14 @@ export const devMode = setDevMode();
 
 // Always sync-up main alarm to the main switch
 export function syncAlarmToMainSwitch(settings) {
-   settings.jobMonkeyUi.isOn ?
-      browser.alarms.create(settings.mainAlarm.name, settings.mainAlarm.info) :
+   if (settings.jobMonkeyUi.isOn) {
+      const delayInMinutes = settings.mainAlarm.info.delayInMinutes
+      const periodInMinutes = settings.mainAlarm.info.periodInMinutes
+      browser.alarms.create(settings.mainAlarm.name, {delayInMinutes, periodInMinutes})
+   } else {
       browser.alarms.clear(settings.mainAlarm.name)
+      .catch(err => { logErr(err); })
+   }
 }
 
 // NOTE: Not completely tested

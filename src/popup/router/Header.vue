@@ -5,7 +5,7 @@
          <span class="smaller">for Upwork</span>
       </h2>
       <span>
-         <img src="../../assets/jm128.png" height="55px">
+         <img :class="greyOnInactive" src="../../assets/jm128.png" height="55px">
          <p>
             ver. {{ version }}
             <span v-if="devMode" style="color: red;">(dev)</span>
@@ -13,13 +13,13 @@
       </span>
       <nav>
          <div>
-            <router-link to="/" tag="button" class="btn1" active-class="active" exact>
+            <router-link to="/" tag="span" class="btn1" active-class="active" exact>
                Topics
             </router-link>
-            <router-link to="/settings" tag="button" class="btn1" active-class="active">
+            <router-link to="/settings" tag="span" class="btn1" active-class="active">
                Settings
             </router-link>
-            <router-link to="/tools" tag="button" class="btn1" active-class="active">
+            <router-link to="/tools" tag="span" class="btn1" active-class="active">
                Tools
             </router-link>
          </div>
@@ -37,6 +37,15 @@
          },
          devMode() {
             return utils.devMode;
+         },
+         settings() {
+            return this.$store.getters.settings;
+         },
+         greyOnInactive : function () {
+            if ( (this.settings && this.settings.jobMonkeyUi) &&
+                  !this.settings.jobMonkeyUi.isOn ) {
+               return { 'grey-image': true }
+            }
          }
       }
    };
@@ -71,6 +80,16 @@
       line-height: 6px;
    }
 
+   .smaller {
+      color: rgb(55, 160, 0);
+      font-size: 75%;
+      font-style: italic;
+   }
+
+   .grey-image {
+      filter: grayscale(100%);
+   }
+
    nav {
       position: relative;
       height: 40px;
@@ -85,15 +104,16 @@
       transform: translateY(-50%);
    }
 
-   nav > div > button.btn1 {
+   nav > div > .btn1 {
       color: black;
       margin: 0 14px;
       background-color: rgb(221, 209, 192);
+      /* border: solid 1px rgb(222, 222, 222); */
    }
 
-   nav > div button.btn1:hover,
-   nav > div button.btn1.active,
-   nav > div button.btn1.hover > input[type] {
+   nav > div .btn1:hover,
+   nav > div .btn1.active,
+   nav > div .btn1.hover > input[type] {
       background-color: rgb(255, 237, 209);
    }
 </style>

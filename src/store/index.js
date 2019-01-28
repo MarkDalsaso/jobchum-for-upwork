@@ -34,7 +34,8 @@ export default new Vuex.Store({
                dispatch('persistToStorage', { topics: updatedTopicsAry } )
                .then( () => {
                   //utils.logMsg("'topics' (TopicResults) mutated and persisted")
-                  //browser.runtime.sendMessage({'store-update': 'topic-results'})
+                  // browser.runtime.sendMessage({'store-update': 'topic-results'})
+                  // .then(() => {})
                })
             })
             .catch(err => { utils.logErr(err); });
@@ -60,6 +61,12 @@ export default new Vuex.Store({
                      dispatch('persistToStorage', { topics: state.topics } )
                      .then( () => {
                         //utils.logMsg("'topics' (TopicResults) mutated and persisted")
+                        browser.runtime.sendMessage({'store-update': 'topics'})
+                        .then(() => {})
+                        .catch(err => { 
+                           //NOTE: here is where: "Could not establish connection. Receiving end does not exist." is captured
+                           utils.logErr(err);
+                         });
                      })
                      .catch(err => { utils.logErr(err); });
                   }
@@ -106,7 +113,9 @@ export default new Vuex.Store({
       },
       initSettingsIfEmpty({ getters, dispatch }) {
          return new Promise(function(resolve) {
-            if (Object.keys(getters.settings).length === 0) {
+            //if (Object.keys(getters.settings).length === 0) {
+            let settings = getters.settings
+            if ( typeof settings === 'undefined' || Object.keys(settings).length === 0 ) {
                dispatch('persistToStorage', { settings: jmSettings })
                .then( () => {
                   utils.logMsg('default settings have been initialized');
@@ -207,6 +216,7 @@ function doTopicsResultsNotification(topic, newResults) {
    // override iconUrl with data url
    msgOptions.iconUrl = notificationIcon
    utils.doNotification(msgOptions)
+   utils.logMsg({ "New Results": "'" + topic.captured.name + "' " + newResults.length + " new, " +  topic.results.length + " total."  })
 
    // NOTE: future enhancement: use have playSound toggle via tipic options
    if (jmSettings.jobMonkeyUi.playSound) {

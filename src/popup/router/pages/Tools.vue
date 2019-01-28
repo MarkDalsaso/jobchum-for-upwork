@@ -1,15 +1,15 @@
 <template>
    <div class="panel">
       <div>
-         <button class="btn1" @click="dumpStorage()">S. ALL</button>
-         <button class="btn1" @click="dumpStorage('settings')">St. Settings</button>
-         <button class="btn1" @click="dumpStorage('topics')">St. Topics</button>
-         <button class="btn1" @click="reloadFindWorkPage()">reload if no topics</button>
+         <span class="btn1" @click="dumpStorage()">S. ALL</span>
+         <span class="btn1" @click="dumpStorage('settings')">St. Settings</span>
+         <span class="btn1" @click="dumpStorage('topics')">St. Topics</span>
+         <span class="btn1" @click="reloadFindWorkPage()">reload if no topics</span>
          <br>
-         <button class="btn1" @click="initState()">Init. State</button>
-         <button class="btn1" @click="clearExtensionState()">DELETE ALL State</button>
+         <span class="btn1" @click="initState()">Init. State</span>
+         <span class="btn1" @click="clearExtensionState()">DELETE ALL State</span>
          <br>
-         <button class="btn1" @click="addMainAlarm()">Add Main Alarm</button>
+         <span class="btn1" @click="addMainAlarm()">Add Main Alarm</span>
       </div>
       <div>
          <textarea
@@ -60,8 +60,9 @@
             this.$store.dispatch("wipeExtensionState");
          },
          reloadFindWorkPage() {
-            this.$store.dispatch("fetchFromStorage", "topics").then(topics => {
-               if (topics.length == 0) {
+            let self = this
+            this.$store.dispatch("fetchFromStorage", "topics").then(function () {
+               if (self.topics.length == 0) {
                   const code =
                      "window.location.replace('" +
                      jmSettings.requeryBaseUrl +
@@ -83,15 +84,11 @@
 </script>
 
 <style scoped>
-   .panel > div > button.btn1 {
-      margin: 3px 14px;
-   }
-   .json {
-      background-color: #eeece0;
-      font-size: 14px;
-   }
-   button.btn1 {
+   .btn1 {
       margin-right: 10px;
+   }
+   .panel > div > .btn1 {
+      margin: 3px 14px;
    }
    .jsonTextarea {
       box-sizing: border-box;

@@ -1,5 +1,5 @@
 <template>
-   <div v-cloak>
+   <div style="max-width: 450px">
       <popup-header></popup-header>
       <router-view></router-view>
    </div>
@@ -20,18 +20,19 @@
 </script>
 
  <style>
-   body {
-      width: 450px;
+
+   html, body {
       min-height: 300px;
       margin: 0;
-      padding: 2px;
+      padding: 0;
       color: #000;
       background: rgb(246, 232, 181);
       font-family: "Segoe UI", Tahoma, Arial, Helvetica, sans-serif;
       font-size: 1em;
    }
-  
+
    .panel {
+     min-width: 425px;
      margin-top: 85px;
    }
 
@@ -46,12 +47,6 @@
       table-layout: fixed;
    }
 
-   .smaller {
-      color: blue;
-      font-size: 75%;
-      font-style: italic;
-   }
-
    #vueMain {
       position: relative;
    }
@@ -63,19 +58,26 @@
    }
 
    .btn1 {
-      font-weight: 600;
+      display: inline-block;
+      font-weight: 650;
+      font-size:  13px;
+      font-family: inherit;
       padding: 4px;
-      background-color: rgb(205, 220, 243);
-      /* border: solid 1px rgb(141, 141, 141); */
-      border-style: none;
+      /* background-color: rgb(205, 220, 243); */
+      background-color: rgba(235, 239, 245, 0.5);
+      border: solid 1px rgb(187, 187, 187);
       border-radius: 5px;
       outline: none;
+      box-sizing: border-box;
    }
-
+   .btn1 > input[type="checkbox"] {
+      margin: 0 3px 0 4px
+   }
    .btn1:hover,
    .btn1:active,
    .btn1:hover > input[type] {
-      background-color: rgb(226, 239, 248);
+      background-color: rgba(231, 235, 240, 0.87);
+      /* background-color: rgb(226, 239, 248); */
       /* border: solid 1px rgb(168, 168, 168); */
       cursor: hand;
       cursor: pointer;

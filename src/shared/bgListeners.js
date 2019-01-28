@@ -18,6 +18,7 @@ function handleInstall (details) {
       .then(() => {
          utils.syncAlarmToMainSwitch(store.getters.settings)
       })
+      .catch(err => { utils.logErr(err); });
    })
    .catch(err => { utils.logErr(err); });
 }
@@ -36,7 +37,8 @@ function handleMessage(message, sender) {
                   case 'rawResults':
                      // NOTE: only update topic results if main switch is on
                      if (store.getters.settings.jobMonkeyUi.isOn) {
-                        store.dispatch('updateTopicResults', { topicId: message.topicId, results: message.arrayObject });
+                        store.dispatch('updateTopicResults', { topicId: message.topicId, results: message.arrayObject })
+                        .catch(err => { utils.logErr(err); })
                      }
                      break;
                   }
@@ -48,8 +50,9 @@ function handleMessage(message, sender) {
             break;
       }
       //utils.logMsg({ 'msg. from content script': message });
-      return Promise.resolve('msg. type: \'' + message.type + '\', received and processed by background.');   // testing only (not req.)
    }
+   // "Dummy response to keep the console quiet" see: https://github.com/mozilla/webextension-polyfill/issues/130
+   return Promise.resolve('dummy') 
 }
 
 // Listen for "Main alarm" (settings.mainAlarm)
@@ -85,9 +88,9 @@ function handleAlarms(alarm) {
       });
 
       utils.reQueryById(overdueTopics[0].id)
-      utils.logMsg({
-         "overdue topic id": overdueTopics[0].id,
-         "overdue topic name": overdueTopics[0].captured.name,
-      })
+      // utils.logMsg({
+      //    "overdue topic id": overdueTopics[0].id,
+      //    "overdue topic name": overdueTopics[0].captured.name,
+      // })
    }).catch(err => { utils.logErr(err); })
 }

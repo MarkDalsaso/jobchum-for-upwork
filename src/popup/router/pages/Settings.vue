@@ -15,8 +15,8 @@
    }
 </script>
 
-<style>
-   .jsonTextarea {
+<style scoped>
+.jsonTextarea {
     box-sizing: border-box;
     border: none;
     width: 96%;
