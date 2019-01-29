@@ -2,7 +2,7 @@
    <section class="topic-blue" :class="greyOnInactive">
       <table class="topics-table">
          <tr>
-            <td>
+            <td width="77%">
                <span
                   class="topic-name btn1"
                   @click="reQueryTopic()"

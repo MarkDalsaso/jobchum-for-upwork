@@ -1,6 +1,5 @@
 import store from '../store'
 import * as utils from './utils.js'
-
 export default addListeners;
 
 // Add all background event listeners (by 'browser' or by 'chrome')

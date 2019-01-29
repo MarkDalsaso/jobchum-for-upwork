@@ -8,6 +8,18 @@
 <script>
    import Header from "./router/Header.vue";
    export default {
+      beforeCreate() {
+         this.$store.dispatch('initState')
+         .then( () => {
+            let settingsLength = Object.keys(this.$store.state.settings).length
+            let testMsg = ".dispatch('initState') fired from popup App.vue. "
+            testMsg += "settings.length = " + settingsLength + ". "
+            testMsg += "topics.length = " + this.$store.state.topics.length + ". "
+            console.log(testMsg)
+            if ( settingsLength === 0 ) alert("Error: jobMonkey must be reinstalled.")
+         })
+         .catch(err => { console.log(err); });
+      },      
       components: {
          popupHeader: Header
       }
@@ -42,7 +54,7 @@
       border-radius: 3px;
    }
 
-  section > table {
+   section > table {
       width: 100%;
       table-layout: fixed;
    }
@@ -65,10 +77,11 @@
       padding: 4px;
       /* background-color: rgb(205, 220, 243); */
       background-color: rgba(235, 239, 245, 0.5);
-      border: solid 1px rgb(187, 187, 187);
+      /* border: solid 1px rgb(187, 187, 187); */
       border-radius: 5px;
       outline: none;
       box-sizing: border-box;
+      box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.25);
    }
    .btn1 > input[type="checkbox"] {
       margin: 0 3px 0 4px
@@ -105,13 +118,4 @@
       background-color: rgb(255, 237, 209);
    }
 
-   .main-alarm-base {
-      padding: 4px;
-      color: rgb(255, 0, 0);
-   }
-
-   .main-alarm-on {
-      font-weight: bold;
-      color: rgb(0, 128, 0);
-   }
 </style>

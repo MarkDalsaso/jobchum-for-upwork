@@ -5,7 +5,7 @@
 
 import Vue from 'vue'
 import App from './App'
-import store from '../store'
+import store from '../store/index.js'
 import router from './router'
 
 /* eslint-disable no-new */

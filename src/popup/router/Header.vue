@@ -5,7 +5,11 @@
          <span class="smaller">for Upwork</span>
       </h2>
       <span>
-         <img :class="greyOnInactive" src="../../assets/jm128.png" height="55px">
+         <img 
+            v-if="settingsInitialized()"
+            :class="{ 'grey-image': !settings.jobMonkeyUi.isOn }" 
+            src="../../assets/jm128.png" height="55px"
+         >
          <p>
             ver. {{ version }}
             <span v-if="devMode" style="color: red;">(dev)</span>
@@ -22,6 +26,13 @@
             <router-link to="/tools" tag="span" class="btn1" active-class="active">
                Tools
             </router-link>
+            <toggle-switch 
+               v-if="settingsInitialized()"
+               v-model="settings.jobMonkeyUi.isOn"
+               @input="updateSettings($event)"
+               style="float:right; margin: 0 0 0 14px;"
+               title="Main switch" >
+            </toggle-switch>
          </div>
       </nav>
    </header>
@@ -29,24 +40,38 @@
 
 <script>
    import * as utils from "../../shared/utils.js";
+   import ToggleSwitch from "./pages/ToggleSwitch.vue"
    export default {
+      methods: {
+         settingsInitialized () {
+            if ( typeof this.settings.jobMonkeyUi !== 'undefined' )
+               return true;
+            else
+               return false;
+         },
+         updateSettings(event) {
+            //console.log({"toggle fired": event})
+            this.$store.dispatch('persistToStorage', 'settings')
+            .then( () => {
+               utils.syncAlarmToMainSwitch(this.settings);
+            })
+            .catch(err => { utils.logErr(err); });
+         },
+      },
       computed: {
+         settings () {
+            return this.$store.state.settings;
+         },
          version() {
             let manifest = browser.runtime.getManifest();
             return manifest.version;
          },
          devMode() {
             return utils.devMode;
-         },
-         settings() {
-            return this.$store.getters.settings;
-         },
-         greyOnInactive : function () {
-            if ( (this.settings && this.settings.jobMonkeyUi) &&
-                  !this.settings.jobMonkeyUi.isOn ) {
-               return { 'grey-image': true }
-            }
          }
+      },
+      components: {
+         "toggle-switch": ToggleSwitch
       }
    };
 </script>

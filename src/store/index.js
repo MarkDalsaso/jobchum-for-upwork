@@ -25,22 +25,21 @@ export default new Vuex.Store({
       }
    },
    actions: {
-      updateTopics: ({ dispatch, state }, payload) => {
+      updateTopics: ({ dispatch, getters, commit }, payload) => {
          dispatch('fetchFromStorage', 'topics')
             .then( () => {
-               return processTopics(payload, state.topics);
+               return processTopics(payload, getters.topics);
             })
             .then(updatedTopicsAry => {
-               dispatch('persistToStorage', { topics: updatedTopicsAry } )
+               commit('topics', updatedTopicsAry)
+               dispatch('persistToStorage', 'topics' )
                .then( () => {
                   //utils.logMsg("'topics' (TopicResults) mutated and persisted")
-                  // browser.runtime.sendMessage({'store-update': 'topic-results'})
-                  // .then(() => {})
                })
             })
             .catch(err => { utils.logErr(err); });
       },
-      updateTopicResults: ({ dispatch, getters, state }, payload) => {
+      updateTopicResults: ({ dispatch, getters }, payload) => {
          if ('topicId' in payload && typeof payload.topicId != 'undefined') {
             dispatch('fetchFromStorage', 'topics')
                .then( () => {
@@ -58,7 +57,7 @@ export default new Vuex.Store({
                         }
                      }
                      // Always persist (because qLastResult date needs to be updated)
-                     dispatch('persistToStorage', { topics: state.topics } )
+                     dispatch('persistToStorage', 'topics' )
                      .then( () => {
                         //utils.logMsg("'topics' (TopicResults) mutated and persisted")
                         browser.runtime.sendMessage({'store-update': 'topics'})
@@ -74,29 +73,32 @@ export default new Vuex.Store({
                .catch(err => { utils.logErr(err); });
          }
       },
-      persistToStorage: ({ commit }, payload) => {
-         return new Promise(function(resolve) {
-            const rootKeyName = Object.keys(payload)[0];
-            const target = payload[rootKeyName];
-            browser.storage.local.set(payload).then(() => {
-               //utils.logMsg(utils.storeInfo('after set', rootKeyName, target));
-               commit(rootKeyName, target);
-               resolve();
-            })
-         })
-      },
-      fetchFromStorage({ dispatch, state, commit }, rootKeyName) {
+      fetchFromStorage({ commit }, rootKeyName) {
          return new Promise(function(resolve) {
             browser.storage.local.get(rootKeyName)
             .then(obj => {
                if (typeof obj[rootKeyName] !== 'undefined') {
-                  //utils.logMsg(utils.storeInfo('after get', rootKeyName, obj[rootKeyName]));
+                  //utils.logMsg( {fetchFromStorage: { [rootKeyName]: obj[rootKeyName]} });
                   commit(rootKeyName, obj[rootKeyName]);    // refresh store
                }
                resolve()
             })
             .catch(err => { utils.logErr(err); });
          });
+      },
+      persistToStorage: ({ getters }, rootKeyName) => {
+         return new Promise(function(resolve) {
+            // NOTE: 'payload' is string, representing the root key name,
+            //       'settings' or 'topics'
+            const objToPersist = getters[rootKeyName]
+            //utils.logMsg(utils.storeInfo('before persist', rootKeyName, objToPersist));
+            browser.storage.local.set( { [rootKeyName]: objToPersist })
+            .then(() => {
+               //utils.logMsg(utils.storeInfo('after persist', rootKeyName, objToPersist));
+               resolve();
+            })
+            .catch(err => { utils.logErr(err); });
+         })
       },
       initState({ dispatch }) {
          return new Promise(function(resolve) {
@@ -106,17 +108,16 @@ export default new Vuex.Store({
                .then(vals => {
                   resolve()
                })
-               .catch(err => {
-                  utils.logErr(err);
-               });
+               .catch(err => { utils.logErr(err); });
          });
       },
-      initSettingsIfEmpty({ getters, dispatch }) {
+      initSettingsIfEmpty({ getters, dispatch, commit }) {
          return new Promise(function(resolve) {
-            //if (Object.keys(getters.settings).length === 0) {
             let settings = getters.settings
+            //if (Object.keys(getters.settings).length === 0) {
             if ( typeof settings === 'undefined' || Object.keys(settings).length === 0 ) {
-               dispatch('persistToStorage', { settings: jmSettings })
+               commit('settings', jmSettings)
+               dispatch('persistToStorage', 'settings')
                .then( () => {
                   utils.logMsg('default settings have been initialized');
                   resolve();

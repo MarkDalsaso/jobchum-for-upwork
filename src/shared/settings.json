@@ -19,7 +19,7 @@
       ]
    },
    "jobMonkeyUi": {
-      "isOn": true,
+      "isOn": false,
       "panelOpen": false,
       "playSound": true,
       "topic": {
