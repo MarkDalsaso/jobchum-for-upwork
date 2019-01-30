@@ -33,9 +33,7 @@ export default new Vuex.Store({
             .then(updatedTopicsAry => {
                commit('topics', updatedTopicsAry)
                dispatch('persistToStorage', 'topics' )
-               .then( () => {
-                  //utils.logMsg("'topics' (TopicResults) mutated and persisted")
-               })
+               .then( () => { utils.logMsg(updatedTopicsAry.length + " 'topics' persisted.") })
             })
             .catch(err => { utils.logErr(err); });
       },

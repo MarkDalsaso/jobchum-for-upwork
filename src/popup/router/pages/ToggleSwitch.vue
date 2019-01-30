@@ -1,7 +1,7 @@
 <template>
    <div class="toggle" :class="[this.state_class]" @click.self="onClick">
       <div class="draggable" @mousedown.prevent="dragStart" :style="style">
-
+         <span>{{ stateText}}</span>
       </div>
    </div>
 </template>
@@ -16,7 +16,8 @@
             width: 100,
             state: false,
             pressed: 0,
-            position: 0
+            position: 0,
+            stateText: "off"
          };
       },
       mounted() {
@@ -50,6 +51,7 @@
          toggle(state) {
             this.state = state;
             this.position = !state ? 0 : 100;
+            state ? this.stateText = "on" : this.stateText = "off"
          },
          dragging(e) {
             const pos = e.clientX - this.$el.offsetLeft;
@@ -88,48 +90,42 @@
 </script>
 
 <style scoped>
-   body {
-      padding: 30px;
-   }
-
    .toggle {
       width: 40px;
       height: 20px;
-      background: #fff;
+      /* background: #fff; */
+      background: rgb(218, 223, 232);
       border: 1px solid #ddd;
       border-radius: 200px;
       padding: 1px;
       transition: #fff 0.6s;
+      cursor: hand;
+      cursor: pointer;      
    }
    .toggle > .draggable {
       width: 20px;
       height: 20px;
       background: #ddd;
       border-radius: 100%;
-      box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.6);
+      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.6);
       transform: translateX(0%);
       transition: transform 0.05s ease-in-out;
+      cursor: inherit;
    }
-
+   .toggle > .draggable > span {
+      font-size: 12px;
+      position: relative;
+      float: left;
+      top: 45%;
+      left: 49%;
+      transform: translate(-50%, -50%);
+      cursor: inherit;
+   }
    .toggle.active {
       background: rgb(55, 160, 0);
       transition: #fff 0.6s;
    }
-
-   .app {
-      display: flex;
-   }
-
-   .switches {
-      margin-right: 30px;
-   }
-
-   pre {
-      margin: 0;
-      background: #513d56;
-      color: #efefef;
-      padding: 20px;
-      border-radius: 6px;
-      width: 200px;
+   section.grey-out .toggle.active {
+      background: rgb(218, 223, 232);  
    }
 </style>

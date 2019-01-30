@@ -2,34 +2,43 @@
    <section class="topic-blue" :class="greyOnInactive">
       <table class="topics-table">
          <tr>
-            <td width="77%">
+            <td>
                <span
-                  class="topic-name btn1"
+                  class="topic-name"
                   @click="reQueryTopic()"
                >{{ topic.captured.name }}</span>
             </td>
             <td class="enable-btn-col">
-               <span class="btn1">
-                  <label :for="'enabled-checkbox_'+index">Enabled</label>
-                  <input
-                     type="checkbox"
-                     :id="'enabled-checkbox_'+index"
-                     v-model="topic.custom.enabled"
-                     @change.stop="rowChg()"
-                  >
-               </span>
+               <toggle-switch 
+                  :id="'enabled-checkbox_'+index"
+                  v-model="topic.custom.enabled"
+                  @input="rowChg()"
+                  style="float: right"
+                  title="Topic switch"
+               ></toggle-switch>
             </td>
          </tr>
          <tr>
             <td colspan="2">
-               <label>Query interval</label>
+               <label>Qry. interval</label>
                <input
                   type="number"
-                  class="btn1 interval"
+                  class="btn1"
                   v-model.number="topic.custom.qInterval"
-                  v-on:change="rowChg(topic)"
+                  @change="rowChg(topic)"
                   placeholder="minutes"
-               > (minutes)
+               > (min.)
+               
+               <span style="float: right">
+                  <label>Ignore after</label>
+                  <input
+                     type="number"
+                     class="btn1"
+                     v-model.number="topic.custom.daysOldIgnore"
+                     @change="rowChg(topic)"
+                     placeholder="days"
+                  > (days)
+               </span>
             </td>
          </tr>
          <tr>
@@ -53,6 +62,7 @@
 
 <script>
    import * as utils from "../../../shared/utils";
+   import ToggleSwitch from "./ToggleSwitch.vue"
    export default {
       props: ["topic", "index"],
       methods: {
@@ -83,6 +93,9 @@
                return { 'grey-out': true }
             }
          }
+      },
+      components: {
+         "toggle-switch": ToggleSwitch
       }
    };
 
@@ -113,6 +126,17 @@
       background-color: rgb(186, 194, 207);
    }
 
+   .topics-table tr:nth-child(1),
+   .topics-table tr:nth-child(2) {
+      height: 35px;
+      vertical-align: top;
+      padding: 0 0 0 0;
+   }
+   
+   .topics-table tr:nth-child(1) td:nth-child(1) {
+      width: 88%;
+   }
+
    .topics-table td {
       padding: 2px;
       overflow: hidden;
@@ -124,16 +148,19 @@
       text-align: right;
    }
 
-   /* .topic-name {
-      font-weight: bold;
-   } */
+   span.topic-name {
+      font-weight: 700;
+      font-size: larger;
+      cursor: hand;
+      cursor: pointer;      
+   }
+
+   span.topic-name:hover {
+      text-decoration: underline;
+   }
 
    .topic-options {
       line-height: 1.2em;
    }
 
-   .topics-table .interval {
-      width: 65px;
-      margin-left: 3px;
-   }
 </style>

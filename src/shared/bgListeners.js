@@ -16,6 +16,10 @@ function handleInstall (details) {
       store.dispatch('initSettingsIfEmpty')
       .then(() => {
          utils.syncAlarmToMainSwitch(store.getters.settings)
+         const url = store.getters.settings.requeryBaseUrl
+         browser.tabs.create({ active: true, url: url })
+         //.then( () => { utils.logMsg("tabs.create fired") })
+         .catch(err => { utils.logErr(err); });
       })
       .catch(err => { utils.logErr(err); });
    })

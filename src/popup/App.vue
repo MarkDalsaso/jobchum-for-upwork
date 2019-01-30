@@ -81,11 +81,20 @@
       border-radius: 5px;
       outline: none;
       box-sizing: border-box;
-      box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.25);
+      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
    }
+
    .btn1 > input[type="checkbox"] {
       margin: 0 3px 0 4px
    }
+
+   input.btn1[type="number"] {
+      width: 55px;
+      margin: 0 0 0 4px;
+      padding: 3px;
+      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
+   }
+
    .btn1:hover,
    .btn1:active,
    .btn1:hover > input[type] {

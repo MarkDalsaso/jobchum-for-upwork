@@ -26,13 +26,15 @@
             <router-link to="/tools" tag="span" class="btn1" active-class="active">
                Tools
             </router-link>
+
             <toggle-switch 
                v-if="settingsInitialized()"
-               v-model="settings.jobMonkeyUi.isOn"
-               @input="updateSettings($event)"
+               v-model="jmIsOn"
+               @input="persistSettings($event)"
                style="float:right; margin: 0 0 0 14px;"
-               title="Main switch" >
-            </toggle-switch>
+               title="Main switch"
+            ></toggle-switch>
+
          </div>
       </nav>
    </header>
@@ -42,15 +44,17 @@
    import * as utils from "../../shared/utils.js";
    import ToggleSwitch from "./pages/ToggleSwitch.vue"
    export default {
+      data () { return { jmIsOn: false } },
       methods: {
          settingsInitialized () {
-            if ( typeof this.settings.jobMonkeyUi !== 'undefined' )
-               return true;
-            else
-               return false;
+            if ( typeof this.settings.jobMonkeyUi !== 'undefined' ) {
+               this.jmIsOn = this.settings.jobMonkeyUi.isOn
+               return true; }
+            else { return false; }
          },
-         updateSettings(event) {
-            //console.log({"toggle fired": event})
+         persistSettings(event) {
+            // Update state (w. val from toggle switch) and persist to storage
+            this.settings.jobMonkeyUi.isOn = event 
             this.$store.dispatch('persistToStorage', 'settings')
             .then( () => {
                utils.syncAlarmToMainSwitch(this.settings);
@@ -78,6 +82,7 @@
 
 <style scoped>
    header {
+      z-index: 100;
       height: 85px;
       position: fixed;
       top: 0;
@@ -118,7 +123,6 @@
    nav {
       position: relative;
       height: 40px;
-      border-radius: 5px;
       background-color: rgba(32, 31, 25, 0.068);
    }
 

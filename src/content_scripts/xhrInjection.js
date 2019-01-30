@@ -1,4 +1,4 @@
-console.log('x2 (xhrInjection.js) Load START');
+//console.log('x2 (xhrInjection.js) Load START');
 import xhrCaptureDefs from './xhrCaptureDefs.json';
 
 var jmUtils = jmUtils || {};
