@@ -1,5 +1,9 @@
 <template>
    <div class="panel">
+
+      <!-- <p>filter {{ filter }}</p> -->
+      <!-- <span class="btn1" @click="test1()">Test1</span> -->
+
       <topic
          v-for="(topic, index) in topics"
          v-bind:topic="topic"
@@ -15,15 +19,25 @@
    import * as utils from "../../../shared/utils";
    import Topic from "./Topic.vue";
    export default {
-      //data() { return { }; },  // Currently not implemented
+      data () {
+         return {
+            filter: this.$route.params.filter
+         }
+      },
+      watch: {
+         '$route': function(to, from) {
+            if (to.params) {
+               this.filter = to.params.filter || 'all';
+            }
+         }
+      },
       components: {
          topic: Topic
       },
-      created() {
-         //this.$store.dispatch("initState");
-         // NOTE: also do a message['store-update'] here if topics = {}
-      },
       mounted() {
+         
+         this.filter = this.settings.jmUi.topicsFilter
+
          // listen for background updates
          var thisComponent = this;
          browser.runtime.onMessage.addListener(function ( message, sender ) {
@@ -33,14 +47,13 @@
                   thisComponent: thisComponent,
                   store: thisComponent.$store
                });
-               //thisComponent.$store.dispatch('initState')
                thisComponent.$store.dispatch("fetchFromStorage", "topics");
             }
             return Promise.resolve("dummy");
          });
       },
       methods: {
-         updateTopics(event) {
+         updateTopics (event) {
             let topic = event.topic;
             this.$store
                .dispatch('persistToStorage', 'topics')
@@ -49,12 +62,20 @@
                })
                .catch(err => { utils.logErr(err); });
          },
-         testInit() {
-            /* not impmented  */
-         }      },
+         test1() {
+            /*
+            this.$router.replace({ path: '/2' })
+            this.topics.forEach(topic => {
+               let t1 = topic.custom.enabled
+               let t2 = ''
+            });
+            utils.logMsg({ 'filteredTopics': t1.length })
+            */
+         }      
+      },
       computed: {
          topics() {
-            return this.$store.getters.topics;
+            return this.$store.getters.topicsByFilterIndex(this.filter);
          },
          settings() {
             return this.$store.getters.settings;

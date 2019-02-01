@@ -1,7 +1,7 @@
 <template>
-   <div class="toggle" :class="[this.state_class]" @click.self="onClick">
+   <div class="toggle" :class="[state_class]" @click.self="onClick">
       <div class="draggable" @mousedown.prevent="dragStart" :style="style">
-         <span>{{ stateText}}</span>
+         <span>{{ stateText }}</span>
       </div>
    </div>
 </template>
@@ -9,7 +9,7 @@
 <script>
    export default {
       props: {
-         value: { type: Boolean, default: false }
+         value: { type: Boolean, default: true },
       },
       data() {
          return {
@@ -41,6 +41,9 @@
       watch: {
          position() {
             this.state = this.position >= 50;
+         },
+         value() {
+            this.toggle(this.value)
          }
       },
       methods: {

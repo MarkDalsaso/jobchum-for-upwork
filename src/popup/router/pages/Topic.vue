@@ -1,46 +1,51 @@
 <template>
    <section class="topic-blue" :class="greyOnInactive">
       <table class="topics-table">
+
          <tr>
             <td>
-               <span
-                  class="topic-name"
+               <span class="topic-name"
                   @click="reQueryTopic()"
                >{{ topic.captured.name }}</span>
             </td>
-            <td class="enable-btn-col">
-               <toggle-switch 
-                  :id="'enabled-checkbox_'+index"
+
+            <!-- <td class="enable-btn-col"> -->
+            <!-- :id="'enabled-toggle_'+topic.id" -->
+            <!-- @input="rowChg()" -->
+            <!-- v-model="topic.custom.enabled" -->
+            <!-- :value="topic.custom.enabled" -->
+            <!-- v-bind:value="topic.custom.enabled" -->
+            <!-- {{topic.custom.enabled}} -->
+            <td>
+               <toggle-switch title="Topic switch" style="float: right"
                   v-model="topic.custom.enabled"
                   @input="rowChg()"
-                  style="float: right"
-                  title="Topic switch"
                ></toggle-switch>
             </td>
+
          </tr>
+
          <tr>
             <td colspan="2">
                <label>Qry. interval</label>
-               <input
-                  type="number"
-                  class="btn1"
+               <input class="btn1" type="number"
                   v-model.number="topic.custom.qInterval"
                   @change="rowChg(topic)"
                   placeholder="minutes"
                > (min.)
-               
+
                <span style="float: right">
                   <label>Ignore after</label>
-                  <input
-                     type="number"
-                     class="btn1"
+                  <input  class="btn1" type="number"
                      v-model.number="topic.custom.daysOldIgnore"
                      @change="rowChg(topic)"
                      placeholder="days"
                   > (days)
                </span>
+
             </td>
          </tr>
+
          <tr>
             <td colspan="2">
                Last query: {{ lastQuery(topic.custom.qLastRequest) }}
@@ -48,21 +53,15 @@
                Next query: {{ nextQuery(topic.custom.qLastRequest, topic.custom.qInterval) }}
             </td>
          </tr>
-
-         <!--  "more info" expand/collapse
-            <tr>
-                <td colspan=2>
-                    filters: {{ topic.captured.q }}
-                </td>
-            </tr>             
-         "more info" expand/collapse-->
+         
       </table>
    </section>
 </template>
 
 <script>
    import * as utils from "../../../shared/utils";
-   import ToggleSwitch from "./ToggleSwitch.vue"
+   import ToggleSwitch from "./ToggleSwitch.vue";
+   
    export default {
       props: ["topic", "index"],
       methods: {
@@ -84,13 +83,12 @@
          }
       },
       computed: {
-         greyOnInactive : function () {
+         greyOnInactive: function() {
             if (
-                  !this.$store.state.settings.jobMonkeyUi.isOn ||
-                  !this.topic.custom.enabled
-               )
-            {
-               return { 'grey-out': true }
+               !this.$store.state.settings.jmUi.isOn ||
+               !this.topic.custom.enabled
+            ) {
+               return { "grey-out": true };
             }
          }
       },
@@ -132,7 +130,7 @@
       vertical-align: top;
       padding: 0 0 0 0;
    }
-   
+
    .topics-table tr:nth-child(1) td:nth-child(1) {
       width: 88%;
    }
@@ -144,15 +142,15 @@
       /* border: 1px solid black; */
    }
 
-   .topics-table td.enable-btn-col {
+   /* .topics-table td.enable-btn-col {
       text-align: right;
-   }
+   } */
 
    span.topic-name {
       font-weight: 700;
       font-size: larger;
       cursor: hand;
-      cursor: pointer;      
+      cursor: pointer;
    }
 
    span.topic-name:hover {
@@ -162,5 +160,4 @@
    .topic-options {
       line-height: 1.2em;
    }
-
 </style>

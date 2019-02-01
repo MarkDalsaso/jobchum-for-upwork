@@ -1,5 +1,5 @@
 <template>
-   <div style="max-width: 450px">
+   <div v-if="stateIsReady" style="max-width: 450px">
       <popup-header></popup-header>
       <router-view></router-view>
    </div>
@@ -8,27 +8,21 @@
 <script>
    import Header from "./router/Header.vue";
    export default {
-      beforeCreate() {
-         this.$store.dispatch('initState')
-         .then( () => {
-            let settingsLength = Object.keys(this.$store.state.settings).length
-            let testMsg = ".dispatch('initState') fired from popup App.vue. "
-            testMsg += "settings.length = " + settingsLength + ". "
-            testMsg += "topics.length = " + this.$store.state.topics.length + ". "
-            console.log(testMsg)
-            if ( settingsLength === 0 ) alert("Error: jobMonkey must be reinstalled.")
-         })
-         .catch(err => { console.log(err); });
-      },      
-      components: {
-         popupHeader: Header
-      }
+      computed: {
+         stateIsReady() {
+         // NOTE: This (along w. store.dispatch('initState') in popup.js),
+         //        eliminates ALL undefined state property errors
+            return this.$store.state.initialized;
+         },
+      },
+      components: { popupHeader: Header }
    };
+
    window.onunhandledrejection = (event => {
      console.log(event.type);
      console.log(event.reason.message);
-     console.log(rejected === event.promise);
    })
+   
 </script>
 
  <style>
@@ -45,11 +39,11 @@
 
    .panel {
      min-width: 425px;
-     margin-top: 85px;
+     margin-top: 84px;
    }
 
    section {
-      margin: 8px 4px 8px 4px;
+      margin: 6px;
       padding-top: 2px;
       border-radius: 3px;
    }

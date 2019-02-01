@@ -2,73 +2,122 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import * as utils from '../shared/utils.js';
 import jmSettings from '../shared/settings.json';
-import notificationIcon from '../shared/notificationIcon'
-import notificationMp3 from '../shared/notificationMp3'
+import notificationIcon from '../shared/notificationIcon';
+import notificationMp3 from '../shared/notificationMp3';
 Vue.use(Vuex);
 
+// in lue of: state: { settings: {}, topics: [] },
+const initialState = {}
+initialState.settings = jmSettings
+initialState.topics = []
+
+// NOTE:: is never persisted to storage, its sole
+//        purpose is verify that the Vuex store/state
+//        has been refreshed from Ext. loca storage
+initialState.initialized = false
+
 export default new Vuex.Store({
-   // The 'source of truth' that drives the app
-   state: { settings: {}, topics: [] },
+   state: initialState,
    getters: {
       topics: state => state.topics,
       settings: state => state.settings,
+      initialized: state => state.initialized,
       getTopicById: state => id => {
          return state.topics.find(topic => topic.id === id);
+      },
+      topicsByFilterIndex: state => (index = 'all') => {
+         // Topic filters driven by route param 'filter': On, Off, "All" (default )
+         let rtnAry = [];
+         // NOTE: 'concat' probably not needed, it was a stab at trying to fix buttons not rendering
+         switch (index.toLowerCase()) {
+            case 'on':
+               rtnAry = state.topics.filter(topic => {
+                  return topic.custom.enabled;
+               });
+               rtnAry = [].concat(rtnAry)
+               break;
+            case 'off':
+               rtnAry = state.topics.filter(topic => {
+                  return !topic.custom.enabled;
+               });
+               rtnAry = [].concat(rtnAry)
+               break;
+            default:  
+               rtnAry = [].concat(state.topics);
+               break;
+         }
+         return rtnAry;
       }
    },
    mutations: {
-      topics(state, payload) {
+      topics (state, payload) {
          state.topics = payload;
       },
-      settings(state, payload) {
+      settings (state, payload) {
          state.settings = payload;
-      }
+      },
+      initialized (state, payload) {
+         state.initialized = payload;
+      }      
    },
    actions: {
       updateTopics: ({ dispatch, getters, commit }, payload) => {
          dispatch('fetchFromStorage', 'topics')
-            .then( () => {
+            .then(() => {
                return processTopics(payload, getters.topics);
             })
             .then(updatedTopicsAry => {
-               commit('topics', updatedTopicsAry)
-               dispatch('persistToStorage', 'topics' )
-               .then( () => { utils.logMsg(updatedTopicsAry.length + " 'topics' persisted.") })
+               commit('topics', updatedTopicsAry);
+               dispatch('persistToStorage', 'topics').then(() => {
+                  utils.logMsg(
+                     updatedTopicsAry.length + " 'topics' persisted."
+                  );
+               });
             })
             .catch(err => { utils.logErr(err); });
+            //.catch(err => { utils.logErr(err); });   // WHY/WHEN ???? does this keep formatting
       },
       updateTopicResults: ({ dispatch, getters }, payload) => {
          if ('topicId' in payload && typeof payload.topicId != 'undefined') {
             dispatch('fetchFromStorage', 'topics')
-               .then( () => {
+               .then(() => {
                   let topicId = Number(payload.topicId);
                   if (topicId == NaN) {
                      utils.logErr("Non-numeric topic id's are not supported.");
                   } else {
-                     let topic = getters.getTopicById(topicId)
-                     topic.custom.qLastRequest = Date.now()
-                     if (topic.custom.enabled) {  // process topic if it's enabled
-                        let newResults = newTopicResults(payload.results, topic);
+                     let topic = getters.getTopicById(topicId);
+                     topic.custom.qLastRequest = Date.now();
+                     if (topic.custom.enabled) {
+                        // process topic if it's enabled
+                        let newResults = newTopicResults(
+                           payload.results,
+                           topic
+                        );
                         if (newResults.length > 0) {
-                           topic.results = topic.results.concat(newResults)
-                           doTopicsResultsNotification(topic, newResults)
+                           topic.results = topic.results.concat(newResults);
+                           doTopicsResultsNotification(topic, newResults);
                         }
                      }
                      // Always persist (because qLastResult date needs to be updated)
-                     dispatch('persistToStorage', 'topics' )
-                     .then( () => {
-                        //utils.logMsg("'topics' (TopicResults) mutated and persisted")
-                        browser.runtime.sendMessage({'store-update': 'topics'})
-                        .then(() => {})
-                        .catch(err => { 
-                           //NOTE: here is where: "Could not establish connection. Receiving end does not exist." is captured
+                     dispatch('persistToStorage', 'topics')
+                        .then(() => {
+                           //utils.logMsg("'topics' (TopicResults) mutated and persisted")
+                           browser.runtime
+                              .sendMessage({ 'store-update': 'topics' })
+                              .then(() => {})
+                              .catch(err => {
+                                 //NOTE: here is where: "Could not establish connection. Receiving end does not exist." is captured
+                                 utils.logErr(err);
+                              });
+                        })
+                        .catch(err => {
                            utils.logErr(err);
-                         });
-                     })
-                     .catch(err => { utils.logErr(err); });
+                        });
                   }
                })
-               .catch(err => { utils.logErr(err); });
+               .catch(err => {
+                  utils.logErr(err);
+               });
          }
       },
       fetchFromStorage({ commit }, rootKeyName) {
@@ -77,9 +126,9 @@ export default new Vuex.Store({
             .then(obj => {
                if (typeof obj[rootKeyName] !== 'undefined') {
                   //utils.logMsg( {fetchFromStorage: { [rootKeyName]: obj[rootKeyName]} });
-                  commit(rootKeyName, obj[rootKeyName]);    // refresh store
+                  commit(rootKeyName, obj[rootKeyName]); // refresh store
                }
-               resolve()
+               resolve();
             })
             .catch(err => { utils.logErr(err); });
          });
@@ -88,50 +137,45 @@ export default new Vuex.Store({
          return new Promise(function(resolve) {
             // NOTE: 'payload' is string, representing the root key name,
             //       'settings' or 'topics'
-            const objToPersist = getters[rootKeyName]
+            const objToPersist = getters[rootKeyName];
             //utils.logMsg(utils.storeInfo('before persist', rootKeyName, objToPersist));
-            browser.storage.local.set( { [rootKeyName]: objToPersist })
+            browser.storage.local.set({ [rootKeyName]: objToPersist })
             .then(() => {
                //utils.logMsg(utils.storeInfo('after persist', rootKeyName, objToPersist));
                resolve();
             })
             .catch(err => { utils.logErr(err); });
-         })
-      },
-      initState({ dispatch }) {
-         return new Promise(function(resolve) {
-            let p1 = dispatch('fetchFromStorage', 'settings');
-            let p2 = dispatch('fetchFromStorage', 'topics');
-            Promise.all([p1, p2])
-               .then(vals => {
-                  resolve()
-               })
-               .catch(err => { utils.logErr(err); });
          });
       },
-      initSettingsIfEmpty({ getters, dispatch, commit }) {
-         return new Promise(function(resolve) {
-            let settings = getters.settings
-            //if (Object.keys(getters.settings).length === 0) {
-            if ( typeof settings === 'undefined' || Object.keys(settings).length === 0 ) {
-               commit('settings', jmSettings)
-               dispatch('persistToStorage', 'settings')
-               .then( () => {
-                  utils.logMsg('default settings have been initialized');
-                  resolve();
-               });
-            } else {
+      initState({state, commit}) {
+         return new Promise(function (resolve) {
+            browser.storage.local.get(null)
+            .then(rootObj => {
+               if (Object.keys(rootObj).length > 0) {
+                  // Update Vuex store.state with data from local storage
+                  for (let rootProp in rootObj) {
+                     commit(rootProp, rootObj[rootProp])
+                  }
+               } else {
+                  // Update local storage from Vuex store (just settings)
+                  browser.storage.local.set({ 'settings': state.settings })
+                  .catch(err => { utils.logErr(err); });
+               }
+               commit('initialized', true);
                resolve();
-            }
-         }).catch(err => { utils.logErr(err); });
+            })
+            .catch(err => { utils.logErr(err); });            
+         })
       },
       wipeExtensionState({ commit }) {
          browser.storage.local.clear()
-         .then(() => {
-            commit('settings', {});
-            commit('topics', []);
-         })
-         .catch(err => { utils.logErr(err); });
+            .then(() => {
+               commit('settings', {});
+               commit('topics', []);
+            })
+            .catch(err => {
+               utils.logErr(err);
+            });
       }
    }
 });
@@ -143,7 +187,7 @@ function newTopicResults(xhrResults, currentTopic) {
    for (let i = 0, len = xhrResults.length; i < len; i++) {
       let daysOldIgnore = currentTopic.custom.daysOldIgnore;
       let xhrResult = xhrResults[i];
-      if ( !resultTooOld(daysOldIgnore, xhrResult.publishedOn) ) {
+      if (!resultTooOld(daysOldIgnore, xhrResult.publishedOn)) {
          if (!currentTopic.results.find(r => r.recno === xhrResult.recno)) {
             newResults.push(xhrResult);
          }
@@ -204,22 +248,23 @@ function Topic(
 }
 
 function doTopicsResultsNotification(topic, newResults) {
-  	   
    let msgOptions = {
       type: 'basic',
-      title: newResults.length.toString() +  " new job(s) detected!",
-      iconUrl: jmSettings.notification.iconFile,
-      message: "for saved search: " + topic.captured.name
+      title: newResults.length.toString() + ' new job(s) detected!',
+      iconUrl: notificationIcon,
+      message: 'for saved search: ' + topic.captured.name
    };
 
-   // override iconUrl with data url
-   msgOptions.iconUrl = notificationIcon
-   utils.doNotification(msgOptions)
-   utils.logMsg({ "New Results": "'" + topic.captured.name + "' " + newResults.length + " new, " +  topic.results.length + " total."  })
+   utils.doNotification(msgOptions);
+   utils.logMsg({
+      'New Results': "'" + topic.captured.name + "' " +
+         newResults.length + ' new, ' +  topic.results.length +
+         ' total.'
+   });
 
    // NOTE: future enhancement: use have playSound toggle via tipic options
-   if (jmSettings.jobMonkeyUi.playSound) {
-      utils.doSound(notificationMp3)
+   if (jmSettings.jmUi.playSound) {
+      utils.doSound(notificationMp3);
    }
-   
 }
+ 

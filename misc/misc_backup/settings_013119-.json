@@ -1,0 +1,48 @@
+{
+   "uwUi": {
+      "topicsSelector": "[data-topic-list=''] > ul > li",
+      "nonCustomTopicsSelector": "[data-topic-list=''] > ul > li:not([data-ng-repeat]",
+      "reloadOnAutoFeed": "false  *not implemented, reload on greeen auto feed msg",
+      "standardSerachDefs": [
+         {
+            "NOTE1": "Do not think these should work like custom, saved search topics",
+            "NOTE2": "Technically they would have to search thru all custom ones prior to notification"
+         },
+         {
+            "buttonName": "Domestic",
+            "winLocHrefUrl": "https://www.upwork.com/ab/find-work/domestic"
+         },
+         {
+            "buttonName": "My Job Feed",
+            "winLocHrefUrl": "https://www.upwork.com/ab/find-work/domestic"
+         }
+      ]
+   },
+   "jmUi": {
+      "isOn": false,
+      "panelOpen": false,
+      "playSound": true,
+      "topic": {
+         "enabled": false,
+         "qInterval": 10,
+         "daysOldIgnore": 7
+      },
+      "topicFiltersIndex": 0
+   },
+   "psm": {
+      "host": "www.upwork.com",
+      "path": "/ab/find-work"
+   },
+   "requeryBaseUrl": "https://www.upwork.com/ab/find-work/",
+   "mainAlarm": {
+      "name": "overdueCheckAlarm",
+      "info": {
+         "delayInMinutes": 0.01,
+         "periodInMinutes": 0.25
+      }
+   },
+   "notification": {
+      "audioFile": "jmSound.mp3",
+      "iconFile": "jm128.png"
+   }
+}

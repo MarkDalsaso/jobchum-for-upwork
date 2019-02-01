@@ -11,37 +11,40 @@ export function logMsg(msg) {
 
 export function logErr(err) {
    //let m = err instanceof Object ? err : { err: err };
-   console.log({ "Error": err });
+   console.log({ Error: err });
 }
 
 export function storeInfo(type, name, value) {
-   let length = "n/a"
+   let length = 'n/a';
    if (Array.isArray(value)) {
-      length = value.length
+      length = value.length;
    } else if (typeof value === 'object') {
-      length = Object.keys(value).length
+      length = Object.keys(value).length;
    }
-   return { 
+   return {
       [type]: {
-         "0-key": name,
-         "1-target": value,
-         "2-typeof target": typeof value,
-         "3-length of target": length
+         '0-key': name,
+         '1-target': value,
+         '2-typeof target': typeof value,
+         '3-length of target': length
       }
-   }
+   };
 }
 
 export const devMode = setDevMode();
 
 // Always sync-up main alarm to the main switch
 export function syncAlarmToMainSwitch(settings) {
-   if (settings.jobMonkeyUi.isOn) {
-      const delayInMinutes = settings.mainAlarm.info.delayInMinutes
-      const periodInMinutes = settings.mainAlarm.info.periodInMinutes
-      browser.alarms.create(settings.mainAlarm.name, {delayInMinutes, periodInMinutes})
+   if (settings.jmUi.isOn) {
+      const delayInMinutes = settings.mainAlarm.info.delayInMinutes;
+      const periodInMinutes = settings.mainAlarm.info.periodInMinutes;
+      browser.alarms.create(settings.mainAlarm.name, {
+         delayInMinutes,
+         periodInMinutes
+      });
    } else {
       browser.alarms.clear(settings.mainAlarm.name)
-      .catch(err => { logErr(err); })
+      .catch(err => { logErr(err); });
    }
 }
 
@@ -66,37 +69,32 @@ function setDevMode() {
    return inDevMode;
 }
 
-export function reQueryById (topicId) {
-   browser.tabs.query({ url: jmSettings.requeryBaseUrl + "*" })
-   .then( (tabs) => {
+export function reQueryById(topicId) {
+   browser.tabs.query({ url: jmSettings.requeryBaseUrl + '*' }).then(tabs => {
       if (tabs.length > 0) {
-         const codeObj = { 
-            code: "window.location.replace('" +
-               jmSettings.requeryBaseUrl +
-               topicId + "')"
-         }
+         const codeObj = {
+            code: "window.location.replace('" + jmSettings.requeryBaseUrl + topicId + "')"
+         };
          browser.tabs.executeScript(tabs[0].id, codeObj)
-         .catch(err => { logErr(err); })
+         .catch(err => { logErr(err); });
       }
-   })
+   });
 }
 
 // Init and invoke basic notification
-export function doNotification(msgOptions,) {
+export function doNotification(msgOptions) {
    browser.notifications.create(msgOptions)
-   .then( () => {
-      //logMsg("notification fired")
-   })
-   .catch(err => { logErr(err); })
- }
+      .then(() => {
+         //logMsg("notification fired")
+      })
+      .catch(err => { logErr(err); });
+}
 
-export function doSound (soundFile) {
+export function doSound(soundFile) {
    if (soundFile) {
-      //var audio = new Audio(jmSettings.notification.audioFile);
       let audio = new Audio(soundFile);
       audio.play();
    }
 }
 
 //logMsg({'deveMode': devMode})
-

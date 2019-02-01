@@ -9,4 +9,6 @@ import routes from './routes';
 Vue.use(VueRouter);
 
 // Instantiate "new" router instance, assignin routes
-export default new VueRouter({routes});
+export default new VueRouter({
+   routes
+});

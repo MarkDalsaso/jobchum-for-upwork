@@ -6,7 +6,8 @@ import SettingsPage from './pages/Settings';
 import ToolsPage from './pages/Tools';
 
 export default [
-   { path: '/', component: TopicsPage },
    { path: '/settings', component: SettingsPage },
-   { path: '/tools', component: ToolsPage }
+   { path: '/tools', component: ToolsPage },
+   { path: '/:filter', component: TopicsPage },
+   { path: '/', component: TopicsPage }
 ];
