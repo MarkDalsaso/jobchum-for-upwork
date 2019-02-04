@@ -3,7 +3,7 @@
          or ...
    import * as utils from 'utils.js'
 */
-import jmSettings from './settings.json';
+import appSettings from './settings.json';
 export function logMsg(msg) {
    let m = msg instanceof Object ? msg : { msg: msg };
    console.log(m);
@@ -35,15 +35,16 @@ export const devMode = setDevMode();
 
 // Always sync-up main alarm to the main switch
 export function syncAlarmToMainSwitch(settings) {
-   if (settings.jmUi.isOn) {
-      const delayInMinutes = settings.mainAlarm.info.delayInMinutes;
-      const periodInMinutes = settings.mainAlarm.info.periodInMinutes;
-      browser.alarms.create(settings.mainAlarm.name, {
+   let alarm = settings.sys.mainAlarm
+   if (settings.ui.auto.isOn) {
+      const delayInMinutes = alarm.info.delayInMinutes;
+      const periodInMinutes = alarm.info.periodInMinutes;
+      browser.alarms.create(alarm.name, {
          delayInMinutes,
          periodInMinutes
       });
    } else {
-      browser.alarms.clear(settings.mainAlarm.name)
+      browser.alarms.clear(alarm.name)
       .catch(err => { logErr(err); });
    }
 }
@@ -70,10 +71,10 @@ function setDevMode() {
 }
 
 export function reQueryById(topicId) {
-   browser.tabs.query({ url: jmSettings.requeryBaseUrl + '*' }).then(tabs => {
+   browser.tabs.query({ url: appSettings.sys.requeryBaseUrl + '*' }).then(tabs => {
       if (tabs.length > 0) {
          const codeObj = {
-            code: "window.location.replace('" + jmSettings.requeryBaseUrl + topicId + "')"
+            code: "window.location.replace('" + appSettings.sys.requeryBaseUrl + topicId + "')"
          };
          browser.tabs.executeScript(tabs[0].id, codeObj)
          .catch(err => { logErr(err); });

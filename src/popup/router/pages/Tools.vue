@@ -26,7 +26,7 @@
 
 <script>
    import * as utils from "../../../shared/utils.js";
-   import jmSettings from "../../../shared/settings.json";
+   import appSettings from "../../../shared/settings.json";
    export default {
       data() {
          return {
@@ -41,7 +41,7 @@
       },
       methods: {
          addMainAlarm() {
-            let alarm = this.settings.mainAlarm;
+            let alarm = this.settings.sys.mainAlarm;
             browser.alarms.create(alarm.name, alarm.info);
          },
          dumpStorage(key = null) {
@@ -65,7 +65,7 @@
                if (self.topics.length == 0) {
                   const code =
                      "window.location.replace('" +
-                     jmSettings.requeryBaseUrl +
+                     appSettings.sys.requeryBaseUrl +
                      "')";
                   browser.tabs.executeScript(null, { code: code });
                }

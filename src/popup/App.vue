@@ -1,5 +1,5 @@
 <template>
-   <div v-if="stateIsReady" style="max-width: 450px">
+   <div v-if="stateIsReady" style="max-width:450px">
       <popup-header></popup-header>
       <router-view></router-view>
    </div>
@@ -26,7 +26,7 @@
 </script>
 
  <style>
-
+   /* html { overflow-y:scroll } */
    html, body {
       min-height: 300px;
       margin: 0;

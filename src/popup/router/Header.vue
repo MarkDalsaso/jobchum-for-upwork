@@ -11,26 +11,31 @@
       >
 
       <!-- Text title text (centered) -->
-      <h2 class="title">jobMonkey
+      <h2 class="title">jobChimp
          <span class="smaller">for Upwork</span>
       </h2>
 
-      <!-- monkey img/help link, and version text (float right) -->
-      <span class="monkey" @click="openHelpTab" title="Click for help">
-         <img :class="{ 'grey-image': !settings.jmUi.isOn }"
+      <!-- chinp img/help link, and version text (float right) -->
+      <span class="chimp" @click="openHelpTab" title="Click for help">
+         <img :class="{ 'grey-image': !settings.ui.auto.isOn }"
             src="../../assets/jm128.png"
             height="55px"
          >
          <p>
             ver. {{ version }}
-            <span v-if="devMode" style="color: red;">(dev)</span>
+            <span v-if="devMode" style="color: red;"> dev</span>
          </p>
       </span>
 
-      <!-- nav buttons: 'Topics', 'Filter', 'Tools' and 'Main switch' -->
       <nav>
          <div>
-            <router-link class="btn1" to="/all" tag="span" active-class="active" exact>
+
+            <span class="btn2" tag="span" active-class="active">
+               {{ filter.name }} : {{ filter.count }} : {{filterCount}}
+            </span>
+
+             <!--  exact    -->
+            <router-link class="btn1" to="/all" tag="span" active-class="active">
                All
             </router-link>
 
@@ -47,7 +52,7 @@
             </router-link>
 
             <toggle-switch title="Main switch" style="float:right; margin: 0 0 0 14px;"
-               :value="this.settings.jmUi.isOn"
+               v-model="settings.ui.auto.isOn"
                @input="toggleIsOnAndPersist($event)"
             ></toggle-switch>
 
@@ -61,23 +66,28 @@
    import * as utils from "../../shared/utils.js";
    import ToggleSwitch from "./pages/ToggleSwitch.vue";
    export default {
-      data () {
-         return { 
-         };
+      data () { 
+         return {
+            filter: { name: '', count: ''}
+          };
       },
       watch: {
          '$route': function(to, from) {
             if (to.params && to.params.filter) {
-               this.settings.jmUi.topicsFilter = to.params.filter
-               this.persistSettings(function () {
-                  utils.logMsg(to.params.filter)
-               })               
+               this.settings.ui.auto.topicsFilter = to.params.filter
+               let self = this
+               this.persistSettings( function () { 
+                  /* utils.logMsg(to.params.filter) */
+                  let f = to.params.filter
+                  self.filter.name = f.charAt(0).toUpperCase() + f.slice(1)
+                  self.filter.count = self.$store.getters.topicsByFilterName(f).length.toString()
+               })
             }
          }
       },
       methods: {
          toggleIsOnAndPersist(event) {
-            this.settings.jmUi.isOn = event
+            this.settings.ui.auto.isOn = event
             let self = this
             this.persistSettings(function () {
                utils.syncAlarmToMainSwitch(self.settings);
@@ -100,6 +110,9 @@
          }
       },
       computed: {
+         // filterCount () {
+         //    this.$store.getters.topicsByFilterName(this.$route.param.filter).length.toString()
+         // },
          settings () {
             return this.$store.getters.settings
          },
@@ -142,7 +155,7 @@
       height: auto;
    }
 
-   header > span.monkey {
+   header > span.chimp {
       padding: 6px;
       z-index: 10;
       position: absolute;
@@ -151,12 +164,12 @@
       font-size: 75%;
    }
 
-   header > span.monkey:hover {
+   header > span.chimp:hover {
       cursor: hand;
       cursor: pointer;
    }
 
-   header > span > p {
+   header > span.chimp > p {
       margin: 0;
       line-height: 6px;
    }

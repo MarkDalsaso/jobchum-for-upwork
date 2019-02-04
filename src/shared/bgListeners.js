@@ -16,7 +16,7 @@ function handleInstall(details) {
    .then ( () => {
       utils.logMsg({ "state initialized": store.state.initialized.toString()})
       utils.syncAlarmToMainSwitch(store.getters.settings);
-      const url = store.getters.settings.requeryBaseUrl;
+      const url = store.getters.settings.sys.requeryBaseUrl;
       browser.tabs.create({ active: true, url: url })
       //.then( () => { utils.logMsg("tabs.create fired") })
       .catch(err => { utils.logErr(err); });
@@ -36,7 +36,7 @@ function handleMessage(message, sender) {
                      break;
                   case 'rawResults':
                      // NOTE: only update topic results if main switch is on
-                     if (store.getters.settings.jmUi.isOn) {
+                     if (store.getters.settings.ui.auto.isOn) {
                         store
                            .dispatch('updateTopicResults', {
                               topicId: message.topicId,
@@ -59,12 +59,12 @@ function handleMessage(message, sender) {
    return Promise.resolve('dummy');
 }
 
-// Listen for "Main alarm" (settings.mainAlarm)
+// Listen for "Main alarm" (settings.sys.mainAlarm)
 function handleAlarms(alarm) {
    store.dispatch('fetchFromStorage', 'settings')
    .then(() => {
       const settings = store.getters.settings;
-      if (alarm.name === settings.mainAlarm.name && settings.jmUi.isOn) {
+      if (alarm.name === settings.sys.mainAlarm.name && settings.ui.auto.isOn) {
          requeryMostOverdueTopic();
       }
    });

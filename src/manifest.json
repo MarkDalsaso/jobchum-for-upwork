@@ -1,9 +1,9 @@
 {
-   "name": "jobMonkey",
-   "version": "2.2.0",
+   "name": "jobChimp",
+   "version": "0.9.1",
    "manifest_version": 2,
-   "homepage_url": "http://www.we-is.com/jobMonkey",
-   "description": "This extension augments the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/). To insure proper initialization of jobMonkey, the  \"Find Work\" page will need to reloaded after the extension is installed.",
+   "homepage_url": "http://www.we-is.com/jobChimp",
+   "description": "This extension augments the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/).",
    "permissions": [
       "notifications",
       "tabs", 
@@ -22,7 +22,7 @@
    ],
    "page_action": {
       "default_popup": "popup/popup.html",
-      "default_title": "JobMonkey for Upwork",
+      "default_title": "JobChimp for Upwork",
       "default_icon": "icons/jm48.png"
    },
    "web_accessible_resources": [

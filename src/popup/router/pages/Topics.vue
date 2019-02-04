@@ -5,17 +5,16 @@
       <!-- <span class="btn1" @click="test1()">Test1</span> -->
 
       <topic
-         v-for="(topic, index) in topics"
+         v-for="(topic) in topics"
          v-bind:topic="topic"
-         v-bind:index="index"
-         v-bind:key="index"
+         v-bind:key="topic.id"
          @topic-modified="updateTopics($event)"
       ></topic>
    </div>
 </template>
 
 <script>
-   // import jmSettings from "../../../shared/settings.json";
+   // import appSettings from "../../../shared/settings.json";
    import * as utils from "../../../shared/utils";
    import Topic from "./Topic.vue";
    export default {
@@ -35,19 +34,15 @@
          topic: Topic
       },
       mounted() {
-         
-         this.filter = this.settings.jmUi.topicsFilter
+         // Activate route filter param from saved state
+         this.$router.replace({ path: '/' + this.settings.ui.auto.topicsFilter })
 
          // listen for background updates
-         var thisComponent = this;
+         var self = this;
          browser.runtime.onMessage.addListener(function ( message, sender ) {
             if (typeof message["store-update"] !== "undefined") {
-               utils.logMsg({
-                  msg: message,
-                  thisComponent: thisComponent,
-                  store: thisComponent.$store
-               });
-               thisComponent.$store.dispatch("fetchFromStorage", "topics");
+               //utils.logMsg({ msg: message, component: self, store: self.$store });
+               self.$store.dispatch("fetchFromStorage", "topics");
             }
             return Promise.resolve("dummy");
          });
@@ -58,24 +53,16 @@
             this.$store
                .dispatch('persistToStorage', 'topics')
                .then(() => {
+                  //this.$router.replace({ path: '/' + this.filter })
                   //utils.logMsg({"topic updated": "name" + topic.captured.name})
                })
                .catch(err => { utils.logErr(err); });
          },
-         test1() {
-            /*
-            this.$router.replace({ path: '/2' })
-            this.topics.forEach(topic => {
-               let t1 = topic.custom.enabled
-               let t2 = ''
-            });
-            utils.logMsg({ 'filteredTopics': t1.length })
-            */
-         }      
+         test1() { }      
       },
       computed: {
          topics() {
-            return this.$store.getters.topicsByFilterIndex(this.filter);
+            return this.$store.getters.topicsByFilterName(this.filter);
          },
          settings() {
             return this.$store.getters.settings;

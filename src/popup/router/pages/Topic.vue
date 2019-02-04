@@ -8,15 +8,8 @@
                   @click="reQueryTopic()"
                >{{ topic.captured.name }}</span>
             </td>
-
-            <!-- <td class="enable-btn-col"> -->
-            <!-- :id="'enabled-toggle_'+topic.id" -->
-            <!-- @input="rowChg()" -->
-            <!-- v-model="topic.custom.enabled" -->
-            <!-- :value="topic.custom.enabled" -->
-            <!-- v-bind:value="topic.custom.enabled" -->
-            <!-- {{topic.custom.enabled}} -->
             <td>
+               {{topic.custom.enabled}}
                <toggle-switch title="Topic switch" style="float: right"
                   v-model="topic.custom.enabled"
                   @input="rowChg()"
@@ -63,7 +56,7 @@
    import ToggleSwitch from "./ToggleSwitch.vue";
    
    export default {
-      props: ["topic", "index"],
+      props: ["topic"],
       methods: {
          rowChg() {
             this.$emit("topic-modified", { topic: this.topic });
@@ -85,7 +78,7 @@
       computed: {
          greyOnInactive: function() {
             if (
-               !this.$store.state.settings.jmUi.isOn ||
+               !this.$store.state.settings.ui.auto.isOn ||
                !this.topic.custom.enabled
             ) {
                return { "grey-out": true };
@@ -93,7 +86,7 @@
          }
       },
       components: {
-         "toggle-switch": ToggleSwitch
+         "toggle-switch": ToggleSwitch,
       }
    };
 

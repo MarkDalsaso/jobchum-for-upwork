@@ -1,20 +1,28 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import * as utils from '../shared/utils.js';
-import jmSettings from '../shared/settings.json';
+import appSettings from '../shared/settings.json';
 import notificationIcon from '../shared/notificationIcon';
 import notificationMp3 from '../shared/notificationMp3';
 Vue.use(Vuex);
 
 // in lue of: state: { settings: {}, topics: [] },
-const initialState = {}
-initialState.settings = jmSettings
-initialState.topics = []
+const initialState = (function () {
+   return {
+      settings: appSettings,
+      topics: [],
+      notificationLog: [],
 
-// NOTE:: is never persisted to storage, its sole
-//        purpose is verify that the Vuex store/state
-//        has been refreshed from Ext. loca storage
-initialState.initialized = false
+      // Items below are not persisted to storage
+      /*current: {
+         topics: {
+            filterName: '',
+            filterCount: 0
+         }
+      },*/
+      initialized: false   // Used to delay DOM render until state is ready
+   }
+})()
 
 export default new Vuex.Store({
    state: initialState,
@@ -22,29 +30,27 @@ export default new Vuex.Store({
       topics: state => state.topics,
       settings: state => state.settings,
       initialized: state => state.initialized,
-      getTopicById: state => id => {
+      current: state => state.curent,
+      topicById: state => id => {
          return state.topics.find(topic => topic.id === id);
       },
-      topicsByFilterIndex: state => (index = 'all') => {
+      topicsByFilterName: state => (filterName = 'all') => {
          // Topic filters driven by route param 'filter': On, Off, "All" (default )
-         let rtnAry = [];
-         // NOTE: 'concat' probably not needed, it was a stab at trying to fix buttons not rendering
-         switch (index.toLowerCase()) {
+         let rtnAry = []
+         switch (filterName.toLowerCase()) {
             case 'on':
                rtnAry = state.topics.filter(topic => {
                   return topic.custom.enabled;
                });
-               rtnAry = [].concat(rtnAry)
                break;
             case 'off':
                rtnAry = state.topics.filter(topic => {
                   return !topic.custom.enabled;
                });
-               rtnAry = [].concat(rtnAry)
                break;
-            default:  
-               rtnAry = [].concat(state.topics);
-               break;
+            default:
+               rtnAry = state.topics;   // default 'all'
+               break;        
          }
          return rtnAry;
       }
@@ -58,7 +64,7 @@ export default new Vuex.Store({
       },
       initialized (state, payload) {
          state.initialized = payload;
-      }      
+      }   
    },
    actions: {
       updateTopics: ({ dispatch, getters, commit }, payload) => {
@@ -85,7 +91,7 @@ export default new Vuex.Store({
                   if (topicId == NaN) {
                      utils.logErr("Non-numeric topic id's are not supported.");
                   } else {
-                     let topic = getters.getTopicById(topicId);
+                     let topic = getters.topicById(topicId);
                      topic.custom.qLastRequest = Date.now();
                      if (topic.custom.enabled) {
                         // process topic if it's enabled
@@ -263,8 +269,7 @@ function doTopicsResultsNotification(topic, newResults) {
    });
 
    // NOTE: future enhancement: use have playSound toggle via tipic options
-   if (jmSettings.jmUi.playSound) {
+   if (appSettings.ui.user.playSound) {
       utils.doSound(notificationMp3);
    }
 }
- 

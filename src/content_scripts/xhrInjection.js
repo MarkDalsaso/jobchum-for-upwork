@@ -1,11 +1,11 @@
 //console.log('x2 (xhrInjection.js) Load START');
 import xhrCaptureDefs from './xhrCaptureDefs.json';
 
-var jmUtils = jmUtils || {};
+var utils = utils || {};
 
 // Monkey patch xhr for data extraction. Arg's open and send are references
 // to the original xhr open and send methods
-jmUtils.xhrMp = (function(open, send) {
+utils.xhrMp = (function(open, send) {
 
    // Closure/state var's
    const xhrDefs = xhrCaptureDefs.defs;

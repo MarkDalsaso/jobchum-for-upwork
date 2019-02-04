@@ -1,15 +1,24 @@
 {
-   "jmUi": {
-      "isOn": false,
-      "playSound": true,
-      "topicsFilter": "all"
+   "sys": {
+      "requeryBaseUrl": "https://www.upwork.com/ab/find-work/",
+      "mainAlarm": {
+         "name": "overdueCheckAlarm",
+         "info": {
+            "delayInMinutes": 0.01,
+            "periodInMinutes": 0.25
+         }
+      }
    },
-   "requeryBaseUrl": "https://www.upwork.com/ab/find-work/",
-   "mainAlarm": {
-      "name": "overdueCheckAlarm",
-      "info": {
-         "delayInMinutes": 0.01,
-         "periodInMinutes": 0.25
+   "ui": {
+      "auto": {
+         "isOn": false,
+         "topicsFilter": "all"
+      },
+      "user": {
+         "playSound": true,
+         "notificationLog": true,
+         "domesticTopic": true,
+         "myFeedTopic": true
       }
    }
 }

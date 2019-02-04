@@ -42,9 +42,6 @@
          position() {
             this.state = this.position >= 50;
          },
-         value() {
-            this.toggle(this.value)
-         }
       },
       methods: {
          onClick() {
