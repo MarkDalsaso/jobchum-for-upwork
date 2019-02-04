@@ -13,13 +13,15 @@ const initialState = (function () {
       topics: [],
       notificationLog: [],
 
-      // Items below are not persisted to storage
-      /*current: {
+      // ALL Items below are NOT persisted to storage
+      current: {
          topics: {
-            filterName: '',
-            filterCount: 0
+            filter:  {
+               name: '',
+               count: 0
+            }
          }
-      },*/
+      },
       initialized: false   // Used to delay DOM render until state is ready
    }
 })()
@@ -29,8 +31,8 @@ export default new Vuex.Store({
    getters: {
       topics: state => state.topics,
       settings: state => state.settings,
+      current: state => state.current,
       initialized: state => state.initialized,
-      current: state => state.curent,
       topicById: state => id => {
          return state.topics.find(topic => topic.id === id);
       },
@@ -38,6 +40,9 @@ export default new Vuex.Store({
          // Topic filters driven by route param 'filter': On, Off, "All" (default )
          let rtnAry = []
          switch (filterName.toLowerCase()) {
+            case 'all':
+               rtnAry = state.topics;
+               break;                    
             case 'on':
                rtnAry = state.topics.filter(topic => {
                   return topic.custom.enabled;
@@ -48,11 +53,15 @@ export default new Vuex.Store({
                   return !topic.custom.enabled;
                });
                break;
-            default:
-               rtnAry = state.topics;   // default 'all'
-               break;        
          }
-         return rtnAry;
+         //return rtnAry;
+         return {
+            topics: rtnAry, 
+            state: {
+               name: filterName.charAt(0).toUpperCase() + filterName.slice(1),
+               count: rtnAry.length
+            }
+         }
       }
    },
    mutations: {
@@ -62,9 +71,12 @@ export default new Vuex.Store({
       settings (state, payload) {
          state.settings = payload;
       },
+      topicsFilterState (state, payload) {
+         state.current.topics = payload;
+      },
       initialized (state, payload) {
          state.initialized = payload;
-      }   
+      }       
    },
    actions: {
       updateTopics: ({ dispatch, getters, commit }, payload) => {
@@ -74,10 +86,9 @@ export default new Vuex.Store({
             })
             .then(updatedTopicsAry => {
                commit('topics', updatedTopicsAry);
-               dispatch('persistToStorage', 'topics').then(() => {
-                  utils.logMsg(
-                     updatedTopicsAry.length + " 'topics' persisted."
-                  );
+               dispatch('persistToStorage', 'topics')
+               .then(() => {
+                  //utils.logMsg( updatedTopicsAry.length + " 'topics' persisted.");
                });
             })
             .catch(err => { utils.logErr(err); });
@@ -182,6 +193,9 @@ export default new Vuex.Store({
             .catch(err => {
                utils.logErr(err);
             });
+      },
+      updateTopicsFilterState( {commit}, payload ) {
+         commit('topicsFilterState', {filter: payload})
       }
    }
 });

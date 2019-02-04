@@ -10,5 +10,8 @@ Vue.use(VueRouter);
 
 // Instantiate "new" router instance, assignin routes
 export default new VueRouter({
-   routes
+   routes,
+   scrollBehavior (to, from, savedPosition) {
+      return { x: 0, y: 0 }
+    }   
 });

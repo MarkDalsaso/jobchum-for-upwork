@@ -31,10 +31,10 @@
          <div>
 
             <span class="btn2" tag="span" active-class="active">
-               {{ filter.name }} : {{ filter.count }} : {{filterCount}}
+               {{ current.topics.filter.name }} : {{ current.topics.filter.count }}
             </span>
 
-             <!--  exact    -->
+             <!--  exact   (required when detectin default path of just '/') -->
             <router-link class="btn1" to="/all" tag="span" active-class="active">
                All
             </router-link>
@@ -76,12 +76,7 @@
             if (to.params && to.params.filter) {
                this.settings.ui.auto.topicsFilter = to.params.filter
                let self = this
-               this.persistSettings( function () { 
-                  /* utils.logMsg(to.params.filter) */
-                  let f = to.params.filter
-                  self.filter.name = f.charAt(0).toUpperCase() + f.slice(1)
-                  self.filter.count = self.$store.getters.topicsByFilterName(f).length.toString()
-               })
+               this.persistSettings()
             }
          }
       },
@@ -110,9 +105,9 @@
          }
       },
       computed: {
-         // filterCount () {
-         //    this.$store.getters.topicsByFilterName(this.$route.param.filter).length.toString()
-         // },
+         current () {
+            return this.$store.getters.current;
+         },
          settings () {
             return this.$store.getters.settings
          },

@@ -26,9 +26,8 @@
 </script>
 
  <style>
-   /* html { overflow-y:scroll } */
    html, body {
-      min-height: 300px;
+      min-height: 900px;   /* ensures vertical scrollbar */
       margin: 0;
       padding: 0;
       color: #000;

@@ -62,7 +62,10 @@
       },
       computed: {
          topics() {
-            return this.$store.getters.topicsByFilterName(this.filter);
+            // Always update current state (topics filter) when filter changes
+            let filterObj = this.$store.getters.topicsByFilterName(this.filter)
+            this.$store.dispatch('updateTopicsFilterState', filterObj.state)
+            return filterObj.topics
          },
          settings() {
             return this.$store.getters.settings;

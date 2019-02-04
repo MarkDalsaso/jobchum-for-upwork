@@ -9,7 +9,6 @@
                >{{ topic.captured.name }}</span>
             </td>
             <td>
-               {{topic.custom.enabled}}
                <toggle-switch title="Topic switch" style="float: right"
                   v-model="topic.custom.enabled"
                   @input="rowChg()"
