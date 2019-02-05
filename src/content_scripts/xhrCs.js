@@ -23,7 +23,7 @@ function sendXhrDataToBackground(event) {
    // Send msg with payload to background
    let p1 = browser.runtime.sendMessage(event.data);
    p1.then(response => {
-      utils.logMsg({ [standardRspMsg]: response });
+      //utils.logMsg({ [standardRspMsg]: response });
    }).catch(err => {
       utils.logErr(err);
    });
@@ -46,7 +46,7 @@ function createAndInjectMonkeyPatch() {
 function sendPageActionTrigger() {
    let prm = browser.runtime.sendMessage({ type: 'activate_icon' });
    prm.then(response => {
-      utils.logMsg({ [standardRspMsg]: response });
+      //utils.logMsg({ [standardRspMsg]: response });
    }).catch(err => {
       utils.logErr(err);
    });

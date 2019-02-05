@@ -33,7 +33,7 @@ export const store = new Vuex.Store({
       current: state => state.current,
       initialized: state => state.initialized,
       topicById: state => id => {
-         return state.topics.find(topic => topic.id == id);  // Use type coercion!
+         return state.topics.find(topic => topic.id === id);
       },
       topicsByFilterName: state => (filterName = 'all') => {
          // Topic filters driven by route param 'filter': On, Off, "All" (default )
@@ -96,29 +96,33 @@ export const store = new Vuex.Store({
          if ('topicId' in payload && typeof payload.topicId != 'undefined') {
             dispatch('fetchFromStorage', 'topics')
                .then(() => {
-                  let topic = getters.topicById(payload.topicId);
-                  topic.custom.qLastRequest = Date.now();
-                  if (topic.custom.enabled) {
-                     // process topic if it's enabled
-                     let newResults = newTopicResults( payload.results, topic );
-                     if (newResults.length > 0) {
-                        topic.results = topic.results.concat(newResults);
-                        doTopicsResultsNotification(topic, newResults);
+                  let topicId = Number(payload.topicId);
+                  if (topicId == NaN) {
+                     utils.logErr("Non-numeric topic id's are not supported.");
+                  } else {
+                     let topic = getters.topicById(topicId);
+                     topic.custom.qLastRequest = Date.now();
+                     if (topic.custom.enabled) {
+                        // process topic if it's enabled
+                        let newResults = newTopicResults( payload.results, topic );
+                        if (newResults.length > 0) {
+                           topic.results = topic.results.concat(newResults);
+                           doTopicsResultsNotification(topic, newResults);
+                        }
                      }
+                     // Always persist (because qLastResult date needs to be updated)
+                     dispatch('persistToStorage', 'topics')
+                        .then(() => {
+                           //utils.logMsg("'topics' (TopicResults) mutated and persisted")
+                           browser.runtime.sendMessage({ 'store-update': 'topics' })
+                           .then(() => {})
+                           .catch(err => {
+                              //NOTE: here is where: "Could not establish connection. Receiving end does not exist." is captured
+                              //utils.logErr(err);
+                           });
+                        })
+                        .catch(err => { utils.logErr(err); });
                   }
-                  // Always persist (because qLastResult date needs to be updated)
-                  dispatch('persistToStorage', 'topics')
-                     .then(() => {
-                        //utils.logMsg("'topics' (TopicResults) mutated and persisted")
-                        browser.runtime.sendMessage({ 'store-update': 'topics' })
-                        .then(() => {})
-                        .catch(err => {
-                           //NOTE: here is where: "Could not establish connection. Receiving end does not exist." is captured
-                           //utils.logErr(err);
-                        });
-                     })
-                     .catch(err => { utils.logErr(err); });
-                  
                })
                .catch(err => { utils.logErr(err); });
          }
@@ -220,7 +224,7 @@ function processTopics(xhrTopics, currentTopics) {
    injectUpworkStandardTopics(xhrTopics)
    for (let i = 0, len = xhrTopics.length; i < len; i++) {
       xhrTopic = xhrTopics[i];
-      curTopic = currentTopics.find(t => t.id == xhrTopic.id);    // Use type coercion!
+      curTopic = currentTopics.find(t => t.id === xhrTopic.id);
       if (curTopic) {
          // Add new topic, preserve existing 'custom' and 'results' props from 'curTopic'
          rtnAry.push(

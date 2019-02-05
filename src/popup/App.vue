@@ -41,6 +41,11 @@
      margin-top: 84px;
    }
 
+   .panel h4 {
+      text-align: center;
+      margin: 0
+   }
+
    section {
       margin: 6px;
       padding-top: 2px;
@@ -50,6 +55,10 @@
    section > table {
       width: 100%;
       table-layout: fixed;
+   }
+
+   .sub-panel {
+      background-color: rgb(181, 206, 246);
    }
 
    #vueMain {

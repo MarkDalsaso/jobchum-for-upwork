@@ -3,7 +3,7 @@
          or ...
    import * as utils from 'utils.js'
 */
-import appSettings from './settings.json';
+import sysSettings from './settings.json';
 export function logMsg(msg) {
    let m = msg instanceof Object ? msg : { msg: msg };
    console.log(m);
@@ -31,8 +31,6 @@ export function storeInfo(type, name, value) {
    };
 }
 
-export const devMode = setDevMode();
-
 // Always sync-up main alarm to the main switch
 export function syncAlarmToMainSwitch(settings) {
    let alarm = settings.sys.mainAlarm
@@ -52,6 +50,7 @@ export function syncAlarmToMainSwitch(settings) {
 // NOTE: Not completely tested
 // Determine if extentions is in develeopment mode by testing for existence
 //   (or not) of certain keys in the manifest, or id signature, or whaever
+export const devMode = setDevMode();
 function setDevMode() {
    let inDevMode = false;
 
@@ -67,19 +66,44 @@ function setDevMode() {
       let manifest = browser.runtime.getManifest();
       if (typeof manifest.update_url == 'undefined') inDevMode = true;
    }
+
+   //inDevMode = false;  // Testing 
    return inDevMode;
 }
 
 export function reQueryById(topicId) {
-   browser.tabs.query({ url: appSettings.sys.requeryBaseUrl + '*' }).then(tabs => {
+   let url = sysSettings.sys.requeryBaseUrl
+   let codeObj = {}
+   browser.tabs.query({ url: url + '*' })
+   .then(tabs => {
       if (tabs.length > 0) {
-         const codeObj = {
-            code: "window.location.replace('" + appSettings.sys.requeryBaseUrl + topicId + "')"
-         };
+         if (topicId === 'myfeed') {
+            codeObj.code = clickSavedSearchJs("My Feed")
+         } else {
+            codeObj.code = "window.location.replace('" + url + topicId + "')"
+         }
          browser.tabs.executeScript(tabs[0].id, codeObj)
-         .catch(err => { logErr(err); });
       }
-   });
+   })
+   .catch(err => { logErr(err); });;
+}
+
+// Note: currently only used fo "My Feed". If left-side topics panel
+//   is hidden, THIS WILL NOT WORK
+function clickSavedSearchJs(ssName) {
+   const rtn = `
+   var u = window.location.href, n, i;
+   n = document.querySelectorAll(\"[data-topic-list=''] > ul > li\");
+   if (n) {
+      for (i = 0; i < n.length; i++) {
+         if (n[i].textContent.trim() === '${ssName}') {
+            n[i].click();
+            break;
+         }
+      }
+   };
+   `
+   return rtn;
 }
 
 // Init and invoke basic notification

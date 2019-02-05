@@ -101,21 +101,30 @@ utils.xhrMp = (function(open, send) {
          type: 'xhr-capture'
       };
 
-      // if harvesting "rawResults" then append topicId (if present)
+      // if harvesting "rawResults" then append topicId (also check for standard topics)
       if (xhrDef.defId === 'rawResults') {
-         var tId = getQueryStringValue(xhrSendResponseUrl, 'topic');
-         if (tId) returnObj.topicId = tId;
+         let tId = getQueryStringValue(xhrSendResponseUrl, 'topic')
+         if (tId) {
+            returnObj.topicId = tId
+         } else {
+            tId = getQueryStringValue(xhrSendResponseUrl, 'user_location_match')
+            if (tId) {
+               returnObj.topicId = 'domestic'
+            } else {
+               returnObj.topicId = 'myfeed'
+            }
+         }
       }
 
       // for development testing
       var logObj = {
          xhrDef: xhrDef,
-         xhrOpenRequestUrl: xhrOpenRequestUrl,
-         xhrSendResponseUrl: xhrSendResponseUrl,
+         "xhrOpenRequestUrl": xhrOpenRequestUrl,
+         "xhrSendResponseUrl": xhrSendResponseUrl,
          zErrors: errMsg     
       };
 
-      // Comment out followinf for production
+      // Comment out following for production
       returnObj.logObj = logObj;
 
       // POST msg back content script

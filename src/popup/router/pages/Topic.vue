@@ -1,5 +1,5 @@
 <template>
-   <section class="topic-blue" :class="greyOnInactive">
+   <section class="sub-panel" :class="greyOnInactive">
       <table class="topics-table">
 
          <tr>
@@ -14,7 +14,6 @@
                   @input="rowChg()"
                ></toggle-switch>
             </td>
-
          </tr>
 
          <tr>
@@ -85,7 +84,7 @@
          }
       },
       components: {
-         "toggle-switch": ToggleSwitch,
+         "toggle-switch": ToggleSwitch
       }
    };
 
@@ -108,10 +107,6 @@
 </script>
 
 <style scoped>
-   .topic-blue {
-      background-color: rgb(181, 206, 246);
-   }
-
    .grey-out {
       background-color: rgb(186, 194, 207);
    }

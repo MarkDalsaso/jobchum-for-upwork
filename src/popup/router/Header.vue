@@ -29,23 +29,22 @@
 
       <nav>
          <div>
-
-            <span class="btn2" tag="span" active-class="active">
-               {{ current.topics.filter.name }} : {{ current.topics.filter.count }}
+            <!--  exact   (required when detectin default path of just '/') -->
+            <span class="multi">
+               <router-link class="btn1" to="/all" tag="span" active-class="active">
+                  All
+               </router-link>
+               <router-link class="btn1" to="/on" tag="span" active-class="active">
+                  On
+               </router-link>
+               <router-link class="btn1" to="/off" tag="span" active-class="active">
+                  Off
+               </router-link>
             </span>
 
-             <!--  exact   (required when detectin default path of just '/') -->
-            <router-link class="btn1" to="/all" tag="span" active-class="active">
-               All
-            </router-link>
-
-            <router-link class="btn1" to="/on" tag="span" active-class="active">
-               On
-            </router-link>
-
-            <router-link class="btn1" to="/off" tag="span" active-class="active">
-               Off
-            </router-link>
+            <span class="count-container">
+               <span v-if="$route.params.filter">{{ current.topics.filter.count }}</span>
+            </span>
 
             <router-link class="btn1" to="/tools" tag="span" active-class="active">
                Tools
@@ -70,6 +69,10 @@
          return {
             filter: { name: '', count: ''}
           };
+      },
+      mounted() {
+         // Activate route filter param from saved state
+         this.$router.replace({ path: '/' + this.settings.ui.auto.topicsFilter })
       },
       watch: {
          '$route': function(to, from) {
@@ -192,20 +195,49 @@
       transform: translateY(-50%);
    }
 
-   .btn1.filter {
-      width: 70px;
-   }
-
-   nav > div > .btn1 {
+   .btn1 {
       color: black;
       margin: 0 14px;
       background-color: rgb(221, 209, 192);
-      /* border: solid 1px rgb(222, 222, 222); */
    }
 
-   nav > div .btn1:hover,
-   nav > div .btn1.active,
-   nav > div .btn1.hover > input[type] {
+   .btn1:hover,
+   .btn1.active,
+   .btn1.hover > input[type] {
       background-color: rgb(255, 237, 209);
    }
+
+   .multi {
+      margin: 0 7px 0 14px ;
+   }
+
+   .multi > .btn1 {
+      width: 40px;
+      margin: 0 0;
+      padding: 4px 10px;
+      border-radius: 0
+   }
+
+   .multi > .btn1:first-child {
+      border-radius: 5px 0 0 5px
+   }
+
+   .multi > .btn1:last-child {
+      border-radius: 0 5px 5px 0
+   }
+
+   .count-container {
+      display: inline-block;
+      overflow: hidden;
+      width: 30px;
+      margin-right: 14px;
+      vertical-align: text-bottom
+   }
+
+   .count-container > span {
+      color: rgb(55, 160, 0);
+      font-weight: 650;
+      font-size: 13px;
+   }
+
 </style>

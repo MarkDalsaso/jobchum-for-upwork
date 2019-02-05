@@ -6,6 +6,7 @@
          <span class="btn1" @click="dumpStorage('topics')">St. Topics</span>
          <span class="btn1" @click="reloadFindWorkPage()">reload if no topics</span>
          <br>
+         <span class="btn1" @click="clearTopics()">Delete Topics</span>
          <span class="btn1" @click="initState()">Init. State</span>
          <span class="btn1" @click="clearExtensionState()">DELETE ALL State</span>
          <br>
@@ -26,7 +27,7 @@
 
 <script>
    import * as utils from "../../../shared/utils.js";
-   import appSettings from "../../../shared/settings.json";
+   import sysSettings from "../../../shared/settings.json";
    export default {
       data() {
          return {
@@ -56,6 +57,15 @@
          initState() {
             this.$store.dispatch("initState");
          },
+         clearTopics () {
+            this.$store.dispatch('fetchFromStorage', 'topics')
+            .then ( () => { 
+               this.$store.commit('topics', []);
+               this.$store.dispatch('persistToStorage', 'topics')
+               .catch(err => { utils.logErr(err); });
+            })
+            .catch(err => { utils.logErr(err); });
+         },
          clearExtensionState() {
             this.$store.dispatch("wipeExtensionState");
          },
@@ -65,7 +75,7 @@
                if (self.topics.length == 0) {
                   const code =
                      "window.location.replace('" +
-                     appSettings.sys.requeryBaseUrl +
+                     sysSettings.sys.requeryBaseUrl +
                      "')";
                   browser.tabs.executeScript(null, { code: code });
                }

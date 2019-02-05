@@ -6,7 +6,7 @@
 import * as utils from '../shared/utils.js'
 import Vue from 'vue'
 import App from './App'
-import store from '../store/index.js'
+import {store} from '../store/index.js'
 import router from './router'
 
 // NOTE: This (along w. v-if="stateIsReady" in App.vue),

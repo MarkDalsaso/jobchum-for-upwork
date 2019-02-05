@@ -14,7 +14,6 @@
 </template>
 
 <script>
-   // import appSettings from "../../../shared/settings.json";
    import * as utils from "../../../shared/utils";
    import Topic from "./Topic.vue";
    export default {
@@ -34,9 +33,6 @@
          topic: Topic
       },
       mounted() {
-         // Activate route filter param from saved state
-         this.$router.replace({ path: '/' + this.settings.ui.auto.topicsFilter })
-
          // listen for background updates
          var self = this;
          browser.runtime.onMessage.addListener(function ( message, sender ) {

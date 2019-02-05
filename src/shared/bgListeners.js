@@ -1,4 +1,4 @@
-import store from '../store';
+import {store} from '../store';
 import * as utils from './utils.js';
 export default addListeners;
 
@@ -37,12 +37,11 @@ function handleMessage(message, sender) {
                   case 'rawResults':
                      // NOTE: only update topic results if main switch is on
                      if (store.getters.settings.ui.auto.isOn) {
-                        store
-                           .dispatch('updateTopicResults', {
-                              topicId: message.topicId,
-                              results: message.arrayObject
-                           })
-                           .catch(err => { utils.logErr(err); });
+                        store.dispatch('updateTopicResults', {
+                           topicId: message.topicId,
+                           results: message.arrayObject
+                        })
+                        .catch(err => { utils.logErr(err); });
                      }
                      break;
                }
