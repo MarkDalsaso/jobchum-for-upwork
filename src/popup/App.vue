@@ -1,21 +1,42 @@
 <template>
    <div v-if="stateIsReady" style="max-width:450px">
-      <popup-header></popup-header>
+      <router-view name="header-top"></router-view>
       <router-view></router-view>
    </div>
 </template>
 
 <script>
-   import Header from "./router/Header.vue";
    export default {
+      data () { return { 
+         queryString: '',
+         auxilaryRoute: false }  
+      },
+      created() {
+         this.queryString = window.location.search;
+         //console.log(queryString)   // NOTE: querystring testing 
+         if (this.queryString.startsWith("?report")) {
+            this.auxilaryRoute =  true;
+            this.$router.replace({ path: '/reports' + this.queryString})
+         }
+      },
+      // mounted() { },
       computed: {
          stateIsReady() {
          // NOTE: This (along w. store.dispatch('initState') in popup.js),
          //        eliminates ALL undefined state property errors
-            return this.$store.state.initialized;
+            return this.$store.state.initialized
          },
+         settings () {
+            return this.$store.getters.settings
+         },         
       },
-      components: { popupHeader: Header }
+      watch: {
+         stateIsReady: function (isReady) {
+            if (isReady && !this.auxilaryRoute) {
+               this.$router.replace({ path: '/' + this.settings.ui.auto.topicsFilter });
+            }
+         }
+      },
    };
 
    window.onunhandledrejection = (event => {

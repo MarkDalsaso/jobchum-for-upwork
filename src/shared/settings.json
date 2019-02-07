@@ -16,9 +16,9 @@
       },
       "user": {
          "playSound": true,
-         "notificationLog": true,
          "domesticTopic": true,
-         "myFeedTopic": true
+         "myFeedTopic": true,
+         "auxilaryWindowType": 1
       }
    }
 }

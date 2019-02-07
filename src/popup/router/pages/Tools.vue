@@ -11,13 +11,11 @@
          <span class="btn1" @click="clearExtensionState()">DELETE ALL State</span>
          <br>
          <span class="btn1" @click="addMainAlarm()">Add Main Alarm</span>
+         <span class="btn1" @click="openReportsWindow()">Open Reports Window</span>
+         <span class="btn1" @click="openReportsTab()">Open Reports Tab</span>
       </div>
       <div>
-         <textarea
-            wrap="off"
-            v-model="jsonDump"
-            class="jsonTextarea"
-            spellcheck="false"
+         <textarea wrap="off" v-model="jsonDump" class="jsonTextarea" spellcheck="false"
          ></textarea>
          <!-- <textarea v-model="jsonDump" ></textarea> -->
          <!-- <pre class="json">{{ jsonDump }}</pre> -->
@@ -79,6 +77,19 @@
                      "')";
                   browser.tabs.executeScript(null, { code: code });
                }
+            });
+         },
+         openReportsWindow: function(event) {
+            window.open("./reports.html", "reportswindow", "width=425,height=650")
+         },
+         openReportsTab: function(event) {
+            let url
+            url = "./popup/reports.html?t1=boo&t2=ya-man";
+            //url = "./popup/popup.html#/settings";
+            browser.tabs
+               .create({ active: true, url: url })
+               .catch(err => {
+                  utils.logErr(err);
             });
          }
       },

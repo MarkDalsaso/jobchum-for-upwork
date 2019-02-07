@@ -11,6 +11,7 @@ Vue.use(VueRouter);
 // Instantiate "new" router instance, assignin routes
 export default new VueRouter({
    routes,
+   mode: 'history', // may not work 
    scrollBehavior (to, from, savedPosition) {
       return { x: 0, y: 0 }
     }   

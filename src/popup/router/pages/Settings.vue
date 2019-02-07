@@ -11,14 +11,6 @@
              ></toggle-switch>
             <label>Play sound on notification of results</label>             
          </div>
-         
-         <div>
-            <toggle-switch title="Topic switch"
-               v-model="settings.ui.user.notificationLog"
-               @input="persist()"
-             ></toggle-switch>
-            <label>Track history/log of notifications</label>
-         </div>
 
          <div>
             <toggle-switch title="Topic switch"

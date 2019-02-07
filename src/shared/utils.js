@@ -106,6 +106,22 @@ function clickSavedSearchJs(ssName) {
    return rtn;
 }
 
+export function openAuxilaryWindow (url, auxWinType = 1, makeTabActive = true, winOpenParams = "width=460,height=650") {
+   // "browser.tabs.create: is the default (reserved for #1) 
+   // "window.open" (case #2), params "width=460,height=650" mimicks ext. popup
+   switch(auxWinType) {
+      case 2:    /*      USE window.open      */
+         // fyi: params = 
+         window.open(url, "", winOpenParams)
+         break
+      default:    /*     USE browser.tabs.create  */
+         browser.tabs.create({ url: url, active: makeTabActive  })
+         //.then( () => {} ) 
+         .catch(err => {utils.logErr(err); });   
+         break
+   }
+}
+
 // Init and invoke basic notification
 export function doNotification(msgOptions) {
    browser.notifications.create(msgOptions)

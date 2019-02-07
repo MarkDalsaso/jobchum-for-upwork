@@ -3,19 +3,24 @@
    <!--  Main Header -->
    <header>
 
-      <!-- gear img/settings link (float left) -->
-      <img class="gear"
-         @click="$router.replace({ path: '/settings' })"
-         title="Settings"
-         src="../../assets/gear1.png"
-      >
-
       <!-- Text title text (centered) -->
       <h2 class="title">jobChimp
          <span class="smaller">for Upwork</span>
       </h2>
 
-      <!-- chinp img/help link, and version text (float right) -->
+      <!--settings and dev tools img. links (float left) -->
+      <span class="tool-links">
+         <img @click="$router.replace({ path: '/settings' })"
+            title="Settings"
+            src="../../assets/gear1.png" >
+
+         <img v-if="devMode"
+            @click="$router.replace({ path: '/tools' })"
+            title="Dev. Tools"
+            src="../../assets/gear1.png" >         
+      </span>
+
+      <!-- chimp img/help link, and version text (float right) -->
       <span class="chimp" @click="openHelpTab" title="Click for help">
          <img :class="{ 'grey-image': !settings.ui.auto.isOn }"
             src="../../assets/jm128.png"
@@ -29,7 +34,7 @@
 
       <nav>
          <div>
-            <!--  exact   (required when detectin default path of just '/') -->
+            <!--  exact   (required when detecting default path of just '/') -->
             <span class="multi">
                <router-link class="btn1" to="/all" tag="span" active-class="active">
                   All
@@ -46,9 +51,15 @@
                <span v-if="$route.params.filter">{{ current.topics.filter.count }}</span>
             </span>
 
-            <router-link class="btn1" to="/tools" tag="span" active-class="active">
-               Tools
+            <!-- Reports button testing -->
+            <router-link class="Zbtn1" title="Reports - normal route" to="/reports" tag="button" active-class="active">
+               R1
             </router-link>
+
+            <!-- Reports button testing -->
+            <button class="Zbtn1"
+               @click="openReportsTab"
+               title="Reports - new tab">R2</button>
 
             <toggle-switch title="Main switch" style="float:right; margin: 0 0 0 14px;"
                v-model="settings.ui.auto.isOn"
@@ -69,10 +80,6 @@
          return {
             filter: { name: '', count: ''}
           };
-      },
-      mounted() {
-         // Activate route filter param from saved state
-         this.$router.replace({ path: '/' + this.settings.ui.auto.topicsFilter })
       },
       watch: {
          '$route': function(to, from) {
@@ -99,13 +106,19 @@
             .catch(err => { utils.logErr(err);});
          },
          openHelpTab() {
-            let manifest = browser.runtime.getManifest();
+            let url = browser.runtime.getManifest().homepage_url;
             browser.tabs
-               .create({ active: true, url: manifest.homepage_url })
+               .create({ active: true, url: url })
                .catch(err => {
                   utils.logErr(err);
                });
-         }
+         },
+         openReportsTab() {
+            let url = "../popup/popup.html?report=1";
+            let type = this.settings.ui.user.auxilaryWindowType
+            //utils.openAuxilaryWindow(url)     // default, 2se browser.tabs.create
+            utils.openAuxilaryWindow(url,type)   // #2, use window.open
+         }         
       },
       computed: {
          current () {
@@ -141,33 +154,37 @@
    }
 
    h2.title {
-      padding-right: 15px;
+      position: relative;
       text-align: center;
       margin: 0 0 5px 0;
    }
 
-   img.gear {
-      padding: 8px;
-      float: left;
-      max-width: 100%;
-      height: auto;
+    span.tool-links  {
+      padding: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
    }
 
-   header > span.chimp {
+   span.tool-links > img {
+      width: 30px;
+      margin: 3px 5px 0 5px
+   }
+
+   span.chimp {
       padding: 6px;
-      z-index: 10;
       position: absolute;
       top: 0;
       right: 0;
       font-size: 75%;
    }
 
-   header > span.chimp:hover {
+   span.chimp:hover {
       cursor: hand;
       cursor: pointer;
    }
 
-   header > span.chimp > p {
+   span.chimp > p {
       margin: 0;
       line-height: 6px;
    }
