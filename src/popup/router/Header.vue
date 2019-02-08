@@ -4,8 +4,8 @@
    <header>
 
       <!-- Text title text (centered) -->
-      <h2 class="title">jobChimp
-         <span class="smaller">for Upwork</span>
+      <h2 class="title">jC
+         <span class="uw-small">for Upwork</span>
       </h2>
 
       <!--settings and dev tools img. links (float left) -->
@@ -114,7 +114,7 @@
                });
          },
          openReportsTab() {
-            let url = "../popup/popup.html?report=1";
+            let url = "../popup/popup.html?report=notifications";
             let type = this.settings.ui.user.auxilaryWindowType
             //utils.openAuxilaryWindow(url)     // default, 2se browser.tabs.create
             utils.openAuxilaryWindow(url,type)   // #2, use window.open
@@ -143,34 +143,18 @@
 
 <style scoped>
    header {
-      z-index: 100;
       height: 84px;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      overflow: hidden;
-      background: rgb(246, 232, 181);
-      /* border: solid 1px rgb(141, 141, 141); */
    }
-
-   h2.title {
-      position: relative;
-      text-align: center;
-      margin: 0 0 5px 0;
-   }
-
-    span.tool-links  {
+   span.tool-links  {
       padding: 0;
       position: absolute;
       top: 0;
       left: 0;
    }
-
    span.tool-links > img {
       width: 30px;
       margin: 3px 5px 0 5px
    }
-
    span.chimp {
       padding: 6px;
       position: absolute;
@@ -178,71 +162,56 @@
       right: 0;
       font-size: 75%;
    }
-
    span.chimp:hover {
       cursor: hand;
       cursor: pointer;
    }
-
    span.chimp > p {
       margin: 0;
       line-height: 6px;
    }
-
-   .smaller {
+   .uw-small {
       color: rgb(55, 160, 0);
       font-size: 75%;
       font-style: italic;
    }
-
    .grey-image {
       filter: grayscale(100%);
    }
-
    nav {
       position: relative;
       height: 40px;
       background-color: rgba(32, 31, 25, 0.068);
    }
-
    nav > div {
       margin: 0;
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
    }
-
    .btn1 {
-      color: black;
-      margin: 0 14px;
       background-color: rgb(221, 209, 192);
    }
-
    .btn1:hover,
    .btn1.active,
    .btn1.hover > input[type] {
       background-color: rgb(255, 237, 209);
    }
-
    .multi {
       margin: 0 7px 0 14px ;
    }
-
    .multi > .btn1 {
       width: 40px;
       margin: 0 0;
       padding: 4px 10px;
       border-radius: 0
    }
-
    .multi > .btn1:first-child {
       border-radius: 5px 0 0 5px
    }
-
    .multi > .btn1:last-child {
       border-radius: 0 5px 5px 0
    }
-
    .count-container {
       display: inline-block;
       overflow: hidden;
@@ -250,11 +219,9 @@
       margin-right: 14px;
       vertical-align: text-bottom
    }
-
    .count-container > span {
       color: rgb(55, 160, 0);
       font-weight: 650;
       font-size: 13px;
    }
-
 </style>

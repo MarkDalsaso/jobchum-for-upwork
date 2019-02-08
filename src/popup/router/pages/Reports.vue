@@ -1,42 +1,57 @@
 <template>
-   <div class="panel">
-      <div>
-         <span class="btn1" @click="test()">Say Boo</span>
-      </div>
-      <div>
-         <p>report name : {{reportName}}</p>
-         <!-- <textarea wrap="off" v-model="jsonDump" class="jsonTextarea" spellcheck="false"
-         ></textarea> -->
-
+   <div>
+      <reports-header 
+         :hdrInfo="hdrInfo"
+         :rptInfo="rptInfo"
+      ></reports-header>
+      <div class="panel">
+         <!-- :style="{ 'margin-top': hdrInfo.fixedHeight +'px' }" -->
+         <div>
+            <button @click="test()">Say Boo</button>
+         </div>
+         <div>
+            <p>report name : {{ this.rptInfo.name }}</p>
+         </div>
       </div>
    </div>
 </template>
 
 <script>
    import * as utils from "../../../shared/utils.js";
-   import sysSettings from "../../../shared/settings.json";
+   import ReportsHeader from "./ReportsHeader.vue";
    export default {
       data() { 
          return {
-            reportName: '',
-            reportParams: {}
+            hdrInfo: {
+               fixedHeight: 38,
+               titlePrefix: "jC - "
+            },
+            rptInfo: {
+               name: '',
+               title: '',
+            }
          };
       },
       created() {
-         this.reportName = this.$route.query.report
-         switch(reportName) {
-            case notifications:
+         this.rptInfo.name = this.$route.query.report
+         switch(this.rptInfo.name) {
+            case 'notifications':
+               this.rptInfo.title = "Notification History"
                break
-            case topicResults:
+            case 'topicResults':
+               this.rptInfo.title = "Topic Results"
                break
          }
-
       },
-      mounted() { },
+      mounted() {
+         // nix max-width popup hack
+         document.querySelector("body > div").removeAttribute("style")
+       },
       methods: {
          test () {
-            alert('Boo!')
-         }
+            alert("boo")
+            //document.title = this.titlePrefix + this.rptInfo.title
+         },
       }, 
       computed: {
          topics() {
@@ -45,25 +60,18 @@
          settings() {
             return this.$store.getters.settings;
          }
-      }
+      },
+      components: {
+         'reports-header': ReportsHeader
+      },
    };
 </script>
 
 <style scoped>
-   .btn1 {
-      margin-right: 10px;
-   }
-   .panel > div > .btn1 {
-      margin: 3px 14px;
-   }
-   .jsonTextarea {
-      box-sizing: border-box;
-      border: none;
-      width: 96%;
-      height: 735px;
-      background-color: rgb(248, 248, 213);
-      margin: 8px 3px 8px 3px;
-      padding: 3px;
-      overflow: auto;
+   html, body {
+      min-height: unset
+   } 
+   .panel {
+      margin-top: 38px;
    }
 </style>

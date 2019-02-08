@@ -107,44 +107,63 @@
 </script>
 
 <style scoped>
+   .sub-panel {
+      background-color: rgb(181, 206, 246);
+   }
+   section {
+      margin: 6px;
+      padding-top: 2px;
+      border-radius: 3px;
+   }   
    .grey-out {
       background-color: rgb(186, 194, 207);
    }
-
    .topics-table tr:nth-child(1),
    .topics-table tr:nth-child(2) {
       height: 35px;
       vertical-align: top;
       padding: 0 0 0 0;
    }
-
    .topics-table tr:nth-child(1) td:nth-child(1) {
       width: 88%;
    }
-
    .topics-table td {
       padding: 2px;
       overflow: hidden;
       white-space: nowrap;
       /* border: 1px solid black; */
    }
-
    /* .topics-table td.enable-btn-col {
       text-align: right;
    } */
-
    span.topic-name {
       font-weight: 700;
       font-size: larger;
       cursor: hand;
       cursor: pointer;
    }
-
    span.topic-name:hover {
       text-decoration: underline;
    }
-
    .topic-options {
       line-height: 1.2em;
+   }
+   section > table {
+      width: 100%;
+      table-layout: fixed;
+   }
+   .btn1 {
+      background-color: rgba(235, 239, 245, 0.5);
+   }
+   input.btn1[type="number"] {
+      width: 55px;
+      margin: 0 0 0 4px;
+      padding: 3px;
+      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
+   }
+   .btn1:hover,
+   .btn1:active,
+   .btn1:hover > input[type] {
+      background-color: rgba(231, 235, 240, 0.87);
    }
 </style>

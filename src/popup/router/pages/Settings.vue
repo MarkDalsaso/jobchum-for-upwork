@@ -71,6 +71,9 @@ import * as utils from "../../../shared/utils";
 </script>
 
 <style scoped>
+   .panel {
+     margin-top: 84px; 
+   }
    section {
       background-color: rgb(181, 206, 246);
     }
@@ -89,4 +92,8 @@ import * as utils from "../../../shared/utils";
       padding: 3px;
       overflow: auto;
    }
+   h4 {
+      text-align: center;
+      margin: 0
+   }   
 </style>

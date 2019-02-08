@@ -1,5 +1,6 @@
 <template>
    <div class="panel">
+      <h4>Misc. Dev. Tools and Functions</h4>
       <div>
          <span class="btn1" @click="dumpStorage()">S. ALL</span>
          <span class="btn1" @click="dumpStorage('settings')">St. Settings</span>
@@ -105,11 +106,16 @@
 </script>
 
 <style scoped>
-   .btn1 {
-      margin-right: 10px;
+   .panel {
+     margin-top: 84px; 
    }
-   .panel > div > .btn1 {
-      margin: 3px 14px;
+   .btn1 {
+      background-color: rgb(221, 209, 192);
+      margin: 3px 7px;
+      padding: 4px 6px;
+   }
+   .btn1:hover {
+      background-color: rgb(255, 237, 209);
    }
    .jsonTextarea {
       box-sizing: border-box;
@@ -121,4 +127,8 @@
       padding: 3px;
       overflow: auto;
    }
+   h4 {
+      text-align: center;
+      margin: 0
+   }  
 </style>
