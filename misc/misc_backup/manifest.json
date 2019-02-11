@@ -23,11 +23,7 @@
    "page_action": {
       "default_popup": "popup/popup.html",
       "default_title": "JobChimp for Upwork",
-      "default_icon": {
-         "16": "icons/jm16.png",
-         "48": "icons/jm48.png",
-         "128": "icons/jm128.png"
-      }
+      "default_icon": "icons/jm48.png"
    },
    "web_accessible_resources": [
       "content_scripts/x2.js",

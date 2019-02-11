@@ -19,7 +19,6 @@ export default [
       path: '/tools',
       components: {
          default: ToolsPage,
-         'header-top': Header
      }       
    },
    { 
@@ -39,7 +38,7 @@ export default [
    /*
    {path: '/reports', component: ReportsPage, children: [
       { path: 'topic-results:topicId', component: TopicResultsReport },
-      { path: 'notification-log', component: NotificationLogReport }
+      { path: 'notification-log', component: NotificationHistoryReport }
    ]}
    */
 ];

@@ -107,18 +107,22 @@ function clickSavedSearchJs(ssName) {
 }
 
 export function openAuxilaryWindow (url, auxWinType = 1, makeTabActive = true, winOpenParams = "width=460,height=650") {
-   // "browser.tabs.create: is the default (reserved for #1) 
-   // "window.open" (case #2), params "width=460,height=650" mimicks ext. popup
-   switch(auxWinType) {
-      case 2:    /*      USE window.open      */
-         // fyi: params = 
-         window.open(url, "", winOpenParams)
-         break
-      default:    /*     USE browser.tabs.create  */
-         browser.tabs.create({ url: url, active: makeTabActive  })
-         //.then( () => {} ) 
-         .catch(err => {utils.logErr(err); });   
-         break
+   // auxWinType = 1: do "browser.tabs.create" (the default)
+   // auxWinType = 2: do "window.open", params "width=460,height=650" mimicks ext. popup
+   if (auxWinType === 1) { 
+      browser.tabs.create({ url: url, active: makeTabActive  })
+      .then( (rtnObj) => {
+         //alert(rtnObj.toString())
+         // return ref. to new extension tab object
+         logMsg({'Tab obj': rtnObj})
+         return rtnObj
+      }) 
+      .catch(err => {utils.logErr(err); });
+   } else if (auxWinType === 2) {
+         // return ref. to new window object
+         let rtnObj = window.open(url, "", winOpenParams)
+         logMsg({'Window obj': rtnObj})
+         return rtnObj
    }
 }
 
@@ -136,6 +140,56 @@ export function doSound(soundFile) {
       let audio = new Audio(soundFile);
       audio.play();
    }
+}
+
+// nix max-width popup hack, used with auxilary tabs/windows
+export function removeExtPopupMaxWidth() {
+   let el = document.querySelector("body > div")
+   if (el) el.removeAttribute("style")
+
+}
+
+import notificationIcon from './notificationIcon';
+
+export  function setPageActionIcon(notificationCount) {
+   let manifest = browser.runtime.getManifest();
+   let firstMatchesDef = manifest.content_scripts[0].matches[0]
+   let title = manifest.page_action.default_title
+   browser.tabs.query({
+      // active: true,
+      url: firstMatchesDef
+   })
+   .then( (tabs) => {
+      var canvas = document.createElement('canvas');
+      var img = new Image();
+      // img.src = 'data:image/gif;bas ...
+      img.src = "/icons/jm48.png";      
+      // img.addEventListener('load', function() {}
+      img.onload = function () {
+
+         /* Draw the background image */
+         var ctx = canvas.getContext('2d');
+         ctx.drawImage(img, 0, 0);
+
+         if (notificationCount > 0) {
+            ctx.font = '56px bold Arial';
+            ctx.fillStyle = 'red';
+            let textMetrix =  ctx.measureText(notificationCount)
+            let textWidth = Math.floor(textMetrix.width) + 1
+            let xPos = Math.max(0, Math.floor((48 - textWidth)/2) )
+            ctx.fillText(notificationCount, xPos, 44, 48);
+            title += '\n' +  notificationCount + ' new notifications'
+         }
+         
+         tabs.forEach( (tab) => {
+            chrome.pageAction.setIcon({
+               imageData: ctx.getImageData(0, 0, 48, 48),
+               tabId: tab.id
+            })
+            chrome.pageAction.setTitle({ title: title, tabId: tab.id })
+         })
+      }
+   })
 }
 
 //logMsg({'deveMode': devMode})

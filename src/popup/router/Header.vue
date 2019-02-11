@@ -13,9 +13,8 @@
          <img @click="$router.replace({ path: '/settings' })"
             title="Settings"
             src="../../assets/gear1.png" >
-
          <img v-if="devMode"
-            @click="$router.replace({ path: '/tools' })"
+            @click="openToolsWindow()"
             title="Dev. Tools"
             src="../../assets/gear1.png" >         
       </span>
@@ -52,14 +51,14 @@
             </span>
 
             <!-- Reports button testing -->
-            <router-link class="Zbtn1" title="Reports - normal route" to="/reports" tag="button" active-class="active">
-               R1
-            </router-link>
+            <!-- <router-link title="Reports - normal route" to="/reports" tag="button" active-class="active">
+               Rn
+            </router-link> -->
+            <button title="Zero Notification Count" @click="zeroNotificationCount()">0Nc</button>
 
             <!-- Reports button testing -->
-            <button class="Zbtn1"
-               @click="openReportsTab"
-               title="Reports - new tab">R2</button>
+            <button title="Reports - new Tab" @click="openReportsTab(1)">R1</button>
+            <button title="Reports - new Win" @click="openReportsTab(2)">R2</button>
 
             <toggle-switch title="Main switch" style="float:right; margin: 0 0 0 14px;"
                v-model="settings.ui.auto.isOn"
@@ -90,7 +89,20 @@
             }
          }
       },
+      mounted () {
+         if (this.settings.ui.auto.notificationCount > 0) {
+            if (this.settings.ui.user.autoPopupNewNotifications) {
+               this.openReportsTab(2)
+            }
+            this.zeroNotificationCount()  // NOTE: not working, may just glow report link instead
+         }
+      },
       methods: {
+         zeroNotificationCount() {
+            this.settings.ui.auto.notificationCount = 0
+            this.persistSettings(function (){utils.setPageActionIcon(0)})
+         },
+         testSetIcon() { },
          toggleIsOnAndPersist(event) {
             this.settings.ui.auto.isOn = event
             let self = this
@@ -113,12 +125,15 @@
                   utils.logErr(err);
                });
          },
-         openReportsTab() {
-            let url = "../popup/popup.html?report=notifications";
-            let type = this.settings.ui.user.auxilaryWindowType
-            //utils.openAuxilaryWindow(url)     // default, 2se browser.tabs.create
-            utils.openAuxilaryWindow(url,type)   // #2, use window.open
-         }         
+         openReportsTab(type) {
+            let url = "../popup/popup.html?p=reports&report=notifications";
+            //let type = this.settings.ui.user.auxilaryWindowType
+            utils.openAuxilaryWindow(url, type)   // #2, use window.open
+         },
+         openToolsWindow() {
+             let url = "../popup/popup.html?p=tools";
+             utils.openAuxilaryWindow(url, 2)   // #2, use window.open
+         }
       },
       computed: {
          current () {

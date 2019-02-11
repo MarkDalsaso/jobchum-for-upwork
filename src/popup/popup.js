@@ -11,7 +11,7 @@ import router from './router'
 
 // NOTE: This (along w. v-if="stateIsReady" in App.vue),
 //        eliminates ALL undefined state property errors
-store.dispatch('initState')
+store.dispatch('loadStateFromStorage')
    .then ( () => {
       utils.logMsg( "state initialized: " + store.state.initialized.toString())
    })

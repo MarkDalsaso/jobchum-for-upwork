@@ -5,7 +5,7 @@
       <section class="grid">
 
          <div>
-            <toggle-switch title="Topic switch"
+            <toggle-switch
                v-model="settings.ui.user.playSound"
                @input="persist()"
              ></toggle-switch>
@@ -13,7 +13,15 @@
          </div>
 
          <div>
-            <toggle-switch title="Topic switch"
+            <toggle-switch
+               v-model="settings.ui.user.autoPopupNewNotifications"
+               @input="persist()"
+             ></toggle-switch>
+            <label>Automatically popup notification history log when new notifications are detected</label>             
+         </div>
+
+         <div>
+            <toggle-switch
                v-model="settings.ui.user.domesticTopic"
                @input="persist()"
              ></toggle-switch>
@@ -21,7 +29,7 @@
          </div>
 
          <div>
-            <toggle-switch title="Topic switch"
+            <toggle-switch
                v-model="settings.ui.user.myFeedTopic"
                @input="persist()"
              ></toggle-switch>

@@ -12,10 +12,12 @@
    "ui": {
       "auto": {
          "isOn": false,
-         "topicsFilter": "all"
+         "topicsFilter": "all",
+         "notificationCount": 0
       },
       "user": {
          "playSound": true,
+         "autoPopupNewNotifications": true,
          "domesticTopic": true,
          "myFeedTopic": true,
          "auxilaryWindowType": 1

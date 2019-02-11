@@ -8,22 +8,30 @@
 <script>
    export default {
       data () { return { 
-         queryString: '',
-         auxilaryRoute: false }  
+         auxilaryRoute: false }
       },
       created() {
-         this.queryString = window.location.search;
-         //console.log(queryString)   // NOTE: querystring testing 
-         if (this.queryString.startsWith("?report")) {
-            this.auxilaryRoute =  true;
-            this.$router.replace({ path: '/reports' + this.queryString})
+         let queryString = window.location.search;
+         if (queryString.length > 1) {
+            let qsAry = queryString.split("&")
+            if (
+                  qsAry[0].startsWith("?p=") && 
+                  qsAry[0].split("=").length > 1
+               ) {
+                  let path = qsAry[0].split("=")[1]
+                  this.auxilaryRoute =  true;
+                  this.$router.replace({ path: '/' + path + queryString})
+                  // default html title
+                  document.title = 
+                     "jC - " + path.charAt(0).toUpperCase() + path.slice(1);
+            }
+            //console.log("querystring: " + queryString)   // Testing
          }
       },
-      // mounted() { },
       computed: {
          stateIsReady() {
-         // NOTE: This (along w. store.dispatch('initState') in popup.js),
-         //        eliminates ALL undefined state property errors
+         // NOTE: This, and store.dispatch('loadStateFromStorage') in
+         //        popup.js, eliminates ALL undefined state property errors
             return this.$store.state.initialized
          },
          settings () {

@@ -6,30 +6,36 @@ import notificationIcon from '../shared/notificationIcon';
 import notificationMp3 from '../shared/notificationMp3';
 Vue.use(Vuex);
 
-const initialState = (function () {
+function EmptyState () {
    return {
+      // These prop's "ARE" persisted to storage
       settings: sysSettings,
       topics: [],
-      notificationLog: [],
+      notifications: [],
 
-      // ALL Items below are NOT persisted to storage
+      // These prop's "ARE NOT" persisted to storage
       current: {
          topics: {
             filter:  {
                name: '',
                count: 0
             }
-         }
+         },
+         auxWinRef: null,
+         auxTabId: 0
       },
       initialized: false   // Used to delay DOM render until state is ready
    }
-})()
+}
+//const initialState = new EmptyState()
 
 export const store = new Vuex.Store({
-   state: initialState,
+   // state: initialState,
+   state:  new EmptyState(),
    getters: {
-      topics: state => state.topics,
       settings: state => state.settings,
+      topics: state => state.topics,
+      notifications: state => state.notifications,
       current: state => state.current,
       initialized: state => state.initialized,
       topicById: state => id => {
@@ -64,12 +70,15 @@ export const store = new Vuex.Store({
       }
    },
    mutations: {
-      topics (state, payload) {
-         state.topics = payload;
-      },
       settings (state, payload) {
          state.settings = payload;
       },
+      topics (state, payload) {
+         state.topics = payload;
+      },
+      notifications (state, payload) {
+         state.notifications = payload;
+      },      
       topicsFilterState (state, payload) {
          state.current.topics = payload;
       },
@@ -92,7 +101,7 @@ export const store = new Vuex.Store({
             })
             .catch(err => { utils.logErr(err); });
       },
-      updateTopicResults: ({ dispatch, getters }, payload) => {
+      updateTopicResults: ({ dispatch, getters, state }, payload) => {
          if ('topicId' in payload && typeof payload.topicId != 'undefined') {
             dispatch('fetchFromStorage', 'topics')
                .then(() => {
@@ -103,10 +112,13 @@ export const store = new Vuex.Store({
                      let newResults = newTopicResults( payload.results, topic );
                      if (newResults.length > 0) {
                         topic.results = topic.results.concat(newResults);
-                        doTopicsResultsNotification(topic, newResults);
+                        dispatch('updateNotifications', { 'topic': topic, 'newResults': newResults})
+                        doTopicsResultsNotification(topic, newResults)
+                        doUpdateBadge()
                      }
                   }
-                  // Always persist (because qLastResult date needs to be updated)
+                  // Always persist (to update qLastResult date). NOTE: It may
+                  //    make more sense to update only when topic.custom.enabled
                   dispatch('persistToStorage', 'topics')
                      .then(() => {
                         //utils.logMsg("'topics' (TopicResults) mutated and persisted")
@@ -123,6 +135,19 @@ export const store = new Vuex.Store({
                .catch(err => { utils.logErr(err); });
          }
       },
+      updateNotifications: ({ dispatch, getters, commit }, payload) => {
+         dispatch('fetchFromStorage', 'notifications')
+            .then( () => {
+               //let notifications = getters.notifications
+               let note = new Notification(payload.topic, payload.newResults)
+               getters.notifications.push(note)
+               dispatch('persistToStorage', 'notifications')
+               .then(() => { 
+                  utils.logMsg("New notification persisted.");
+               });
+            })
+            .catch(err => { utils.logErr(err); });
+      },      
       fetchFromStorage({ commit }, rootKeyName) {
          return new Promise(function(resolve) {
             browser.storage.local.get(rootKeyName)
@@ -150,7 +175,7 @@ export const store = new Vuex.Store({
             .catch(err => { utils.logErr(err); });
          });
       },
-      initState({state, commit}) {
+      loadStateFromStorage({state, commit}) {
          return new Promise(function (resolve) {
             browser.storage.local.get(null)
             .then(rootObj => {
@@ -167,13 +192,13 @@ export const store = new Vuex.Store({
                commit('initialized', true);
                resolve();
             })
-            .catch(err => { utils.logErr(err); });            
+            .catch(err => { utils.logErr(err) });            
          })
       },
-      wipeExtensionState({ commit }) {
+      wipeExtensionState({ state }) {
+         // Clear all storage and intial state to new empty object
          browser.storage.local.clear().then(() => {
-            commit('settings', {});
-            commit('topics', []);
+            state = new EmptyState()
          })
          .catch(err => { utils.logErr(err); });
       },
@@ -255,6 +280,17 @@ function Topic( id, captured, custom = defaultTopicConfig(), results = []) {
    return { id, captured, custom, results };
 }
 
+function Notification(topic, newResults) {
+   return {
+      date: new Date().toISOString(),
+      topic: {
+         id: topic.id,
+         name: topic.captured.name
+      },
+      results: newResults.map(result => result.recno)
+   }
+}
+
 function doTopicsResultsNotification(topic, newResults) {
    let msgOptions = {
       type: 'basic',
@@ -274,4 +310,12 @@ function doTopicsResultsNotification(topic, newResults) {
    if (store.state.settings.ui.user.playSound) {
       utils.doSound(notificationMp3);
    }
+}
+
+function doUpdateBadge() {
+   ++store.state.settings.ui.auto.notificationCount
+   store.dispatch("persistToStorage", "settings")
+   .then( () => { 
+      utils.setPageActionIcon(store.state.settings.ui.auto.notificationCount)
+   })
 }

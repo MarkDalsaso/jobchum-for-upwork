@@ -12,7 +12,7 @@ function addListeners() {
 //utils.logMsg({ "state initialized": store.state.initialized.toString()})
 
 function handleInstall(details) {
-   store.dispatch('initState')
+   store.dispatch('loadStateFromStorage')
    .then ( () => {
       utils.logMsg({ "state initialized": store.state.initialized.toString()})
       utils.syncAlarmToMainSwitch(store.getters.settings);
