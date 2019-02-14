@@ -29,7 +29,8 @@ function handleMessage(message, sender) {
    if (message && message.type) {
       switch (message.type) {
          case 'xhr-capture':
-            store.dispatch('fetchFromStorage', 'settings').then(() => {
+            store.dispatch('fetchFromStorage', 'settings')
+            .then(() => {
                switch (message.arrayType) {
                   case 'rawTopics':
                      store.dispatch('updateTopics', message.arrayObject);
@@ -50,6 +51,10 @@ function handleMessage(message, sender) {
          case 'activate_icon':
             // this guarantees popup click works correctly for page action
             browser.pageAction.show(sender.tab.id);
+            store.dispatch('fetchFromStorage', 'settings')
+            .then( () => {
+               utils.setPageActionIcon(store.getters.settings)
+            })
             break;
       }
       //utils.logMsg({ 'msg. from content script': message });

@@ -6,7 +6,7 @@
    "description": "This extension augments the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/).",
    "permissions": [
       "notifications",
-      "tabs", 
+      "activeTab", 
       "storage",
       "alarms", 
       "*://www.upwork.com/*"],
@@ -21,21 +21,19 @@
       }
    ],
    "page_action": {
-      "default_popup": "popup/popup.html",
       "default_title": "JobChimp for Upwork",
-      "default_icon": {
-         "16": "icons/jm16.png",
-         "48": "icons/jm48.png",
-         "128": "icons/jm128.png"
-      }
+      "default_popup": "popup/popup.html",
+      "default_icon": "icons/48.png"
    },
    "web_accessible_resources": [
       "content_scripts/x2.js",
       "icons/*.png"
       ],
    "icons": {
-      "16": "icons/jm16.png",
-      "48": "icons/jm48.png",
-      "128": "icons/jm128.png"
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "96": "icons/96.png",
+      "128": "icons/128.png"
    }
 }

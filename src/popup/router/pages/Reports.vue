@@ -30,7 +30,7 @@
 
 <script>
    import * as utils from "../../../shared/utils.js";
-   import ReportsHeader from "./ReportsHeader.vue";
+   import ReportsHeader from "./sub/ReportsHeader.vue";
    export default {
       data() { 
          return {
@@ -59,6 +59,12 @@
       mounted() { 
          utils.removeExtPopupMaxWidth()
          this.buildReport()
+         let self = this
+         browser.storage.onChanged.addListener(function (changesObject, areaName) {
+            if ('notifications' in changesObject) {
+               self.buildReport()
+            }
+         })
       },
       methods: {
          reload () {

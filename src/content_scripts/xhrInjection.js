@@ -107,6 +107,13 @@ utils.xhrMp = (function(open, send) {
          if (tId) {
             returnObj.topicId = tId
          } else {
+            // NOTE: qs param 'since_result_set_ts' is the flag for the narrow horiz
+            //       rect. (w. green font). " There are new jobs. Click to see them."
+            //       To ignore these, send querystring back to "bgListener.js" with
+            //        'returnObj', to evaluate and skip  notification based on setting
+            // "My Job Fed" https://www.upwork.com/ab/find-work/api/feeds/search?since_result_set_ts=1549918103063
+            // "U.S. Only" (domestic) https://www.upwork.com/ab/find-work/api/feeds/search?since_result_set_ts=1549918955633&user_location_match=1 
+            //tId = getQueryStringValue(xhrSendResponseUrl, '?since_result_set_ts=')
             tId = getQueryStringValue(xhrSendResponseUrl, 'user_location_match')
             if (tId) {
                returnObj.topicId = 'domestic'

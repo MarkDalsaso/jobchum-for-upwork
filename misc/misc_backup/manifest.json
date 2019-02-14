@@ -21,6 +21,7 @@
       }
    ],
    "page_action": {
+      "show_matches": ["*://www.upwork.com/ab/find-work/*"],
       "default_popup": "popup/popup.html",
       "default_title": "JobChimp for Upwork",
       "default_icon": "icons/jm48.png"

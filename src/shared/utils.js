@@ -4,6 +4,7 @@
    import * as utils from 'utils.js'
 */
 import sysSettings from './settings.json';
+import extActionIcon48 from './extActionIcon48';
 export function logMsg(msg) {
    let m = msg instanceof Object ? msg : { msg: msg };
    console.log(m);
@@ -55,12 +56,12 @@ function setDevMode() {
    let inDevMode = false;
 
    // Logic for Firefox. 'getBrowserInfo' is only supported by Firefox
-   if (typeof browser.runtime.getBrowserInfo !== 'undefined') {
+   if ( isFirefox() ) {
       // Check for existence of the workd 'temporary' in Ext. id
       let id = browser.runtime.id;
       if (RegExp('temporary', 'i').test(id)) inDevMode = true;
 
-      //  Logic for Chrome (probably will break in Opera, Edge, etc.  ??? ))
+   //  Logic for Chrome (may break in Opera, Edge, etc.  ??? )
    } else {
       // Check for existence of 'update_url' key in manifest json
       let manifest = browser.runtime.getManifest();
@@ -69,6 +70,11 @@ function setDevMode() {
 
    //inDevMode = false;  // Testing 
    return inDevMode;
+}
+
+export function isFirefox() {
+   // based on the fact that 'getBrowserInfo' is only supported by Firefox
+   return typeof browser.runtime.getBrowserInfo !== 'undefined'
 }
 
 export function reQueryById(topicId) {
@@ -149,47 +155,75 @@ export function removeExtPopupMaxWidth() {
 
 }
 
-import notificationIcon from './notificationIcon';
+export  function setPageActionIcon(settings) {
 
-export  function setPageActionIcon(notificationCount) {
    let manifest = browser.runtime.getManifest();
-   let firstMatchesDef = manifest.content_scripts[0].matches[0]
    let title = manifest.page_action.default_title
-   browser.tabs.query({
-      // active: true,
-      url: firstMatchesDef
-   })
+
+   let tabsQueryDef = { url: manifest.content_scripts[0].matches[0] }
+   if (isFirefox()) tabsQueryDef = {}
+
+   browser.tabs.query(tabsQueryDef)
    .then( (tabs) => {
-      var canvas = document.createElement('canvas');
-      var img = new Image();
-      // img.src = 'data:image/gif;bas ...
-      img.src = "/icons/jm48.png";      
+      //logMsg({'All Tabs': tabs})
+      let canvas = document.createElement('canvas')
+      let img = new Image()
+      img.src = extActionIcon48  // instead of "/icons/48.png";
       // img.addEventListener('load', function() {}
       img.onload = function () {
 
          /* Draw the background image */
-         var ctx = canvas.getContext('2d');
-         ctx.drawImage(img, 0, 0);
-
-         if (notificationCount > 0) {
-            ctx.font = '56px bold Arial';
-            ctx.fillStyle = 'red';
-            let textMetrix =  ctx.measureText(notificationCount)
-            let textWidth = Math.floor(textMetrix.width) + 1
-            let xPos = Math.max(0, Math.floor((48 - textWidth)/2) )
-            ctx.fillText(notificationCount, xPos, 44, 48);
-            title += '\n' +  notificationCount + ' new notifications'
-         }
+         let ctx = canvas.getContext('2d');
+         ctx.drawImage(img, 0, 0);                       // add icon to context
+         title = updateContext(settings, ctx, title)     // update canvas, return new title
+         let imgData =  ctx.getImageData(0, 0, 48, 48)
          
+         let setIconParams = {}
+         let setTitleParams = {}
          tabs.forEach( (tab) => {
-            chrome.pageAction.setIcon({
-               imageData: ctx.getImageData(0, 0, 48, 48),
-               tabId: tab.id
+            setIconParams = { tabId: tab.id, imageData: imgData }
+            /* //  This is the older "chrome" API call (if 'browser' works in Firefox, remove)
+            chrome.pageAction.setIcon(setIconParams, function () {
+               setTitleParams = { title: title, tabId: tab.id }
+               chrome.pageAction.setTitle(setTitleParams)
+            })*/
+            browser.pageAction.setIcon(setIconParams)
+            .then(() => {
+               setTitleParams = { title: title, tabId: tab.id }
+               browser.pageAction.setTitle(setTitleParams)
             })
-            chrome.pageAction.setTitle({ title: title, tabId: tab.id })
+            .catch(err => { logErr(err); });
          })
       }
    })
+   .catch(err => { logErr(err); });
+}
+
+// ctx is the canvas context objext
+function updateContext(settings, ctx, title) {
+   let uiAuto = settings.ui.auto
+   if (!uiAuto.isOn) {
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(42, 6);
+      ctx.lineTo(6, 42);
+      ctx.moveTo(6, 6);
+      ctx.lineTo(42, 42);
+      ctx.stroke();
+      title += '\nSwitched Off'
+   }
+   else if (uiAuto.notificationCount > 0) {
+      ctx.font = '56px bold Arial';
+      ctx.fillStyle = 'red';
+      let textMetrix =  ctx.measureText(uiAuto.notificationCount)
+      let textWidth = Math.floor(textMetrix.width) + 1
+      let xPos = Math.max(0, Math.floor((48 - textWidth)/2) )
+      ctx.fillText(uiAuto.notificationCount, xPos, 44, 48);
+      title += '\n' +  uiAuto.notificationCount + ' new notifications'
+   }
+   return title
+   //logMsg('setPageActionIcon fired: ' + uiAuto.notificationCount)
 }
 
 //logMsg({'deveMode': devMode})

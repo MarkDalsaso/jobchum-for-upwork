@@ -6,6 +6,7 @@
 </template>
 
 <script>
+   import * as utils from "../shared/utils";
    export default {
       data () { return { 
          auxilaryRoute: false }

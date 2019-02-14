@@ -12,6 +12,7 @@ function EmptyState () {
       settings: sysSettings,
       topics: [],
       notifications: [],
+      //activeTabId: 0,   // singleton, updates on every popop up load, (used for set icon)
 
       // These prop's "ARE NOT" persisted to storage
       current: {
@@ -21,8 +22,8 @@ function EmptyState () {
                count: 0
             }
          },
-         auxWinRef: null,
-         auxTabId: 0
+         
+         //auxWinRef: null, auxTabId: 0  // not in use, proably not needed
       },
       initialized: false   // Used to delay DOM render until state is ready
    }
@@ -36,6 +37,7 @@ export const store = new Vuex.Store({
       settings: state => state.settings,
       topics: state => state.topics,
       notifications: state => state.notifications,
+      //activeTabId: state => state.activeTabId,
       current: state => state.current,
       initialized: state => state.initialized,
       topicById: state => id => {
@@ -78,7 +80,10 @@ export const store = new Vuex.Store({
       },
       notifications (state, payload) {
          state.notifications = payload;
-      },      
+      },
+      // activeTabId (state, payload) {
+      //    state.activeTabId = payload;
+      // },            
       topicsFilterState (state, payload) {
          state.current.topics = payload;
       },
@@ -101,7 +106,7 @@ export const store = new Vuex.Store({
             })
             .catch(err => { utils.logErr(err); });
       },
-      updateTopicResults: ({ dispatch, getters, state }, payload) => {
+      updateTopicResults: ({ dispatch, getters }, payload) => {
          if ('topicId' in payload && typeof payload.topicId != 'undefined') {
             dispatch('fetchFromStorage', 'topics')
                .then(() => {
@@ -117,25 +122,16 @@ export const store = new Vuex.Store({
                         doUpdateBadge()
                      }
                   }
-                  // Always persist (to update qLastResult date). NOTE: It may
-                  //    make more sense to update only when topic.custom.enabled
+                  // Always persist (to update qLastResult date). If Topics.vue is open
+                  //    its browser.storage.onChange listener will catch and refresh
                   dispatch('persistToStorage', 'topics')
-                     .then(() => {
-                        //utils.logMsg("'topics' (TopicResults) mutated and persisted")
-                        browser.runtime.sendMessage({ 'store-update': 'topics' })
-                        .then(() => {})
-                        .catch(err => {
-                           //NOTE: here is where: "Could not establish connection. Receiving end does not exist." is captured
-                           //utils.logErr(err);
-                        });
-                     })
-                     .catch(err => { utils.logErr(err); });
+                  .catch(err => { utils.logErr(err); });
                   
                })
                .catch(err => { utils.logErr(err); });
          }
       },
-      updateNotifications: ({ dispatch, getters, commit }, payload) => {
+      updateNotifications: ({ getters, dispatch }, payload) => {
          dispatch('fetchFromStorage', 'notifications')
             .then( () => {
                //let notifications = getters.notifications
@@ -147,7 +143,12 @@ export const store = new Vuex.Store({
                });
             })
             .catch(err => { utils.logErr(err); });
-      },      
+      },
+      // updateActiveTabId: ({ state, dispatch }, payload) => {
+      //    state.activeTabId = payload
+      //    dispatch('persistToStorage', 'activeTabId')
+      //    .catch(err => { utils.logErr(err); });
+      // },  
       fetchFromStorage({ commit }, rootKeyName) {
          return new Promise(function(resolve) {
             browser.storage.local.get(rootKeyName)
@@ -313,9 +314,12 @@ function doTopicsResultsNotification(topic, newResults) {
 }
 
 function doUpdateBadge() {
-   ++store.state.settings.ui.auto.notificationCount
-   store.dispatch("persistToStorage", "settings")
-   .then( () => { 
-      utils.setPageActionIcon(store.state.settings.ui.auto.notificationCount)
+   store.dispatch('fetchFromStorage', 'settings')
+   .then( () => {
+      ++store.state.settings.ui.auto.notificationCount
+      store.dispatch("persistToStorage", "settings")
+      .then( () => { 
+         utils.setPageActionIcon(store.state.settings)
+      })      
    })
 }

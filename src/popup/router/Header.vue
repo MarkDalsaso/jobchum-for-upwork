@@ -11,18 +11,20 @@
       <!--settings and dev tools img. links (float left) -->
       <span class="tool-links">
          <img @click="$router.replace({ path: '/settings' })"
+            class="nav-icon"
             title="Settings"
-            src="../../assets/gear1.png" >
+            src="../../assets/gears.png">
          <img v-if="devMode"
+            class="nav-icon"
             @click="openToolsWindow()"
             title="Dev. Tools"
-            src="../../assets/gear1.png" >         
+            src="../../assets/wrench.png">         
       </span>
 
       <!-- chimp img/help link, and version text (float right) -->
       <span class="chimp" @click="openHelpTab" title="Click for help">
          <img :class="{ 'grey-image': !settings.ui.auto.isOn }"
-            src="../../assets/jm128.png"
+            src="../../assets/128.png"
             height="55px"
          >
          <p>
@@ -54,13 +56,13 @@
             <!-- <router-link title="Reports - normal route" to="/reports" tag="button" active-class="active">
                Rn
             </router-link> -->
-            <button title="Zero Notification Count" @click="zeroNotificationCount()">0Nc</button>
+            <button title="Zero Notification Count"    @click="zeroNotificationCount()">0Nc</button>
 
-            <!-- Reports button testing -->
-            <button title="Reports - new Tab" @click="openReportsTab(1)">R1</button>
-            <button title="Reports - new Win" @click="openReportsTab(2)">R2</button>
+            <img @click="openReportsTab()"
+                  class="nav-icon"
+                  title="Notification History" src="../../assets/reports.png">     
 
-            <toggle-switch title="Main switch" style="float:right; margin: 0 0 0 14px;"
+            <toggle-switch title="Main switch" class="nav-switch"
                v-model="settings.ui.auto.isOn"
                @input="toggleIsOnAndPersist($event)"
             ></toggle-switch>
@@ -73,7 +75,7 @@
 
 <script>
    import * as utils from "../../shared/utils.js";
-   import ToggleSwitch from "./pages/ToggleSwitch.vue";
+   import ToggleSwitch from "./pages/sub/ToggleSwitch.vue";
    export default {
       data () { 
          return {
@@ -94,13 +96,16 @@
             if (this.settings.ui.user.autoPopupNewNotifications) {
                this.openReportsTab(2)
             }
-            this.zeroNotificationCount()  // NOTE: not working, may just glow report link instead
+            //this.zeroNotificationCount()
          }
       },
       methods: {
          zeroNotificationCount() {
             this.settings.ui.auto.notificationCount = 0
-            this.persistSettings(function (){utils.setPageActionIcon(0)})
+            let self = this
+            this.persistSettings( function () {
+               utils.setPageActionIcon(self.settings)
+            })
          },
          testSetIcon() { },
          toggleIsOnAndPersist(event) {
@@ -108,6 +113,7 @@
             let self = this
             this.persistSettings(function () {
                utils.syncAlarmToMainSwitch(self.settings);
+               utils.setPageActionIcon(self.settings)
             })
          },
          persistSettings(callback) {
@@ -125,14 +131,15 @@
                   utils.logErr(err);
                });
          },
-         openReportsTab(type) {
+         openReportsTab() {
             let url = "../popup/popup.html?p=reports&report=notifications";
-            //let type = this.settings.ui.user.auxilaryWindowType
-            utils.openAuxilaryWindow(url, type)   // #2, use window.open
+            let type = this.settings.ui.user.auxilaryWindowType
+            utils.openAuxilaryWindow(url, type)
          },
          openToolsWindow() {
              let url = "../popup/popup.html?p=tools";
-             utils.openAuxilaryWindow(url, 2)   // #2, use window.open
+             let type = this.settings.ui.user.auxilaryWindowType
+             utils.openAuxilaryWindow(url, type)
          }
       },
       computed: {
@@ -193,6 +200,21 @@
    .grey-image {
       filter: grayscale(100%);
    }
+   .nav-icon:hover {
+      background-color: rgb(55, 160, 0);
+      border-radius: 4px; 
+   }
+   nav .nav-icon {
+      display: inline-block;
+      vertical-align: bottom;
+      height: 30px;
+      margin: 0 0 0 15px
+   }
+   .nav-switch {
+      display: inline-block;
+      margin: 0 0 0 14px;
+      vertical-align: text-bottom;
+   }   
    nav {
       position: relative;
       height: 40px;

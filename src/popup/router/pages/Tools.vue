@@ -1,5 +1,6 @@
 <template>
    <div class="panel">
+      <usage-bar :value="22"></usage-bar>
       <div>
          <h4>Ext. Local Storage Dumps</h4>
          <span class="btn1" @click="dumpStorage()">Stg. ALL</span>
@@ -12,12 +13,11 @@
          <span class="btn1" @click="dumpNotificationsNodeVuexState()">Vx. St. Notifications Node</span>
          <h4>Misc. Reset and Initialize</h4>
          <span class="btn1" @click="emptyTopicsArray()">Empty Topics Array</span>
+         <span class="btn1" @click="emptyNotificationsArray()">Empty Notifications Array</span>
          <span class="btn1" @click="loadStateFromStorage()">Reload State From Storage</span>
          <span class="btn1" @click="wipeExtensionState()">DELETE ALL Storage/State</span>
          <h4>Misc</h4>
-         <span class="btn1" @click="openReports(1)">Open Reports Tab</span>
-         <span class="btn1" @click="openReports(2)">Open Reports Window</span>
-         <span class="btn1" @click="reloadFindWorkPage()">Reload 'Find Work' if no topics</span>
+         <span class="btn1" @click="openReports()">Open Reports Tab</span>
          <span class="btn1" @click="addMainAlarm()">Add Main Alarm</span>
       </div>
       <div>
@@ -31,14 +31,15 @@
 
 <script>
    import * as utils from "../../../shared/utils.js";
-   import sysSettings from "../../../shared/settings.json";
+   // import sysSettings from "../../../shared/settings.json";
+   import UsageBar from "./sub/UsageBar.vue";
    export default {
-      data() {
+      data () {
          return {
             jsonDump: ''
          };
       },
-      mounted() { utils.removeExtPopupMaxWidth() },
+      mounted () { utils.removeExtPopupMaxWidth() },
       methods: {
          addMainAlarm() {
             let alarm = this.settings.sys.mainAlarm;
@@ -74,27 +75,23 @@
             })
             .catch(err => { utils.logErr(err); });
          },
+         emptyNotificationsArray () {
+            this.$store.dispatch('fetchFromStorage', 'notifications')
+            .then ( () => { 
+               this.$store.commit('notifications', []);
+               this.$store.dispatch('persistToStorage', 'notifications')
+               .catch(err => { utils.logErr(err); });
+            })
+            .catch(err => { utils.logErr(err); });
+         },         
          wipeExtensionState() {
             this.$store.dispatch("wipeExtensionState");
          },
-         reloadFindWorkPage() {
-            let self = this
-            this.$store.dispatch("fetchFromStorage", "topics").then(function () {
-               if (self.topics.length == 0) {
-                  const code =
-                     "window.location.replace('" +
-                     sysSettings.sys.requeryBaseUrl +
-                     "')";
-                  browser.tabs.executeScript(null, { code: code });
-               }
-            });
-         },
-         openReports(type) {
+         openReports() {
             let rtnObj = null
             let url = "../popup/popup.html?p=reports&report=notifications"
-            //type = this.settings.ui.user.auxilaryWindowType
-            utils.openAuxilaryWindow(url, type, false)   // #2, use window.open
-            //utils.logMsg({'new win/tab': rtnObj})
+            let type = this.settings.ui.user.auxilaryWindowType
+            utils.openAuxilaryWindow(url, type, false)
          },
       },
       computed: {
@@ -104,6 +101,9 @@
          settings() {
             return this.$store.getters.settings;
          }
+      },
+      components: {
+         'usage-bar': UsageBar
       }
    };
 </script>

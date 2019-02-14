@@ -50,7 +50,7 @@
 </template>
 
 <script>
-   import * as utils from "../../../shared/utils";
+   import * as utils from "../../../../shared/utils";
    import ToggleSwitch from "./ToggleSwitch.vue";
    
    export default {
@@ -110,14 +110,19 @@
    .sub-panel {
       background-color: rgb(181, 206, 246);
    }
+
+   .grey-out {
+      background-color: rgb(186, 194, 207);
+   }
    section {
       margin: 6px;
       padding-top: 2px;
       border-radius: 3px;
-   }   
-   .grey-out {
-      background-color: rgb(186, 194, 207);
    }
+   .topics-table {
+      width: 100%;
+      table-layout: fixed;
+   }   
    .topics-table tr:nth-child(1),
    .topics-table tr:nth-child(2) {
       height: 35px;
@@ -147,10 +152,6 @@
    }
    .topic-options {
       line-height: 1.2em;
-   }
-   section > table {
-      width: 100%;
-      table-layout: fixed;
    }
    .btn1 {
       background-color: rgba(235, 239, 245, 0.5);

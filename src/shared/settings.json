@@ -17,7 +17,7 @@
       },
       "user": {
          "playSound": true,
-         "autoPopupNewNotifications": true,
+         "autoPopupNewNotifications": false,
          "domesticTopic": true,
          "myFeedTopic": true,
          "auxilaryWindowType": 1

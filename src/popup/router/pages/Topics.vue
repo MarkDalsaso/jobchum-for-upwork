@@ -10,12 +10,28 @@
          v-bind:key="topic.id"
          @topic-modified="updateTopics($event)"
       ></topic>
+
+      <div v-if="filter === 'all' && topics.length === 0"
+           @click="reloadSyncTopics()"
+           class="load-topics">
+         <p class="btn1">Click here to synchronize jobChimp with your Upwork (Find Work) search topics</p>
+      </div>
+
+      <div v-if="filter === 'on' && topics.length === 0"
+         class="load-topics" >
+         <br>
+         <p>There are no switched 'On' search topics.</p>
+         <p>Click the 'All' filter to switch On/Off individual topics.</p>
+         <p>Click the 'Master switch' (in header) to toggle overall, jobChimp functionality</p>
+         
+      </div>
+
    </div>
 </template>
 
 <script>
    import * as utils from "../../../shared/utils";
-   import Topic from "./Topic.vue";
+   import Topic from "./sub/Topic.vue";
    export default {
       data () {
          return {
@@ -34,14 +50,12 @@
       },
       mounted() {
          // listen for background updates
-         var self = this;
-         browser.runtime.onMessage.addListener(function ( message, sender ) {
-            if (typeof message["store-update"] !== "undefined") {
-               //utils.logMsg({ msg: message, component: self, store: self.$store });
+         let self = this
+         browser.storage.onChanged.addListener(function (changesObject, areaName) {
+            if ('topics' in changesObject) {
                self.$store.dispatch("fetchFromStorage", "topics");
             }
-            return Promise.resolve("dummy");
-         });
+         })
       },
       methods: {
          updateTopics (event) {
@@ -53,6 +67,11 @@
                   //utils.logMsg({"topic updated": "name" + topic.captured.name})
                })
                .catch(err => { utils.logErr(err); });
+         },
+         reloadSyncTopics () {
+            const code = "window.location.replace('" +
+               this.settings.sys.requeryBaseUrl + "')";
+            browser.tabs.executeScript(null, { code: code });
          },
          test1() { }      
       },
@@ -71,6 +90,16 @@
 </script>
 
 <style scoped>
+   .load-topics {
+      width: 100%;
+      text-align: center
+   }
+
+   .load-topics > p.btn1 {
+      width: 80%;
+       background-color: rgb(181, 206, 246);
+   }
+
    .panel {
       min-height: 900px;
       margin-top: 84px;
