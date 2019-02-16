@@ -101,7 +101,6 @@
    }
 
    .panel {
-      min-height: 900px;
       margin-top: 84px;
    }
 </style>

@@ -21,10 +21,7 @@
          <span class="btn1" @click="addMainAlarm()">Add Main Alarm</span>
       </div>
       <div>
-         <textarea wrap="off" v-model="jsonDump" class="jsonTextarea" spellcheck="false"
-         ></textarea>
-         <!-- <textarea v-model="jsonDump" ></textarea> -->
-         <!-- <pre class="json">{{ jsonDump }}</pre> -->
+         <textarea wrap="off" v-model="jsonDump" class="jsonTextarea" spellcheck="false"></textarea>
       </div>
    </div>
 </template>
@@ -90,8 +87,7 @@
          openReports() {
             let rtnObj = null
             let url = "../popup/popup.html?p=reports&report=notifications"
-            let type = this.settings.ui.user.auxilaryWindowType
-            utils.openAuxilaryWindow(url, type, false)
+            utils.openAuxilaryWindow(this.$store, url, false)
          },
       },
       computed: {

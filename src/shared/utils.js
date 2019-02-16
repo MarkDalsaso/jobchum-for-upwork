@@ -79,17 +79,17 @@ export function isFirefox() {
 
 export function reQueryById(topicId) {
    let url = sysSettings.sys.requeryBaseUrl
-   let codeObj = {}
-   browser.tabs.query({ url: url + '*' })
+   let tabsQueryDef = { active: true, currentWindow: true }
+   browser.tabs.query(tabsQueryDef)
    .then(tabs => {
-      if (tabs.length > 0) {
-         if (topicId === 'myfeed') {
-            codeObj.code = clickSavedSearchJs("My Feed")
-         } else {
-            codeObj.code = "window.location.replace('" + url + topicId + "')"
-         }
-         browser.tabs.executeScript(tabs[0].id, codeObj)
+      let tab = tabs[0]
+      let codeObj = {}
+      if (topicId === 'myfeed') {
+         codeObj.code = clickSavedSearchJs("My Feed")
+      } else {
+         codeObj.code = "window.location.replace('" + url + topicId + "')"
       }
+      browser.tabs.executeScript(tab.id, codeObj)
    })
    .catch(err => { logErr(err); });;
 }
@@ -112,23 +112,15 @@ function clickSavedSearchJs(ssName) {
    return rtn;
 }
 
-export function openAuxilaryWindow (url, auxWinType = 1, makeTabActive = true, winOpenParams = "width=460,height=650") {
-   // auxWinType = 1: do "browser.tabs.create" (the default)
-   // auxWinType = 2: do "window.open", params "width=460,height=650" mimicks ext. popup
+export function openAuxilaryWindow (store, url, makeTabActive = true, winOpenParams = "width=460,height=650") {
+   // auxWinType = 1: (default) do "window.open", params "width=460,height=650" mimicks ext. popup
+   // auxWinType = 2: do "browser.tabs.create"
+   let auxWinType = store.state.settings.ui.user.auxilaryWindowType
    if (auxWinType === 1) { 
+      let rtnObj = window.open(url, "jcAuxWin", winOpenParams)
+   } else {
       browser.tabs.create({ url: url, active: makeTabActive  })
-      .then( (rtnObj) => {
-         //alert(rtnObj.toString())
-         // return ref. to new extension tab object
-         logMsg({'Tab obj': rtnObj})
-         return rtnObj
-      }) 
       .catch(err => {utils.logErr(err); });
-   } else if (auxWinType === 2) {
-         // return ref. to new window object
-         let rtnObj = window.open(url, "", winOpenParams)
-         logMsg({'Window obj': rtnObj})
-         return rtnObj
    }
 }
 
@@ -155,24 +147,21 @@ export function removeExtPopupMaxWidth() {
 
 }
 
-export  function setPageActionIcon(settings) {
+export function setPageActionIcon(settings) {
 
    let manifest = browser.runtime.getManifest();
    let title = manifest.page_action.default_title
-
-   let tabsQueryDef = { url: manifest.content_scripts[0].matches[0] }
-   if (isFirefox()) tabsQueryDef = {}
+   let tabsQueryDef = { active: true, currentWindow: true }
 
    browser.tabs.query(tabsQueryDef)
    .then( (tabs) => {
       //logMsg({'All Tabs': tabs})
+      let tab = tabs[0]
       let canvas = document.createElement('canvas')
       let img = new Image()
       img.src = extActionIcon48  // instead of "/icons/48.png";
       // img.addEventListener('load', function() {}
       img.onload = function () {
-
-         /* Draw the background image */
          let ctx = canvas.getContext('2d');
          ctx.drawImage(img, 0, 0);                       // add icon to context
          title = updateContext(settings, ctx, title)     // update canvas, return new title
@@ -180,20 +169,13 @@ export  function setPageActionIcon(settings) {
          
          let setIconParams = {}
          let setTitleParams = {}
-         tabs.forEach( (tab) => {
-            setIconParams = { tabId: tab.id, imageData: imgData }
-            /* //  This is the older "chrome" API call (if 'browser' works in Firefox, remove)
-            chrome.pageAction.setIcon(setIconParams, function () {
-               setTitleParams = { title: title, tabId: tab.id }
-               chrome.pageAction.setTitle(setTitleParams)
-            })*/
-            browser.pageAction.setIcon(setIconParams)
-            .then(() => {
-               setTitleParams = { title: title, tabId: tab.id }
-               browser.pageAction.setTitle(setTitleParams)
-            })
-            .catch(err => { logErr(err); });
+         setIconParams = { tabId: tab.id, imageData: imgData }
+         browser.pageAction.setIcon(setIconParams)
+         .then(() => {
+            setTitleParams = { title: title, tabId: tab.id }
+            chrome.pageAction.setTitle(setTitleParams)
          })
+         .catch(err => { logErr(err); });
       }
    })
    .catch(err => { logErr(err); });
@@ -206,10 +188,8 @@ function updateContext(settings, ctx, title) {
       ctx.strokeStyle = 'red';
       ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.moveTo(42, 6);
-      ctx.lineTo(6, 42);
-      ctx.moveTo(6, 6);
-      ctx.lineTo(42, 42);
+      ctx.moveTo(42, 6); ctx.lineTo(6, 42);
+      // ctx.moveTo(6, 6); // ctx.lineTo(42, 42);
       ctx.stroke();
       title += '\nSwitched Off'
    }
@@ -224,6 +204,13 @@ function updateContext(settings, ctx, title) {
    }
    return title
    //logMsg('setPageActionIcon fired: ' + uiAuto.notificationCount)
+}
+
+export function formatDate(dtIn) {
+   let dtMilli = Date.parse(dtIn);
+   let dt = new Date(dtMilli);
+   let formattedDate = dt.toLocaleString();
+   return formattedDate;
 }
 
 //logMsg({'deveMode': devMode})

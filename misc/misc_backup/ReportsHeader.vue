@@ -1,6 +1,6 @@
 <template>
    <header :style="{ height: hdrInfo.fixedHeight +'px' }" >
-      <h2 class="title">{{  hdrInfo.titlePrefix + rptInfo.title }}</h2>
+      <h2 class="title">{{ hdrInfo.titlePrefix + rptInfo.title }}</h2>
    </header>
 </template>
 

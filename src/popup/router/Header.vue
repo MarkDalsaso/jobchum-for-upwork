@@ -48,17 +48,17 @@
                </router-link>
             </span>
 
+            <!-- <span v-if="$route.params.filter" class="count-container"> -->
             <span class="count-container">
-               <span v-if="$route.params.filter">{{ current.topics.filter.count }}</span>
+                  {{ current.topics.filter.count }}
             </span>
 
             <!-- Reports button testing -->
             <!-- <router-link title="Reports - normal route" to="/reports" tag="button" active-class="active">
                Rn
             </router-link> -->
-            <button title="Zero Notification Count"    @click="zeroNotificationCount()">0Nc</button>
 
-            <img @click="openReportsTab()"
+            <img @click="openNotificationsReport()"
                   class="nav-icon"
                   title="Notification History" src="../../assets/reports.png">     
 
@@ -94,19 +94,11 @@
       mounted () {
          if (this.settings.ui.auto.notificationCount > 0) {
             if (this.settings.ui.user.autoPopupNewNotifications) {
-               this.openReportsTab(2)
+               this.openNotificationsReport()
             }
-            //this.zeroNotificationCount()
          }
       },
       methods: {
-         zeroNotificationCount() {
-            this.settings.ui.auto.notificationCount = 0
-            let self = this
-            this.persistSettings( function () {
-               utils.setPageActionIcon(self.settings)
-            })
-         },
          testSetIcon() { },
          toggleIsOnAndPersist(event) {
             this.settings.ui.auto.isOn = event
@@ -131,15 +123,22 @@
                   utils.logErr(err);
                });
          },
-         openReportsTab() {
+         openNotificationsReport() {
             let url = "../popup/popup.html?p=reports&report=notifications";
-            let type = this.settings.ui.user.auxilaryWindowType
-            utils.openAuxilaryWindow(url, type)
+            utils.openAuxilaryWindow(this.$store, url)
+            this.zeroNotificationCount()
+         },
+         zeroNotificationCount() {
+            this.settings.ui.auto.notificationCount = 0
+            let self = this
+            this.persistSettings( function () {
+               utils.setPageActionIcon(self.settings)
+            })
          },
          openToolsWindow() {
              let url = "../popup/popup.html?p=tools";
              let type = this.settings.ui.user.auxilaryWindowType
-             utils.openAuxilaryWindow(url, type)
+             utils.openAuxilaryWindow(this.$store, url, type)
          }
       },
       computed: {
@@ -173,10 +172,10 @@
       top: 0;
       left: 0;
    }
-   span.tool-links > img {
-      width: 30px;
-      margin: 3px 5px 0 5px
-   }
+   /* span.tool-links > img {
+      width: 25px;
+      margin: 5px 5px 0 5px
+   } */
    span.chimp {
       padding: 6px;
       position: absolute;
@@ -200,16 +199,6 @@
    .grey-image {
       filter: grayscale(100%);
    }
-   .nav-icon:hover {
-      background-color: rgb(55, 160, 0);
-      border-radius: 4px; 
-   }
-   nav .nav-icon {
-      display: inline-block;
-      vertical-align: bottom;
-      height: 30px;
-      margin: 0 0 0 15px
-   }
    .nav-switch {
       display: inline-block;
       margin: 0 0 0 14px;
@@ -222,6 +211,7 @@
    }
    nav > div {
       margin: 0;
+      padding-left: 10px;
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -234,12 +224,12 @@
    .btn1.hover > input[type] {
       background-color: rgb(255, 237, 209);
    }
-   .multi {
+   /* .multi {
       margin: 0 7px 0 14px ;
-   }
+   } */
    .multi > .btn1 {
       width: 40px;
-      margin: 0 0;
+      /* margin: 0 0; */
       padding: 4px 10px;
       border-radius: 0
    }
@@ -253,12 +243,15 @@
       display: inline-block;
       overflow: hidden;
       width: 30px;
-      margin-right: 14px;
-      vertical-align: text-bottom
-   }
-   .count-container > span {
+      margin: 0 14px;
+      /* vertical-align: text-bottom */
       color: rgb(55, 160, 0);
       font-weight: 650;
       font-size: 13px;
    }
+   /* .count-container > span {
+      color: rgb(55, 160, 0);
+      font-weight: 650;
+      font-size: 13px;
+   } */
 </style>

@@ -1,8 +1,7 @@
 <template>
+   <!-- <span>{{width + '%'}}</span> -->
    <div class="bar">
-      <div class="inner-bar" :style="{width: width + '%'}">
-         {{value + '%'}}
-      </div>
+      <div class="inner-bar" :style="{width: width + '%'}">&nbsp;</div>
    </div>
 </template>
 
@@ -32,7 +31,8 @@
       text-align: center;
    }
    .inner-bar {
-      background-color:rgb(55, 160, 0);;
+      height: inherit;
+      background-color:rgb(55, 160, 0);
       margin: 0;
       color: white;
       transition: width 250ms;

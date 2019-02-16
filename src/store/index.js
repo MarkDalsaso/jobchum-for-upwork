@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import * as utils from '../shared/utils.js';
 import sysSettings from '../shared/settings.json';
 import notificationIcon from '../shared/notificationIcon';
-import notificationMp3 from '../shared/notificationMp3';
+// import notificationMp3 from '../shared/notificationMp3';
 Vue.use(Vuex);
 
 function EmptyState () {
@@ -12,7 +12,6 @@ function EmptyState () {
       settings: sysSettings,
       topics: [],
       notifications: [],
-      //activeTabId: 0,   // singleton, updates on every popop up load, (used for set icon)
 
       // These prop's "ARE NOT" persisted to storage
       current: {
@@ -20,10 +19,8 @@ function EmptyState () {
             filter:  {
                name: '',
                count: 0
-            }
-         },
-         
-         //auxWinRef: null, auxTabId: 0  // not in use, proably not needed
+            },
+         }
       },
       initialized: false   // Used to delay DOM render until state is ready
    }
@@ -37,7 +34,6 @@ export const store = new Vuex.Store({
       settings: state => state.settings,
       topics: state => state.topics,
       notifications: state => state.notifications,
-      //activeTabId: state => state.activeTabId,
       current: state => state.current,
       initialized: state => state.initialized,
       topicById: state => id => {
@@ -81,9 +77,6 @@ export const store = new Vuex.Store({
       notifications (state, payload) {
          state.notifications = payload;
       },
-      // activeTabId (state, payload) {
-      //    state.activeTabId = payload;
-      // },            
       topicsFilterState (state, payload) {
          state.current.topics = payload;
       },
@@ -144,11 +137,6 @@ export const store = new Vuex.Store({
             })
             .catch(err => { utils.logErr(err); });
       },
-      // updateActiveTabId: ({ state, dispatch }, payload) => {
-      //    state.activeTabId = payload
-      //    dispatch('persistToStorage', 'activeTabId')
-      //    .catch(err => { utils.logErr(err); });
-      // },  
       fetchFromStorage({ commit }, rootKeyName) {
          return new Promise(function(resolve) {
             browser.storage.local.get(rootKeyName)
@@ -309,7 +297,8 @@ function doTopicsResultsNotification(topic, newResults) {
 
    // NOTE: future enhancement: use have playSound toggle via tipic options
    if (store.state.settings.ui.user.playSound) {
-      utils.doSound(notificationMp3);
+      // utils.doSound(notificationMp3);
+      utils.doSound("./icons/sound.mp3");
    }
 }
 

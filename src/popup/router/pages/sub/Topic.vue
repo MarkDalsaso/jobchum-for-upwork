@@ -42,9 +42,16 @@
                Last query: {{ lastQuery(topic.custom.qLastRequest) }}
                &nbsp; &nbsp; &nbsp;
                Next query: {{ nextQuery(topic.custom.qLastRequest, topic.custom.qInterval) }}
+
+            <img v-if="topic.results.length > 0" 
+               @click="openTopicResultsReport(topic.id)"
+               class="nav-icon" style="float: right"
+               :title="rptTitleAttribute"
+               src="../../../../assets/reports.png"> 
+
             </td>
          </tr>
-         
+
       </table>
    </section>
 </template>
@@ -71,9 +78,16 @@
             var nextQryInt = dateInt + interval * 60 * 1000;
             if (nextQryInt < Date.now()) return "overdue";
             else return formatDateTime(nextQryInt);
-         }
+         },
+         openTopicResultsReport(id) {
+            let url = "../popup/popup.html?p=reports&report=topic-results&id=" + id;
+            utils.openAuxilaryWindow(this.$store, url)
+         },
       },
       computed: {
+         rptTitleAttribute: function () {
+            return "Results (" + this.topic.results.length + ")"
+         },
          greyOnInactive: function() {
             if (
                !this.$store.state.settings.ui.auto.isOn ||
@@ -84,7 +98,7 @@
          }
       },
       components: {
-         "toggle-switch": ToggleSwitch
+         "toggle-switch": ToggleSwitch,
       }
    };
 

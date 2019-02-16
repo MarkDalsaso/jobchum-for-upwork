@@ -1,70 +1,85 @@
 <template>
    <div>
-      <reports-header :hdrInfo="hdrInfo" :rptInfo="rptInfo"
-      ></reports-header>
-      <div class="panel">
-         <table>
-            <tr>
-               <th>Notification Date</th>
-               <th>Topic Name (id)</th>
-               <th>Results (recno)</th>
-               <th></th>
-            </tr>
-            <tr v-for="(noti) in prettyNotifications" :key="noti.date">
-               <td>{{ noti.date }}</td>
-               <td>{{ noti.topic }}</td>
-               <td>{{ noti.resultInfo }}</td>
-            </tr>
-         </table>
-         <div>
-            <p>Count: {{ prettyNotifications.length }}</p>
+
+      <header :style="{ height: hdrInfo.fixedHeight +'px' }" >
+         <h2 class="title" @click="buildReport()">
+            {{ hdrInfo.titlePrefix + rptInfo.title }}
+         </h2>
+      </header>
+
+      <main :style="{ 'padding-top': hdrInfo.fixedHeight +'px' }">
+
+         <div v-if="rptInfo.name==='notifications'">
+            <table class="tbl-sticky-hdr">
+               <thead>
+                  <tr>
+                     <th :style="{'top': hdrInfo.fixedHeight +'px'}">Notification Date</th>
+                     <th :style="{'top': hdrInfo.fixedHeight +'px'}">Topic Name (id)</th>
+                     <th :style="{'top': hdrInfo.fixedHeight +'px'}">Results (recno)</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr v-for="(noti) in notificationsReport" :key="noti.date">
+                     <td>{{ noti.date }}</td>
+                     <td>{{ noti.topic }}</td>
+                     <td>{{ noti.resultsInfo }}</td>
+                  </tr>
+               </tbody>
+            </table>
+            <div>
+               <p>Count: {{ notificationsReport.length }}</p>
+            </div>
+            <div>
+               <button @click="reload()">Reload</button>
+               <p>report name : {{ this.rptInfo.name }}</p>
+               
+            </div>
          </div>
-         <div>
-            <button @click="reload()">Reload</button>
-            <p>report name : {{ this.rptInfo.name }}</p>
-            
-         </div>
-      </div>
+
+         <topic-results
+            v-if="rptInfo.name==='topic-results'"
+            :tResults = "topicResultsReport.results"
+            :stickyTop = "hdrInfo.fixedHeight"
+         ></topic-results>
+
+      </main>
+
    </div>
 </template>
 
 <script>
    import * as utils from "../../../shared/utils.js";
-   import ReportsHeader from "./sub/ReportsHeader.vue";
+   import TopicResults from "./sub/TopicResults.vue";
    export default {
       data() { 
          return {
-            prettyNotifications: [],
+            notificationsReport: [],
+            topicResultsReport: [],
             hdrInfo: {
                fixedHeight: 38,
-               titlePrefix: "jC - "
+               titlePrefix: "jC "
             },
             rptInfo: {
                name: '',
                title: '',
+               topicId: 0
             }
          };
       },
       created() {
          this.rptInfo.name = this.$route.query.report
-         switch(this.rptInfo.name) {
-            case 'notifications':
-               this.rptInfo.title = "Notification History"
-               break
-            case 'topicResults':
-               this.rptInfo.title = "Topic Results"
-               break
-         }
+         this.rptInfo.topicId = this.$route.query.id
+         let self = this
+         browser.storage.onChanged.addListener(function (changesObject, areaName) {
+            if ('notifications' in changesObject || 'topics' in changesObject) {
+               self.buildReport()
+            }
+         })
+         //utils.logMsg(this.rptInfo)
       },
       mounted() { 
          utils.removeExtPopupMaxWidth()
          this.buildReport()
-         let self = this
-         browser.storage.onChanged.addListener(function (changesObject, areaName) {
-            if ('notifications' in changesObject) {
-               self.buildReport()
-            }
-         })
       },
       methods: {
          reload () {
@@ -75,17 +90,37 @@
             //document.title = this.titlePrefix + this.rptInfo.title
          },
          buildReport () {
+            switch(this.rptInfo.name) {
+               case 'notifications':
+                  this.doNotificationsReport()
+                  this.rptInfo.title = "Notification History"
+                  break
+               case 'topic-results':
+                  this.doTopicResultsReport()
+                  this.rptInfo.title =
+                     "Results for Topic: " + this.topicResultsReport.captured.name
+                  break
+            }
+            document.title = this.hdrInfo.titlePrefix + this.rptInfo.title
+         },
+         doNotificationsReport() {
             this.$store.dispatch("loadStateFromStorage")
             .then( () => {
-               this.prettyNotifications = this.notifications.map((noti) => {
+               this.notificationsReport = this.notifications.map((noti) => {
                   return {
-                     date: new Date(noti.date).toString(),
+                     //date: new Date(noti.date).toString(),
+                     date: utils.formatDate(noti.date),
                      topic: noti.topic.name + " (" + noti.topic.id + ")",
-                     resultInfo: "(" + noti.results.length + ") " + noti.results.toString()
+                     results: noti.results,
+                     resultsInfo: "(" + noti.results.length + ") " + noti.results.toString()
                   }
                })
             }).catch((err) => { utils.logErr(err) });
-         }
+         },
+         doTopicResultsReport() {
+            this.topicResultsReport = 
+               this.$store.getters.topicById(this.rptInfo.topicId)
+         },
       },
       // watch: {},
       computed: {
@@ -100,16 +135,18 @@
          }
       },
       components: {
-         'reports-header': ReportsHeader
+         'topic-results':TopicResults
       },
    };
 </script>
 
 <style scoped>
-   html, body {
-      min-height: unset
-   } 
-   .panel {
-      margin-top: 38px;
+   header {
+      /* background-color: rgba(32, 31, 25, 0.068); */
+      background-color: rgb(232, 219, 170);
+      position: fixed;
+      top: 0;
+      z-index: 10;
    }
+   main { margin: 0 }
 </style>

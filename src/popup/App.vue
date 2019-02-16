@@ -57,7 +57,6 @@
 
  <style>
     html, body {
-      /* min-height: 900px;   ensures vertical scrollbar */
       margin: 0;
       padding: 0;
       color: #000;
@@ -80,7 +79,18 @@
    }
    .panel {
      min-width: 425px;
+     min-height: 900px;  /* ensures vertical scrollbar */
    }
+   .nav-icon:hover {
+      background-color: rgb(55, 160, 0);
+      border-radius: 4px; 
+   }
+   .nav-icon {
+      display: inline-block;
+      vertical-align: bottom;
+      height: 25px;
+      margin: 5px 5px 0 5px;
+   }   
    .btn1 {
       color: black;
       display: inline-block;
@@ -103,5 +113,17 @@
    .btn1 > label:hover {
       cursor: hand;
       cursor: pointer;
+   }
+   .tbl-sticky-hdr {
+      width: 100%;
+      border-spacing: 0;
+      padding-bottom: 4px;
+   }
+
+   .tbl-sticky-hdr thead th {
+      position: sticky;
+      position: -webkit-sticky;
+      z-index: 5;
+      background-color: rgb(232, 219, 170);
    }   
 </style>

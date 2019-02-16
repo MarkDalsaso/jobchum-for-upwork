@@ -41,7 +41,7 @@
                   v-model.number="settings.ui.user.auxilaryWindowType"
                   @change="persist()"
                >
-            <label>Auxiliary window type (e.g. reports)<br>1 for 'browser tab',<br>2 for 'window.open'</label>
+            <label>Auxiliary window type (e.g. reports)<br>1 for 'window',<br>2 for 'tab'</label>
          </div>
       
       </section>
@@ -62,13 +62,6 @@
          </div>
       </section>
 
-
-      <!-- <section></section> -->
-      <div v-if="devMode">
-         <br/><h4>JSON (dev mode)</h4>
-         <textarea wrap="off" v-model="settingsJson" class="jsonTextarea" spellcheck="false"></textarea>
-      </div>
-      
    </div>
 </template>
 
@@ -98,7 +91,7 @@
             let self = this
             browser.storage.local.getBytesInUse(null)
             .then( (bytes) => {
-               self.totalBytesInUse = bytes
+               self.totalBytesInUse = bytes * 2   //char is UTF-16 (2 bytes)
                self.percentOfQuota = self.percentUsed(bytes, QUOTA_BYTES)
                browser.storage.local.getBytesInUse('notifications')
                .then ( (bytes) => { this.notificationsBytes = bytes })
@@ -115,13 +108,6 @@
             this.$store.commit('notifications', []);
             this.$store.dispatch('persistToStorage', 'notifications')
             .catch(err => { utils.logErr(err); });
-            // this.$store.dispatch('fetchFromStorage', 'notifications')
-            // .then ( () => { 
-            //    this.$store.commit('notifications', []);
-            //    this.$store.dispatch('persistToStorage', 'notifications')
-            //    .catch(err => { utils.logErr(err); });
-            // })
-            // .catch(err => { utils.logErr(err); });
          },         
          persist (callback) {
             this.$store.dispatch("persistToStorage", "settings")
@@ -206,15 +192,5 @@
       margin: 0 0 0 4px;
       padding: 3px;
       box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
-   }
-   .jsonTextarea {
-      box-sizing: border-box;
-      border: none;
-      width: 96%;
-      height: 735px;
-      background-color: rgb(248, 248, 213);
-      margin: 6px 3px 8px 6px;
-      padding: 3px;
-      overflow: auto;
    }
 </style>
