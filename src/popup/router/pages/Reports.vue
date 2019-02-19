@@ -3,7 +3,7 @@
 
       <header :style="{ height: hdrInfo.fixedHeight +'px' }" >
          <h2 class="title" @click="buildReport()">
-            {{ hdrInfo.titlePrefix + rptInfo.title }}
+            {{ rptInfo.title }}
          </h2>
       </header>
 
@@ -14,25 +14,25 @@
                <thead>
                   <tr>
                      <th :style="{'top': hdrInfo.fixedHeight +'px'}">Notification Date</th>
-                     <th :style="{'top': hdrInfo.fixedHeight +'px'}">Topic Name (id)</th>
-                     <th :style="{'top': hdrInfo.fixedHeight +'px'}">Results (recno)</th>
+                     <th :style="{'top': hdrInfo.fixedHeight +'px'}">Topic Name</th>
+                     <th :style="{'top': hdrInfo.fixedHeight +'px'}">Results</th>
                   </tr>
                </thead>
                <tbody>
-                  <tr v-for="(noti) in notificationsReport" :key="noti.date">
-                     <td>{{ noti.date }}</td>
-                     <td>{{ noti.topic }}</td>
-                     <td>{{ noti.resultsInfo }}</td>
+                  <tr v-for="(noti, idx) in notificationsReport" :key="idx">
+                     <td colspan="3" @click="setNotiResults(noti)">
+                        <span style="width=150">{{ noti.formDate }}</span>
+                        <span>{{ noti.topic.name }} ({{noti.recnoAry.length}})</span>
+                        <topic-results
+                           v-if="noti.resultsOpen"
+                           :tResults = "noti.results"
+                        ></topic-results>
+                     </td>
                   </tr>
                </tbody>
             </table>
             <div>
                <p>Count: {{ notificationsReport.length }}</p>
-            </div>
-            <div>
-               <button @click="reload()">Reload</button>
-               <p>report name : {{ this.rptInfo.name }}</p>
-               
             </div>
          </div>
 
@@ -41,6 +41,10 @@
             :tResults = "topicResultsReport.results"
             :stickyTop = "hdrInfo.fixedHeight"
          ></topic-results>
+
+         <div>
+            <button @click="buildReport()">Rebuild Report {{ this.rptInfo.name }}</button>
+         </div>
 
       </main>
 
@@ -82,9 +86,6 @@
          this.buildReport()
       },
       methods: {
-         reload () {
-            this.buildReport()
-         },         
          test () {
             alert("boo")
             //document.title = this.titlePrefix + this.rptInfo.title
@@ -93,12 +94,12 @@
             switch(this.rptInfo.name) {
                case 'notifications':
                   this.doNotificationsReport()
-                  this.rptInfo.title = "Notification History"
+                  this.rptInfo.title = "Notifications Log"
                   break
                case 'topic-results':
                   this.doTopicResultsReport()
                   this.rptInfo.title =
-                     "Results for Topic: " + this.topicResultsReport.captured.name
+                     "Topic Results: " + this.topicResultsReport.captured.name
                   break
             }
             document.title = this.hdrInfo.titlePrefix + this.rptInfo.title
@@ -108,14 +109,26 @@
             .then( () => {
                this.notificationsReport = this.notifications.map((noti) => {
                   return {
-                     //date: new Date(noti.date).toString(),
-                     date: utils.formatDate(noti.date),
-                     topic: noti.topic.name + " (" + noti.topic.id + ")",
-                     results: noti.results,
-                     resultsInfo: "(" + noti.results.length + ") " + noti.results.toString()
+                     resultsOpen: false,
+                     formDate: utils.formatDate(noti.date),
+                     topic: noti.topic,
+                     date: noti.date,
+                     recnoAry: noti.results,
+                     results: []
                   }
                })
             }).catch((err) => { utils.logErr(err) });
+         },
+         setNotiResults(noti) {
+            noti.results = this.getNotiResults(noti.topic.id, noti.recnoAry)
+            noti.resultsOpen = !noti.resultsOpen
+         },
+         getNotiResults(topicId, recnoAry) {
+            let allTopicResults = this.$store.getters.topicById(topicId).results
+            let notiResults = allTopicResults.filter( (result) => {
+               return recnoAry.includes(result.recno)
+            })
+            return notiResults
          },
          doTopicResultsReport() {
             this.topicResultsReport = 

@@ -2,8 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import * as utils from '../shared/utils.js';
 import sysSettings from '../shared/settings.json';
-import notificationIcon from '../shared/notificationIcon';
-// import notificationMp3 from '../shared/notificationMp3';
+import chimp128 from '../shared/chimp128';
 Vue.use(Vuex);
 
 function EmptyState () {
@@ -65,6 +64,13 @@ export const store = new Vuex.Store({
                count: rtnAry.length
             }
          }
+      },
+      notificationResults: state => (topicId, recnoAry) => {
+         let allTopicResults = getters.topicById(topicId).results
+         let notiResults = allTopicResults.filter( result => {
+            return recnoAry.includes(result.recno)
+         })
+         return notiResults         
       }
    },
    mutations: {
@@ -274,7 +280,8 @@ function Notification(topic, newResults) {
       date: new Date().toISOString(),
       topic: {
          id: topic.id,
-         name: topic.captured.name
+         name: topic.captured.name,
+         read: false
       },
       results: newResults.map(result => result.recno)
    }
@@ -284,7 +291,7 @@ function doTopicsResultsNotification(topic, newResults) {
    let msgOptions = {
       type: 'basic',
       title: newResults.length.toString() + ' new job(s) detected!',
-      iconUrl: notificationIcon,
+      iconUrl: chimp128,
       message: 'for saved search: ' + topic.captured.name
    };
 
@@ -297,7 +304,6 @@ function doTopicsResultsNotification(topic, newResults) {
 
    // NOTE: future enhancement: use have playSound toggle via tipic options
    if (store.state.settings.ui.user.playSound) {
-      // utils.doSound(notificationMp3);
       utils.doSound("./icons/sound.mp3");
    }
 }

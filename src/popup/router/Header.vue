@@ -23,10 +23,12 @@
 
       <!-- chimp img/help link, and version text (float right) -->
       <span class="chimp" @click="openHelpTab" title="Click for help">
+
          <img :class="{ 'grey-image': !settings.ui.auto.isOn }"
-            src="../../assets/128.png"
+            :src="logo"
             height="55px"
-         >
+         >      <!--   src="../../assets/128.png" -->
+
          <p>
             ver. {{ version }}
             <span v-if="devMode" style="color: red;"> dev</span>
@@ -36,15 +38,12 @@
       <nav>
          <div>
             <!--  exact   (required when detecting default path of just '/') -->
-            <span class="multi">
+            <span class="multi" title="filter">
                <router-link class="btn1" to="/all" tag="span" active-class="active">
                   All
                </router-link>
                <router-link class="btn1" to="/on" tag="span" active-class="active">
                   On
-               </router-link>
-               <router-link class="btn1" to="/off" tag="span" active-class="active">
-                  Off
                </router-link>
             </span>
 
@@ -53,14 +52,13 @@
                   {{ current.topics.filter.count }}
             </span>
 
-            <!-- Reports button testing -->
-            <!-- <router-link title="Reports - normal route" to="/reports" tag="button" active-class="active">
-               Rn
-            </router-link> -->
-
+            <span class="btn1">
             <img @click="openNotificationsReport()"
                   class="nav-icon"
-                  title="Notification History" src="../../assets/reports.png">     
+                  title="Notification Log"
+                  src="../../assets/reports.png">
+               Notifications
+            </span>
 
             <toggle-switch title="Main switch" class="nav-switch"
                v-model="settings.ui.auto.isOn"
@@ -74,12 +72,14 @@
 </template>
 
 <script>
+   import chimp128 from "../../shared/chimp128.js";
    import * as utils from "../../shared/utils.js";
    import ToggleSwitch from "./pages/sub/ToggleSwitch.vue";
    export default {
       data () { 
          return {
-            filter: { name: '', count: ''}
+            filter: { name: '', count: ''},
+            'logo': chimp128
           };
       },
       watch: {
@@ -124,8 +124,11 @@
                });
          },
          openNotificationsReport() {
-            let url = "../popup/popup.html?p=reports&report=notifications";
-            utils.openAuxilaryWindow(this.$store, url)
+            let aux = new utils.AuxWindow({
+               url: "../popup/popup.html?p=reports&report=notifications",
+               name : 'notifications'
+            })
+            utils.openAuxilaryWindow(this.$store, aux)
             this.zeroNotificationCount()
          },
          zeroNotificationCount() {
@@ -136,9 +139,11 @@
             })
          },
          openToolsWindow() {
-             let url = "../popup/popup.html?p=tools";
-             let type = this.settings.ui.user.auxilaryWindowType
-             utils.openAuxilaryWindow(this.$store, url, type)
+             let aux = new utils.AuxWindow({
+               url: "../popup/popup.html?p=tools",
+               name : 'tools'
+             })
+             utils.openAuxilaryWindow(this.$store, aux)
          }
       },
       computed: {
@@ -216,9 +221,10 @@
       top: 50%;
       transform: translateY(-50%);
    }
-   .btn1 {
+   .btn1, .nav-icon {
       background-color: rgb(221, 209, 192);
    }
+   .nav-icon:hover,
    .btn1:hover,
    .btn1.active,
    .btn1.hover > input[type] {

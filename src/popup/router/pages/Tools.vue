@@ -17,7 +17,7 @@
          <span class="btn1" @click="loadStateFromStorage()">Reload State From Storage</span>
          <span class="btn1" @click="wipeExtensionState()">DELETE ALL Storage/State</span>
          <h4>Misc</h4>
-         <span class="btn1" @click="openReports()">Open Reports Tab</span>
+         <span class="btn1" @click="openReports()">Open Notifications Reports</span>
          <span class="btn1" @click="addMainAlarm()">Add Main Alarm</span>
       </div>
       <div>
@@ -85,9 +85,11 @@
             this.$store.dispatch("wipeExtensionState");
          },
          openReports() {
-            let rtnObj = null
-            let url = "../popup/popup.html?p=reports&report=notifications"
-            utils.openAuxilaryWindow(this.$store, url, false)
+            let aux = new utils.AuxWindow({
+               url: "../popup/popup.html?p=reports&report=notifications",
+               name : 'notifications'
+            })
+            utils.openAuxilaryWindow(this.$store, aux)
          },
       },
       computed: {

@@ -4,7 +4,7 @@
    import * as utils from 'utils.js'
 */
 import sysSettings from './settings.json';
-import extActionIcon48 from './extActionIcon48';
+import chimp48 from './chimp48';
 export function logMsg(msg) {
    let m = msg instanceof Object ? msg : { msg: msg };
    console.log(m);
@@ -77,12 +77,24 @@ export function isFirefox() {
    return typeof browser.runtime.getBrowserInfo !== 'undefined'
 }
 
-export function reQueryById(topicId) {
+export function updateLastTabId (store, tabId) {
+   //if (typeof tabId !== 'undefined') {
+   if (tabId) {
+      store.state.settings.ui.auto.lastTabId = tabId
+      store.dispatch("persistToStorage", "settings")
+      .then (() => {
+         logMsg({'tabsId updated)': tabId})
+      })
+      .catch(err => { logErr(err);});       
+   }
+}
+
+export function reQueryById(store, topicId) {
    let url = sysSettings.sys.requeryBaseUrl
-   let tabsQueryDef = { active: true, currentWindow: true }
-   browser.tabs.query(tabsQueryDef)
-   .then(tabs => {
-      let tab = tabs[0]
+   let tabId = store.state.settings.ui.auto.lastTabId
+   browser.tabs.get(tabId)
+   .then( tab => {
+      logMsg({'tab (reQueryById)': tab})
       let codeObj = {}
       if (topicId === 'myfeed') {
          codeObj.code = clickSavedSearchJs("My Feed")
@@ -112,15 +124,25 @@ function clickSavedSearchJs(ssName) {
    return rtn;
 }
 
-export function openAuxilaryWindow (store, url, makeTabActive = true, winOpenParams = "width=460,height=650") {
-   // auxWinType = 1: (default) do "window.open", params "width=460,height=650" mimicks ext. popup
-   // auxWinType = 2: do "browser.tabs.create"
+export function openAuxilaryWindow (store, auxWin) {
    let auxWinType = store.state.settings.ui.user.auxilaryWindowType
    if (auxWinType === 1) { 
-      let rtnObj = window.open(url, "jcAuxWin", winOpenParams)
+      let rtnObj = window.open(auxWin.url, auxWin.winName, auxWin.winParams)
    } else {
-      browser.tabs.create({ url: url, active: makeTabActive  })
+      browser.tabs.create({ url: auxWin.url, active: auxWin.tabMakeActive })
       .catch(err => {utils.logErr(err); });
+   }
+}
+
+export function AuxWindow(options) {
+   const defaultWinSize = "width=460,height=650"  // mimicks ext. popup
+   const defaultWinwinParams = {}
+   return {
+      url: options.url,
+      winName: options.name ? options.name : "" ,
+      winParams: {},
+      tabId: 0,
+      tabMakeActive: true
    }
 }
 
@@ -148,18 +170,15 @@ export function removeExtPopupMaxWidth() {
 }
 
 export function setPageActionIcon(settings) {
-
    let manifest = browser.runtime.getManifest();
    let title = manifest.page_action.default_title
-   let tabsQueryDef = { active: true, currentWindow: true }
-
-   browser.tabs.query(tabsQueryDef)
-   .then( (tabs) => {
-      //logMsg({'All Tabs': tabs})
-      let tab = tabs[0]
+   let tabId = settings.ui.auto.lastTabId
+   browser.tabs.get(tabId)
+   .then( tab => {
+      //logMsg({'tab (setPageActionIcon)': tab})
       let canvas = document.createElement('canvas')
       let img = new Image()
-      img.src = extActionIcon48  // instead of "/icons/48.png";
+      img.src = chimp48
       // img.addEventListener('load', function() {}
       img.onload = function () {
          let ctx = canvas.getContext('2d');
@@ -189,9 +208,10 @@ function updateContext(settings, ctx, title) {
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.moveTo(42, 6); ctx.lineTo(6, 42);
-      // ctx.moveTo(6, 6); // ctx.lineTo(42, 42);
+      // ctx.moveTo(6, 6); // ctx.lineTo(42, 42);   // for red 'X'
       ctx.stroke();
       title += '\nSwitched Off'
+      //logMsg("page action icon 'off' badge")
    }
    else if (uiAuto.notificationCount > 0) {
       ctx.font = '56px bold Arial';
@@ -201,9 +221,9 @@ function updateContext(settings, ctx, title) {
       let xPos = Math.max(0, Math.floor((48 - textWidth)/2) )
       ctx.fillText(uiAuto.notificationCount, xPos, 44, 48);
       title += '\n' +  uiAuto.notificationCount + ' new notifications'
+      //logMsg("page action icon 'count' badge")
    }
    return title
-   //logMsg('setPageActionIcon fired: ' + uiAuto.notificationCount)
 }
 
 export function formatDate(dtIn) {

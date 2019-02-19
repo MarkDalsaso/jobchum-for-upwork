@@ -51,6 +51,7 @@ function handleMessage(message, sender) {
          case 'activate_icon':
             // this guarantees popup click works correctly for page action
             browser.pageAction.show(sender.tab.id);
+            utils.updateLastTabId(store, sender.tab.id)
             store.dispatch('fetchFromStorage', 'settings')
             .then( () => {
                utils.setPageActionIcon(store.getters.settings)
@@ -96,7 +97,7 @@ function requeryMostOverdueTopic() {
             return a.custom.qLastRequest - b.custom.qLastRequest;
          });
 
-         utils.reQueryById(overdueTopics[0].id);
+         utils.reQueryById(store, overdueTopics[0].id);
          // utils.logMsg({
          //    "overdue topic id": overdueTopics[0].id,
          //    "overdue topic name": overdueTopics[0].captured.name,

@@ -13,7 +13,8 @@
       "auto": {
          "isOn": false,
          "topicsFilter": "all",
-         "notificationCount": 0
+         "notificationCount": 0,
+         "lastTabId": 0
       },
       "user": {
          "playSound": true,

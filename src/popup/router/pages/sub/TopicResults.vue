@@ -1,5 +1,5 @@
 <template>
-   <table class="tbl-sticky-hdr">
+   <table class="tbl-sticky-hdr alt-rows">
       <thead>
          <tr>
             <th :style="{'top': stickyTop +'px'}">Published</th>

@@ -43,11 +43,12 @@
                &nbsp; &nbsp; &nbsp;
                Next query: {{ nextQuery(topic.custom.qLastRequest, topic.custom.qInterval) }}
 
-            <img v-if="topic.results.length > 0" 
+            <img v-if="topic.results.length > 0"
                @click="openTopicResultsReport(topic.id)"
                class="nav-icon" style="float: right"
-               :title="rptTitleAttribute"
-               src="../../../../assets/reports.png"> 
+               :title="'Results (' + topic.results.length + ')'"
+               src="../../../../assets/reports.png"
+            > 
 
             </td>
          </tr>
@@ -67,7 +68,7 @@
             this.$emit("topic-modified", { topic: this.topic });
          },
          reQueryTopic(evt) {
-            utils.reQueryById(this.topic.id);
+            utils.reQueryById(this.$store, this.topic.id);
          },
          lastQuery: function(dateInt) {
             return formatDateTime(dateInt);
@@ -80,14 +81,14 @@
             else return formatDateTime(nextQryInt);
          },
          openTopicResultsReport(id) {
-            let url = "../popup/popup.html?p=reports&report=topic-results&id=" + id;
-            utils.openAuxilaryWindow(this.$store, url)
+            let aux = new utils.AuxWindow({
+               url: "../popup/popup.html?p=reports&report=topic-results&id=" + id,
+               name : 'topic-results'
+            })
+            utils.openAuxilaryWindow(this.$store, aux)         
          },
       },
       computed: {
-         rptTitleAttribute: function () {
-            return "Results (" + this.topic.results.length + ")"
-         },
          greyOnInactive: function() {
             if (
                !this.$store.state.settings.ui.auto.isOn ||
@@ -180,5 +181,8 @@
    .btn1:active,
    .btn1:hover > input[type] {
       background-color: rgba(231, 235, 240, 0.87);
+   }
+   .inner-results {
+      width: 100%; display: block;
    }
 </style>

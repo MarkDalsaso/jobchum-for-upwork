@@ -12,21 +12,26 @@
          auxilaryRoute: false }
       },
       created() {
-         let queryString = window.location.search;
-         if (queryString.length > 1) {
-            let qsAry = queryString.split("&")
-            if (
-                  qsAry[0].startsWith("?p=") && 
-                  qsAry[0].split("=").length > 1
-               ) {
-                  let path = qsAry[0].split("=")[1]
-                  this.auxilaryRoute =  true;
-                  this.$router.replace({ path: '/' + path + queryString})
-                  // default html title
-                  document.title = 
-                     "jC - " + path.charAt(0).toUpperCase() + path.slice(1);
+         this.handleAuxilaryRoute()
+      },
+      methods: {
+         handleAuxilaryRoute () {
+            let queryString = window.location.search;
+            if (queryString.length > 1) {
+               let qsAry = queryString.split("&")
+               if (
+                     qsAry[0].startsWith("?p=") && 
+                     qsAry[0].split("=").length > 1
+                  ) {
+                     let path = qsAry[0].split("=")[1]
+                     this.auxilaryRoute =  true;
+                     this.$router.replace({ path: '/' + path + queryString})
+                     // default html title
+                     document.title = 
+                        "jC - " + path.charAt(0).toUpperCase() + path.slice(1);
+               }
+               //console.log("querystring: " + queryString)   // Testing
             }
-            //console.log("querystring: " + queryString)   // Testing
          }
       },
       computed: {
@@ -81,16 +86,16 @@
      min-width: 425px;
      min-height: 900px;  /* ensures vertical scrollbar */
    }
-   .nav-icon:hover {
+   /* .nav-icon:hover {
       background-color: rgb(55, 160, 0);
       border-radius: 4px; 
-   }
+   } */
    .nav-icon {
       display: inline-block;
       vertical-align: bottom;
       height: 25px;
       margin: 5px 5px 0 5px;
-   }   
+   }    
    .btn1 {
       color: black;
       display: inline-block;
@@ -125,5 +130,8 @@
       position: -webkit-sticky;
       z-index: 5;
       background-color: rgb(232, 219, 170);
-   }   
+   }
+   .tbl-sticky-hdr.alt-rows tr:nth-child(even) {
+       background-color: rgb(232, 219, 170);
+   }
 </style>
