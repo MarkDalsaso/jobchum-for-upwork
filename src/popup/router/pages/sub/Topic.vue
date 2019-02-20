@@ -38,30 +38,38 @@
          </tr>
 
          <tr>
-            <td colspan="2">
+            <td colspan="2" style="height: 30px">
                Last query: {{ lastQuery(topic.custom.qLastRequest) }}
                &nbsp; &nbsp; &nbsp;
                Next query: {{ nextQuery(topic.custom.qLastRequest, topic.custom.qInterval) }}
 
-            <img v-if="topic.results.length > 0"
-               @click="openTopicResultsReport(topic.id)"
-               class="nav-icon" style="float: right"
-               :title="'Results (' + topic.results.length + ')'"
-               src="../../../../assets/reports.png"
-            > 
+               <v-btn v-if="topic.results.length > 0"
+                  style="float: right"
+                  :onClick="function () { openTopicResultsReport(topic.id) }"
+                  :iconSrc="reportsIcon"
+                  :colorClass="'tpc-clr'"
+                  :title="'Results (' + topic.results.length + ')'"
+               ></v-btn>
 
             </td>
          </tr>
-
       </table>
+
    </section>
 </template>
 
 <script>
+   import reportsIcon from "@/assets/reports.png"
    import * as utils from "../../../../shared/utils";
    import ToggleSwitch from "./ToggleSwitch.vue";
+   import Button from "./Button.vue";
    
    export default {
+      data () {
+         return {
+            reportsIcon: reportsIcon,
+         }
+      },
       props: ["topic"],
       methods: {
          rowChg() {
@@ -100,6 +108,7 @@
       },
       components: {
          "toggle-switch": ToggleSwitch,
+         "v-btn": Button
       }
    };
 

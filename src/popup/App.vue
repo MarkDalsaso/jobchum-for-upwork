@@ -86,10 +86,6 @@
      min-width: 425px;
      min-height: 900px;  /* ensures vertical scrollbar */
    }
-   /* .nav-icon:hover {
-      background-color: rgb(55, 160, 0);
-      border-radius: 4px; 
-   } */
    .nav-icon {
       display: inline-block;
       vertical-align: bottom;

@@ -1,9 +1,9 @@
 <template>
-   <div class="toggle" :class="[state_class]" @click="onClick">
-      <div class="draggable" :style="style">
+   <span class="toggle" :class="[state_class]" @click="onClick">
+      <span class="draggable" :style="style">
          <span>{{ stateText }}</span>
-      </div>
-   </div>
+      </span>
+   </span>
 </template>
 
 <script>
@@ -62,6 +62,8 @@
 
 <style scoped>
    .toggle {
+      display: inline-block;
+      vertical-align: middle;    
       width: 40px;
       height: 20px;
       background-color: rgb(218, 223, 232);
@@ -72,6 +74,7 @@
       cursor: pointer;      
    }
    .toggle > .draggable {
+      display: inline-block;
       width: 20px;
       height: 20px;
       background-color: #ddd;

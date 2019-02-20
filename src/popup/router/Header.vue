@@ -10,15 +10,22 @@
 
       <!--settings and dev tools img. links (float left) -->
       <span class="tool-links">
-         <img @click="$router.replace({ path: '/settings' })"
-            class="nav-icon"
+
+         <v-btn
+            :onClick="function () {$router.replace({ path: '/settings' })}"
+            :iconSrc="settingsIcon"
+            :colorClass="'hdr-clr'"
             title="Settings"
-            src="../../assets/gears.png">
-         <img v-if="devMode"
-            class="nav-icon"
-            @click="openToolsWindow()"
+         ></v-btn>
+
+         <v-btn
+            v-if="devMode"
+            :onClick="openToolsWindow"
+            :iconSrc="toolsIcon"
+            :colorClass="'hdr-clr'"
             title="Dev. Tools"
-            src="../../assets/wrench.png">         
+         ></v-btn>
+
       </span>
 
       <!-- chimp img/help link, and version text (float right) -->
@@ -26,60 +33,78 @@
 
          <img :class="{ 'grey-image': !settings.ui.auto.isOn }"
             :src="logo"
-            height="55px"
-         >      <!--   src="../../assets/128.png" -->
+            height="55px">
 
-         <p>
+         <p :style="{ color: devColor }">
             ver. {{ version }}
-            <span v-if="devMode" style="color: red;"> dev</span>
          </p>
+
       </span>
 
+      <!-- nav row: filte, Notifications Log button, and Main switch -->
       <nav>
-         <div>
-            <!--  exact   (required when detecting default path of just '/') -->
-            <span class="multi" title="filter">
-               <router-link class="btn1" to="/all" tag="span" active-class="active">
-                  All
-               </router-link>
-               <router-link class="btn1" to="/on" tag="span" active-class="active">
-                  On
-               </router-link>
-            </span>
 
-            <!-- <span v-if="$route.params.filter" class="count-container"> -->
+         <!--  exact (not used but required if using '/' default path) -->
+         <span class="multi" title="filter">
+            <router-link class="btn1" to="/all" tag="span" active-class="active">
+               All
+            </router-link>
+            <router-link class="btn1" to="/on" tag="span" active-class="active">
+               On
+            </router-link>
+         </span>
+
+         <span v-if="$route.params.filter" class="count-container">
             <span class="count-container">
                   {{ current.topics.filter.count }}
             </span>
+         </span>
 
-            <span class="btn1">
-            <img @click="openNotificationsReport()"
-                  class="nav-icon"
-                  title="Notification Log"
-                  src="../../assets/reports.png">
-               Notifications
-            </span>
+         <!-- Button.vue example: icon img only -->
+         <!-- <v-btn :onClick="openNotificationsReport"
+            :iconSrc="toolsIcon"
+            :colorClass="'hdr-clr'"
+         ></v-btn> -->
 
-            <toggle-switch title="Main switch" class="nav-switch"
-               v-model="settings.ui.auto.isOn"
-               @input="toggleIsOnAndPersist($event)"
-            ></toggle-switch>
+         <v-btn :onClick="openNotificationsReport"
+            :iconSrc="reportsIcon"
+            :colorClass="'hdr-clr'"
+            style="margin-left: 16px"
+         >
+            Notifications Log
+         </v-btn>
 
-         </div>
+         <!-- Button.vue example: button text only -->
+         <!-- <v-btn :onClick="openNotificationsReport">
+            No Img
+         </v-btn> -->
+
+         <toggle-switch title="Main switch" class="main-switch"
+            v-model="settings.ui.auto.isOn"
+            @input="toggleIsOnAndPersist($event)"
+         ></toggle-switch>
+         
       </nav>
 
    </header>
 </template>
 
 <script>
+   import reportsIcon from "@/assets/reports.png"
+   import wrenchIcon from "@/assets/wrench.png"
+   import gearsIcon from "@/assets/gears.png"
    import chimp128 from "../../shared/chimp128.js";
    import * as utils from "../../shared/utils.js";
    import ToggleSwitch from "./pages/sub/ToggleSwitch.vue";
+   import Button from "./pages/sub/Button.vue";
    export default {
       data () { 
          return {
             filter: { name: '', count: ''},
-            'logo': chimp128
+            'logo': chimp128,
+            reportsIcon: reportsIcon,
+            toolsIcon: wrenchIcon,
+            settingsIcon: gearsIcon
           };
       },
       watch: {
@@ -159,10 +184,13 @@
          },
          devMode () {
             return utils.devMode
-         }
+         },
+         devColor () {
+            if (this.devMode) return 'red' }
       },
       components: {
-         "toggle-switch": ToggleSwitch
+         "toggle-switch": ToggleSwitch,
+         "v-btn": Button
       }
    };
 </script>
@@ -171,28 +199,25 @@
    header {
       height: 84px;
    }
-   span.tool-links  {
-      padding: 0;
+   .tool-links  {
       position: absolute;
+      height: 36px;
+      padding-left: 10px;
       top: 0;
       left: 0;
    }
-   /* span.tool-links > img {
-      width: 25px;
-      margin: 5px 5px 0 5px
-   } */
-   span.chimp {
+   .chimp {
       padding: 6px;
       position: absolute;
       top: 0;
       right: 0;
       font-size: 75%;
    }
-   span.chimp:hover {
+   .chimp:hover {
       cursor: hand;
       cursor: pointer;
    }
-   span.chimp > p {
+   .chimp > p {
       margin: 0;
       line-height: 6px;
    }
@@ -204,40 +229,36 @@
    .grey-image {
       filter: grayscale(100%);
    }
-   .nav-switch {
-      display: inline-block;
+    .main-switch {
       margin: 0 0 0 14px;
-      vertical-align: text-bottom;
-   }   
+   }
    nav {
+      box-sizing: border-box;
       position: relative;
       height: 40px;
+      padding: 6px 6px 6px 10px;
       background-color: rgba(32, 31, 25, 0.068);
    }
-   nav > div {
-      margin: 0;
-      padding-left: 10px;
-      position: absolute;
+   .multi {
+      position: relative;
+   }
+   .btn1 {
+      background-color: rgb(221, 209, 192);
+      position: relative;
       top: 50%;
       transform: translateY(-50%);
+      width: 40px;
+      height: 28px;
+      line-height: 22px;
+      padding: 3px 4px 3px 4px;
+      border-radius: 0;
+      text-align: center;
+      vertical-align: middle;
    }
-   .btn1, .nav-icon {
-      background-color: rgb(221, 209, 192);
-   }
-   .nav-icon:hover,
    .btn1:hover,
    .btn1.active,
    .btn1.hover > input[type] {
       background-color: rgb(255, 237, 209);
-   }
-   /* .multi {
-      margin: 0 7px 0 14px ;
-   } */
-   .multi > .btn1 {
-      width: 40px;
-      /* margin: 0 0; */
-      padding: 4px 10px;
-      border-radius: 0
    }
    .multi > .btn1:first-child {
       border-radius: 5px 0 0 5px
@@ -248,16 +269,15 @@
    .count-container {
       display: inline-block;
       overflow: hidden;
-      width: 30px;
-      margin: 0 14px;
-      /* vertical-align: text-bottom */
+      width: 26px;
+      margin: 0 6px 0 4px;
+      text-align: left;
+      vertical-align: text-bottom;
       color: rgb(55, 160, 0);
       font-weight: 650;
       font-size: 13px;
    }
-   /* .count-container > span {
-      color: rgb(55, 160, 0);
-      font-weight: 650;
-      font-size: 13px;
-   } */
+   .count-container > span {
+      margin: 0;
+   }
 </style>
