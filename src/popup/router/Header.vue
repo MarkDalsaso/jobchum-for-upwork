@@ -4,7 +4,7 @@
    <header>
 
       <!-- Text title text (centered) -->
-      <h2 class="title">jC
+      <h2 class="title">jobPal
          <span class="uw-small">for Upwork</span>
       </h2>
 
@@ -41,30 +41,24 @@
 
       </span>
 
-      <!-- nav row: filte, Notifications Log button, and Main switch -->
+      <!-- nav row: filter, Notifications Log button, and Main switch -->
       <nav>
 
          <!--  exact (not used but required if using '/' default path) -->
          <span class="multi" title="filter">
-            <router-link class="btn1" to="/all" tag="span" active-class="active">
+            <router-link to="/all" tag="button" class="hdr-clr" active-class="active">
                All
             </router-link>
-            <router-link class="btn1" to="/on" tag="span" active-class="active">
+            <router-link to="/on" tag="button" class="hdr-clr" active-class="active">
                On
             </router-link>
          </span>
 
-         <span v-if="$route.params.filter" class="count-container">
-            <span class="count-container">
+         <span class="count-container">
+            <span v-if="$route.params.filter" class="count-container">
                   {{ current.topics.filter.count }}
             </span>
          </span>
-
-         <!-- Button.vue example: icon img only -->
-         <!-- <v-btn :onClick="openNotificationsReport"
-            :iconSrc="toolsIcon"
-            :colorClass="'hdr-clr'"
-         ></v-btn> -->
 
          <v-btn :onClick="openNotificationsReport"
             :iconSrc="reportsIcon"
@@ -73,11 +67,6 @@
          >
             Notifications Log
          </v-btn>
-
-         <!-- Button.vue example: button text only -->
-         <!-- <v-btn :onClick="openNotificationsReport">
-            No Img
-         </v-btn> -->
 
          <toggle-switch title="Main switch" class="main-switch"
             v-model="settings.ui.auto.isOn"
@@ -239,31 +228,21 @@
       padding: 6px 6px 6px 10px;
       background-color: rgba(32, 31, 25, 0.068);
    }
-   .multi {
+   .multi > button {
       position: relative;
-   }
-   .btn1 {
-      background-color: rgb(221, 209, 192);
-      position: relative;
+      box-sizing: border-box;
+      line-height: 1.2;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
       height: 28px;
-      line-height: 22px;
-      padding: 3px 4px 3px 4px;
-      border-radius: 0;
-      text-align: center;
-      vertical-align: middle;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin: 0;
    }
-   .btn1:hover,
-   .btn1.active,
-   .btn1.hover > input[type] {
-      background-color: rgb(255, 237, 209);
-   }
-   .multi > .btn1:first-child {
+   .multi > button:first-child {
       border-radius: 5px 0 0 5px
    }
-   .multi > .btn1:last-child {
+   .multi > button:last-child {
       border-radius: 0 5px 5px 0
    }
    .count-container {

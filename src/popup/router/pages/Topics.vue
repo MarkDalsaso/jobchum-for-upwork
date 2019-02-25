@@ -2,7 +2,7 @@
    <div class="panel">
 
       <!-- <p>filter {{ filter }}</p> -->
-      <!-- <span class="btn1" @click="test1()">Test1</span> -->
+      <!-- <button @click="test1()">Test1</button> -->
 
       <topic
          v-for="(topic) in topics"
@@ -14,7 +14,7 @@
       <div v-if="filter === 'all' && topics.length === 0"
            @click="reloadSyncTopics()"
            class="load-topics">
-         <p class="btn1">Click here to synchronize jobChimp with your Upwork (Find Work) search topics</p>
+         <p>Click here to synchronize jobPal with your Upwork (Find Work) search topics</p>
       </div>
 
       <div v-if="filter === 'on' && topics.length === 0"
@@ -22,7 +22,7 @@
          <br>
          <p>There are no switched 'On' search topics.</p>
          <p>Click the 'All' filter to switch On/Off individual topics.</p>
-         <p>Click the 'Master switch' (in header) to toggle overall, jobChimp functionality</p>
+         <p>Click the 'Master switch' (in header) to toggle overall, jobPal functionality</p>
          
       </div>
 
@@ -95,7 +95,7 @@
       text-align: center
    }
 
-   .load-topics > p.btn1 {
+   .load-topics > p {
       width: 80%;
        background-color: rgb(181, 206, 246);
    }

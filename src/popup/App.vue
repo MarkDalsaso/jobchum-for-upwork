@@ -28,7 +28,7 @@
                      this.$router.replace({ path: '/' + path + queryString})
                      // default html title
                      document.title = 
-                        "jC - " + path.charAt(0).toUpperCase() + path.slice(1);
+                        "jobPal - " + path.charAt(0).toUpperCase() + path.slice(1);
                }
                //console.log("querystring: " + queryString)   // Testing
             }
@@ -92,42 +92,80 @@
       height: 25px;
       margin: 5px 5px 0 5px;
    }    
-   .btn1 {
-      color: black;
-      display: inline-block;
-      font-weight: 650;
-      font-size:  13px;
-      font-family: inherit;
+   input[type="number"] {
+      width: 35px;
+      height: 28px;
       border-radius: 5px;
-      outline: none;
-      box-sizing: border-box;
-      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+      border-style: none;
+      margin: 0 0 0 4px;
+      border: none;
+      padding: 0 3px;
+      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
    }
-   .btn1:hover,
-   .btn1:active,
-   .btn1:hover > input[type] {
-      cursor: hand;
-      cursor: pointer;
-      border-radius: 5px;
-      outline: none;
-   }
-   .btn1 > label:hover {
-      cursor: hand;
-      cursor: pointer;
-   }
-   .tbl-sticky-hdr {
-      width: 100%;
-      border-spacing: 0;
-      padding-bottom: 4px;
+   input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
    }
 
-   .tbl-sticky-hdr thead th {
-      position: sticky;
-      position: -webkit-sticky;
-      z-index: 5;
-      background-color: rgb(232, 219, 170);
+   /*     button styling       */
+   button {
+      position: relative;
+      box-sizing: border-box;
+      line-height: 1.2;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 28px;
+      color: black;
+      padding: 3px 4px;
+      margin-right: 10px;
+      font-size:  13px;
+      font-weight: 650;
+      font-family: inherit;
+      border-style: none;
+      border-radius: 5px;
+      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
    }
-   .tbl-sticky-hdr.alt-rows tr:nth-child(even) {
-       background-color: rgb(232, 219, 170);
+   button:focus {
+      outline-style: none
+   }
+   button > img, button > span {
+      height: 100%;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 22px;
+   }
+   .hdr-clr {
+      background-color: rgb(221, 209, 192);
+   }
+   .hdr-clr.active,
+   .hdr-clr:hover,
+   .hdr-clr:active,
+   .hdr-clr.hover > input[type] {
+      background-color: rgb(255, 237, 209);
+   }
+   .tpc-clr {
+      background-color: rgba(235, 239, 245, 0.5);
+   }
+   .tpc-clr.active,
+   .tpc-clr:hover,
+   .tpc-clr:active,
+   .tpc-clr.hover > input[type] {
+      background-color: rgba(231, 235, 240, 0.87);
+   }
+
+   /*
+      Shared reports table styling. 'rpt-tbl' class
+      used in both Reports.vue and Topicresults.vue
+   */
+   .rpt-tbl {
+      width: 100%;
+      border-collapse: collapse;
+   }
+   .rpt-tbl td {   
+      padding: 5px;
+   }
+   .rpt-tbl thead, .rpt-tbl th {
+      position: sticky;
+      top: 38px;
+      background-color: rgb(232, 219, 170);
    }
 </style>

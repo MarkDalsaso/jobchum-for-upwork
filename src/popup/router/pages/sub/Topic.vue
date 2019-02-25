@@ -19,7 +19,7 @@
          <tr>
             <td colspan="2">
                <label>Qry. interval</label>
-               <input class="btn1" type="number"
+               <input class="tpc-clr" type="number"
                   v-model.number="topic.custom.qInterval"
                   @change="rowChg(topic)"
                   placeholder="minutes"
@@ -27,7 +27,7 @@
 
                <span style="float: right">
                   <label>Ignore after</label>
-                  <input  class="btn1" type="number"
+                  <input  class="tpc-clr" type="number"
                      v-model.number="topic.custom.daysOldIgnore"
                      @change="rowChg(topic)"
                      placeholder="days"
@@ -176,20 +176,6 @@
    }
    .topic-options {
       line-height: 1.2em;
-   }
-   .btn1 {
-      background-color: rgba(235, 239, 245, 0.5);
-   }
-   input.btn1[type="number"] {
-      width: 55px;
-      margin: 0 0 0 4px;
-      padding: 3px;
-      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
-   }
-   .btn1:hover,
-   .btn1:active,
-   .btn1:hover > input[type] {
-      background-color: rgba(231, 235, 240, 0.87);
    }
    .inner-results {
       width: 100%; display: block;

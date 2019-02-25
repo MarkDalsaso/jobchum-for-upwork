@@ -233,4 +233,42 @@ export function formatDate(dtIn) {
    return formattedDate;
 }
 
+export function removeOutdatedResults (store, topicId, callback) {
+   let daysOldIgnore = 0
+   let topicResults = []
+   let topics = []
+   if (topicId) {
+      topics.push(store.getters.topicById(topicId))
+   } else {
+      topics = store.getters.topics
+   }
+   topics.forEach(topic => {
+      daysOldIgnore = topic.custom.daysOldIgnore;
+      topicResults = topic.results
+      let curResults = topicResults.filter(result => {
+         return !topicResultTooOld(daysOldIgnore, result.publishedOn)
+      })
+      topic.results = curResults
+   });
+   store.commit('topics', topics);
+   store.dispatch('persistToStorage', 'topics')
+   .then(() => {
+      if (typeof callback === 'function') callback()
+   })
+   .catch(err => { logErr(err); });
+}
+
+export function topicResultTooOld(days, jsonDate) {
+   let rtn = false;
+   try {
+      let curDate = new Date();
+      let date = new Date(jsonDate);
+      let datePlusDays = date.setDate(date.getDate() + days);
+      if (curDate > datePlusDays) {
+         rtn = true;
+      }
+   } catch (err) { logErr(err) }
+   return rtn;
+}
+
 //logMsg({'deveMode': devMode})

@@ -32,7 +32,13 @@ export const store = new Vuex.Store({
    getters: {
       settings: state => state.settings,
       topics: state => state.topics,
-      notifications: state => state.notifications,
+      notifications: state => state.notifications.sort(
+         (a, b) => {
+            if (a.date > b.date) { return -1 }
+            else if (b.date < a.date) { return 1 }
+            return 0
+         }
+      ),
       current: state => state.current,
       initialized: state => state.initialized,
       topicById: state => id => {
@@ -210,28 +216,13 @@ function newTopicResults(xhrResults, currentTopic) {
    for (let i = 0, len = xhrResults.length; i < len; i++) {
       let daysOldIgnore = currentTopic.custom.daysOldIgnore;
       let xhrResult = xhrResults[i];
-      if (!resultTooOld(daysOldIgnore, xhrResult.publishedOn)) {
+      if (!utils.topicResultTooOld(daysOldIgnore, xhrResult.publishedOn)) {
          if (!currentTopic.results.find(r => r.recno === xhrResult.recno)) {
             newResults.push(xhrResult);
          }
       }
    }
    return newResults;
-}
-
-function resultTooOld(days, jsonDate) {
-   let rtn = false;
-   try {
-      let curDate = new Date();
-      let date = new Date(jsonDate);
-      let datePlusDays = date.setDate(date.getDate() + days);
-      if (curDate > datePlusDays) {
-         rtn = true;
-      }
-   } catch (err) {
-      utils.logErr(err);
-   }
-   return rtn;
 }
 
 // Process the captured xhrTopics array and return updated topics array.

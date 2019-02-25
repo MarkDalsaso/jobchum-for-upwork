@@ -3,22 +3,26 @@
       <usage-bar :value="22"></usage-bar>
       <div>
          <h4>Ext. Local Storage Dumps</h4>
-         <span class="btn1" @click="dumpStorage()">Stg. ALL</span>
-         <span class="btn1" @click="dumpStorage('settings')">Stg. Settings</span>
-         <span class="btn1" @click="dumpStorage('topics')">Stg. Topics</span>
-         <span class="btn1" @click="dumpStorage('notifications')">Stg. Notifications</span>
+         <v-btn :onClick="function () {dumpStorage()}" :colorClass="'hdr-clr'">Stg. ALL</v-btn>
+         <v-btn :onClick="function () {dumpStorage('settings')}" :colorClass="'hdr-clr'">Stg. Settings</v-btn>
+         <v-btn :onClick="function () {dumpStorage('topics')}" :colorClass="'hdr-clr'">Stg. Topics</v-btn>
+         <v-btn :onClick="function () {dumpStorage('notifications')}" :colorClass="'hdr-clr'">Stg. Notifications</v-btn>
+
          <h4>Vuex State Dumps</h4>
-         <span class="btn1" @click="dumpAllVuexState()">Vx. St. ALL</span>
-         <span class="btn1" @click="dumpCurrentNodeVuexState()">Vx. St. Current Node</span>
-         <span class="btn1" @click="dumpNotificationsNodeVuexState()">Vx. St. Notifications Node</span>
+         <v-btn :onClick="dumpAllVuexState" :colorClass="'hdr-clr'">Vx. St. ALL</v-btn>
+         <v-btn :onClick="dumpCurrentNodeVuexState" :colorClass="'hdr-clr'">Vx. St. Current Node</v-btn>
+         <v-btn :onClick="dumpNotificationsNodeVuexState" :colorClass="'hdr-clr'">Vx. St. Notifications Node</v-btn>
+
          <h4>Misc. Reset and Initialize</h4>
-         <span class="btn1" @click="emptyTopicsArray()">Empty Topics Array</span>
-         <span class="btn1" @click="emptyNotificationsArray()">Empty Notifications Array</span>
-         <span class="btn1" @click="loadStateFromStorage()">Reload State From Storage</span>
-         <span class="btn1" @click="wipeExtensionState()">DELETE ALL Storage/State</span>
+         <v-btn :onClick="emptyTopicsArray" :colorClass="'hdr-clr'">Empty Topics Array</v-btn>
+         <v-btn :onClick="emptyNotificationsArray" :colorClass="'hdr-clr'">Empty Notifications Array</v-btn>
+         <v-btn :onClick="loadStateFromStorage" :colorClass="'hdr-clr'">Reload State From Storage</v-btn>
+         <v-btn :onClick="wipeExtensionState" :colorClass="'hdr-clr'">DELETE ALL Storage/State</v-btn>
+
          <h4>Misc</h4>
-         <span class="btn1" @click="openReports()">Open Notifications Reports</span>
-         <span class="btn1" @click="addMainAlarm()">Add Main Alarm</span>
+         <v-btn :onClick="openReports" :colorClass="'hdr-clr'">Open Notifications Reports</v-btn>
+         <v-btn :onClick="addMainAlarm" :colorClass="'hdr-clr'">Add Main Alarm</v-btn>
+
       </div>
       <div>
          <textarea wrap="off" v-model="jsonDump" class="jsonTextarea" spellcheck="false"></textarea>
@@ -30,6 +34,7 @@
    import * as utils from "../../../shared/utils.js";
    // import sysSettings from "../../../shared/settings.json";
    import UsageBar from "./sub/UsageBar.vue";
+   import Button from "./sub/Button.vue";
    export default {
       data () {
          return {
@@ -101,22 +106,15 @@
          }
       },
       components: {
-         'usage-bar': UsageBar
+         'usage-bar': UsageBar,
+         'v-btn': Button
       }
    };
 </script>
 
 <style scoped>
    .panel {
-     margin-top: 0;
-   }
-   .btn1 {
-      background-color: rgb(221, 209, 192);
-      margin: 3px 7px;
-      padding: 4px 6px;
-   }
-   .btn1:hover {
-      background-color: rgb(255, 237, 209);
+     margin: 0 15px;
    }
    .jsonTextarea {
       box-sizing: border-box;
@@ -130,6 +128,6 @@
    }
    h4 {
       text-align: center;
-      margin: 0
+      margin: 5px 0 15px 0
    }  
 </style>
