@@ -14,7 +14,7 @@ function addListeners() {
 function handleInstall(details) {
    store.dispatch('loadStateFromStorage')
    .then ( () => {
-      utils.logMsg({ "state initialized": store.state.initialized.toString()})
+      utils.logMsg( {"state initialized": store.state} )
       utils.syncAlarmToMainSwitch(store.getters.settings);
       const url = store.getters.settings.sys.requeryBaseUrl;
       browser.tabs.create({ active: true, url: url })

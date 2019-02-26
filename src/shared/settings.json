@@ -1,6 +1,7 @@
 {
    "sys": {
       "requeryBaseUrl": "https://www.upwork.com/ab/find-work/",
+      "jobsLookupUrl": "https://www.upwork.com/jobs/",
       "mainAlarm": {
          "name": "overdueCheckAlarm",
          "info": {

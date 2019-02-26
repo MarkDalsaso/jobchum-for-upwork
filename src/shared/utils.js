@@ -7,6 +7,7 @@ import sysSettings from './settings.json';
 import chimp48 from './chimp48';
 
 export function logMsg(msg) {
+   if (!devMode) return
    let m = msg instanceof Object ? msg : { msg: msg };
    console.log(m);
 }
@@ -69,7 +70,7 @@ function setDevMode() {
       if (typeof manifest.update_url == 'undefined') inDevMode = true;
    }
 
-   //inDevMode = false;  // Testing 
+   inDevMode = false;  // Fot testing non-DevMode
    return inDevMode;
 }
 

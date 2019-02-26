@@ -15,7 +15,7 @@
                {{ formatDate(tResult.publishedOn) }}
             </td>
             <td>
-               <a :href="'https://www.upwork.com/jobs/' + tResult.ciphertext" target="_blank">
+               <a :href="settings.sys.jobsLookupUrl + tResult.ciphertext" target="_blank">
                   {{ tResult.title }}
                </a>
             </td>
@@ -45,6 +45,9 @@
                   return 0
                })
             return sortedAry
+         },
+         settings() {
+            return this.$store.getters.settings;
          }
       }
    };

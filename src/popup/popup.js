@@ -13,7 +13,7 @@ import router from './router'
 //        eliminates ALL undefined state property errors
 store.dispatch('loadStateFromStorage')
    .then ( () => {
-      utils.logMsg( "state initialized: " + store.state.initialized.toString())
+      utils.logMsg( {"state initialized": store.state} )
    })
    .catch(err => { utils.logErr(err); });
 
