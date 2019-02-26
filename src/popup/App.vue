@@ -28,7 +28,7 @@
                      this.$router.replace({ path: '/' + path + queryString})
                      // default html title
                      document.title = 
-                        "jobPal - " + path.charAt(0).toUpperCase() + path.slice(1);
+                        "jobChum - " + path.charAt(0).toUpperCase() + path.slice(1);
                }
                //console.log("querystring: " + queryString)   // Testing
             }
@@ -78,9 +78,11 @@
       z-index: 10;
    }
    .title {
+      height: 34px;
       position: relative;
       text-align: center;
-      margin: 0 0 5px 0;
+      margin: 0;
+      padding: 2px
    }
    .panel {
      min-width: 425px;
@@ -106,33 +108,6 @@
       -webkit-appearance: none;
    }
 
-   /*     button styling       */
-   button {
-      position: relative;
-      box-sizing: border-box;
-      line-height: 1.2;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 28px;
-      color: black;
-      padding: 3px 4px;
-      margin-right: 10px;
-      font-size:  13px;
-      font-weight: 650;
-      font-family: inherit;
-      border-style: none;
-      border-radius: 5px;
-      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
-   }
-   button:focus {
-      outline-style: none
-   }
-   button > img, button > span {
-      height: 100%;
-      display: inline-block;
-      vertical-align: middle;
-      line-height: 22px;
-   }
    .hdr-clr {
       background-color: rgb(221, 209, 192);
    }
@@ -152,6 +127,33 @@
       background-color: rgba(231, 235, 240, 0.87);
    }
 
+   /*     button styling       */
+   button {
+      position: relative;
+      box-sizing: border-box;
+      line-height: 1.2;
+      top: 50%;
+      transform: translateY(-50%);
+      color: black;
+      padding: 3px 4px;
+      margin-right: 10px;
+      font-size:  13px;
+      font-weight: 650;
+      font-family: inherit;
+      border-style: none;
+      border-radius: 5px;
+      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+   }
+   button:focus {
+      outline-style: none
+   }
+   button > img, button > span {
+      height: 100%;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 22px;
+   }
+
    /*
       Shared reports table styling. 'rpt-tbl' class
       used in both Reports.vue and Topicresults.vue
@@ -168,4 +170,10 @@
       top: 38px;
       background-color: rgb(232, 219, 170);
    }
+
+/*     misc util styling       */
+.flt-rgt {
+   float: right
+}
+
 </style>

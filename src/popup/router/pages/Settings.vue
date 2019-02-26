@@ -47,6 +47,7 @@
       </section>
       
       <h4 @click="getStorageStats()">Data Usage</h4>
+
       <section>
          <div>
             <usage-bar :value="percentOfQuota"></usage-bar>
@@ -55,22 +56,26 @@
             </div>
          </div>
       </section>
+
       <section class="grid">
          <div>
             <v-btn
-               :onClick="emptyNotificationsArray()"
+               :height = "0"
+               :onClick="emptyNotificationsArray"
                :colorClass="'tpc-clr'"
-            >Clear</v-btn>
-            <label>Clear Notification Log ({{notificationsBytes}} bytes)</label>
+            >Clear Notification Log</v-btn>
+            <label>Empty the Notification Log<br>(current size: {{notificationsBytes}} bytes)</label>
          </div>
       </section>
+
       <section class="grid">
          <div>
             <v-btn
-               :onClick="removeOutdatedResults()"
+               :height = "0"
+               :onClick="removeOutdatedResults"
                :colorClass="'tpc-clr'"
-            >Remove</v-btn>
-            <label>Remove outdated topic results</label>
+            >Delete outdated topic results</v-btn>
+            <label>Use the 'Ignore after' field, (defined for each topic) to determine if the result is out of date. If so, it is deleted.</label>
          </div>
       </section>
 
@@ -118,9 +123,8 @@
          },
          bytesTo () {},
          emptyNotificationsArray () {
-            this.$store.commit('notifications', []);
+            this.$store.commit('notifications', [])
             this.$store.dispatch('persistToStorage', 'notifications')
-            .catch(err => { utils.logErr(err); });
          },
          removeOutdatedResults () { 
             utils.removeOutdatedResults(this.$store)
@@ -148,7 +152,7 @@
          "toggle-switch": ToggleSwitch,
          'usage-bar': UsageBar,
          "v-btn": Button
-      }      
+      } 
    }
 </script>
 

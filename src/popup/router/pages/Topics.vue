@@ -1,28 +1,26 @@
 <template>
    <div class="panel">
-
-      <!-- <p>filter {{ filter }}</p> -->
-      <!-- <button @click="test1()">Test1</button> -->
-
       <topic
          v-for="(topic) in topics"
          v-bind:topic="topic"
          v-bind:key="topic.id"
          @topic-modified="updateTopics($event)"
       ></topic>
-
+      
       <div v-if="filter === 'all' && topics.length === 0"
-           @click="reloadSyncTopics()"
-           class="load-topics">
-         <p>Click here to synchronize jobPal with your Upwork (Find Work) search topics</p>
+           class="special-msg">
+         <v-btn :height = "50"
+               :onClick="reloadSyncTopics"
+               :colorClass="'hdr-clr'">
+            Click here to synchronize jobChum with your Upwork (Find Work) search topics
+         </v-btn>
       </div>
 
       <div v-if="filter === 'on' && topics.length === 0"
-         class="load-topics" >
-         <br>
-         <p>There are no switched 'On' search topics.</p>
-         <p>Click the 'All' filter to switch On/Off individual topics.</p>
-         <p>Click the 'Master switch' (in header) to toggle overall, jobPal functionality</p>
+         class="special-msg">
+         <p>There are no switched <strong>On</strong> search topics.</p>
+         <p>Click the <strong>All</strong> filter to switch On/Off individual topics.</p>
+         <p>Click the <strong>Master switch</strong> (in header) to toggle overall, jobChum functionality</p>
          
       </div>
 
@@ -32,6 +30,7 @@
 <script>
    import * as utils from "../../../shared/utils";
    import Topic from "./sub/Topic.vue";
+   import Button from "./sub/Button.vue";
    export default {
       data () {
          return {
@@ -44,9 +43,6 @@
                this.filter = to.params.filter || 'all';
             }
          }
-      },
-      components: {
-         topic: Topic
       },
       mounted() {
          // listen for background updates
@@ -72,8 +68,7 @@
             const code = "window.location.replace('" +
                this.settings.sys.requeryBaseUrl + "')";
             browser.tabs.executeScript(null, { code: code });
-         },
-         test1() { }      
+         }
       },
       computed: {
          topics() {
@@ -85,21 +80,20 @@
          settings() {
             return this.$store.getters.settings;
          }
+      },
+      components: {
+         topic: Topic,
+         "v-btn": Button
       }
    };
 </script>
 
 <style scoped>
-   .load-topics {
-      width: 100%;
-      text-align: center
+   .special-msg {
+      height: 185px; 
+      width: 75%;
+      margin: 120px auto 0 auto;
    }
-
-   .load-topics > p {
-      width: 80%;
-       background-color: rgb(181, 206, 246);
-   }
-
    .panel {
       margin-top: 84px;
    }

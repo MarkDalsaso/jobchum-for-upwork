@@ -10,8 +10,9 @@
                <thead>
                   <tr>
                      <th>Notification Date</th>
-                     <th>Topic Name
-                        <span>(click row to expand details)</span>
+                     <th>
+                        Topic Name
+                        <span style="color: green">click row to toggle details</span>
                      </th>
                   </tr>
                </thead>
@@ -22,8 +23,7 @@
                   </tr>
                   <tr v-if="noti.resultsOpen">
                      <td colspan="2" class="dd-contain">
-                        <topic-results :tResults="noti.results"
-                        ></topic-results>
+                        <topic-results :tResults="noti.results"></topic-results>
                      </td>
                   </tr>
                </tbody>
@@ -36,20 +36,14 @@
          </div>
 
          <div v-if="rptInfo.name==='topic-results'">
-            <topic-results :tResults="topicResultsReport.results"
-            ></topic-results>
+            <topic-results :tResults="topicResultsLog.results"></topic-results>
             <div class="rpt-hdr" style="padding:5px">
-               <v-btn
-                  :onClick="function () { 
-                              removeOutdatedResults(topicResultsReport.id)
-                           }"
+               <v-btn class="flt-rgt"
                   :colorClass="'hdr-clr'"
-               >
-                  Remove old results
-               </v-btn>
+                  :onClick="() => {removeOutdatedResults(topicResultsLog.id)}"
+               >{{removeBtnText}}</v-btn>
             </div>
          </div>
-
       </main>
    </div>
 </template>
@@ -62,11 +56,7 @@
       data() {
          return {
             notificationsLog: [],
-            topicResultsReport: {
-               id: 0,
-               captured: {},
-               results: []
-            },
+            topicResultsLog: {},
             rptInfo: {
                name: "",
                title: "",
@@ -79,7 +69,8 @@
          this.rptInfo.topicId = this.$route.query.id;
          let self = this;
          browser.storage.onChanged.addListener(function(changesObject, areaName) {
-            if ("topics" in changesObject) {
+            //if ("topics" in changesObject || "notifications" in changesObject) {
+            if ("notifications" in changesObject) {
                self.buildReport();
             }
          });
@@ -97,12 +88,12 @@
                   this.rptInfo.title = "Notifications Log";
                   break;
                case "topic-results":
-                  this.doTopicResultsReport();
+                  this.doTopicResultsLog();
                   this.rptInfo.title =
-                     "Topic Results: " + this.topicResultsReport.captured.name;
+                     "Topic Results: " + this.topicResultsLog.captured.name;
                   break;
             }
-            document.title = "jobPal " + this.rptInfo.title;
+            document.title = "jobChum " + this.rptInfo.title;
          },
          doNotificationsLog() {
             this.$store
@@ -137,19 +128,23 @@
             });
             return notiResults;
          },
-         doTopicResultsReport() {
-            let topic = this.$store.getters.topicById(this.rptInfo.topicId);
-            this.topicResultsReport.id = this.rptInfo.topicId;
-            this.topicResultsReport.captured = topic.captured;
-            this.topicResultsReport.results = topic.results;
+         doTopicResultsLog() {
+            this.topicResultsLog = this.$store.getters.topicById(this.rptInfo.topicId);
          },
          removeOutdatedResults(topicId) {
-            utils.removeOutdatedResults(this.$store, topicId, function () { this. buildReport()} )
+            utils.removeOutdatedResults(this.$store, topicId, () => {this.buildReport()} )
          },
       },
       computed: {
          notifications() {
             return this.$store.getters.notifications;
+         },
+         removeBtnText() {
+            let btnTxt = "Remove old results"
+            if (this.topicResultsLog.custom) {
+               btnTxt += " (results older than " + this.topicResultsLog.custom.daysOldIgnore + " day(s) will be deleted.)"
+            }
+         return btnTxt
          }
       },
       components: {

@@ -1,5 +1,5 @@
 <template>     
-   <button :class="[colorClass]" @click="onClick">
+   <button :class="[colorClass]" @click="onClick" :style="{height: adjHeight }">
       <img v-if="iconSrc" :src="iconSrc">
       <span>
          <slot></slot>
@@ -11,9 +11,18 @@
    export default {
       //data () { return { } },
       props: {
+         height: { type: Number, default: 28 },
          onClick: { type: Function, required: false, default: function () {} },
          iconSrc: { type: String, required: false },
          colorClass: { type: String, required: false, default: '' }
+      },
+      computed: {
+         adjHeight () {
+            let rtn = this.height + "px"
+            if (this.height === 0)
+               rtn = "unset"
+            return rtn 
+         }
       }
    }
 </script>

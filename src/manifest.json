@@ -1,8 +1,8 @@
 {
-   "name": "jobPal",
+   "name": "jobChum",
    "version": "0.9.1",
    "manifest_version": 2,
-   "homepage_url": "http://www.we-is.com/jobPal",
+   "homepage_url": "http://www.we-is.com/jobChum",
    "description": "This extension augments the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/).",
    "permissions": [
       "notifications",
@@ -21,7 +21,7 @@
       }
    ],
    "page_action": {
-      "default_title": "JobPal for Upwork",
+      "default_title": "jobChum for Upwork",
       "default_popup": "popup/popup.html",
       "default_icon": "icons/48.png"
    },

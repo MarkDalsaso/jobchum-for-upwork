@@ -3,9 +3,10 @@
    <!--  Main Header -->
    <header>
 
-      <!-- Text title text (centered) -->
-      <h2 class="title">jobPal
-         <span class="uw-small">for Upwork</span>
+      <!-- Logo title text (centered) -->
+      <h2 class="title">
+         <img :src="jobChum" class="chum">
+         <span class="uw-small"> for Upwork</span>
       </h2>
 
       <!--settings and dev tools img. links (float left) -->
@@ -79,6 +80,7 @@
 </template>
 
 <script>
+   import jobChum from "@/assets/jobchum.png"
    import reportsIcon from "@/assets/reports.png"
    import wrenchIcon from "@/assets/wrench.png"
    import gearsIcon from "@/assets/gears.png"
@@ -91,6 +93,7 @@
          return {
             filter: { name: '', count: ''},
             'logo': chimp128,
+            jobChum: jobChum,
             reportsIcon: reportsIcon,
             toolsIcon: wrenchIcon,
             settingsIcon: gearsIcon
@@ -210,9 +213,13 @@
       margin: 0;
       line-height: 6px;
    }
+   .chum {
+      height:28px;
+      vertical-align:middle
+   }
    .uw-small {
       color: rgb(55, 160, 0);
-      font-size: 75%;
+      font-size: 65%;
       font-style: italic;
    }
    .grey-image {
@@ -229,11 +236,6 @@
       background-color: rgba(32, 31, 25, 0.068);
    }
    .multi > button {
-      position: relative;
-      box-sizing: border-box;
-      line-height: 1.2;
-      top: 50%;
-      transform: translateY(-50%);
       height: 28px;
       padding-left: 10px;
       padding-right: 10px;

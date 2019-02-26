@@ -45,7 +45,7 @@ export const store = new Vuex.Store({
          return state.topics.find(topic => topic.id == id);  // Use type coercion!
       },
       topicsByFilterName: state => (filterName = 'all') => {
-         // Topic filters driven by route param 'filter': On, Off, "All" (default )
+         // Apply topic filter for "On", "Off", and "All" (default)
          let rtnAry = []
          switch (filterName.toLowerCase()) {
             case 'all':
@@ -62,7 +62,10 @@ export const store = new Vuex.Store({
                });
                break;
          }
-         //return rtnAry;
+         // Apply filter for hiding built in search topics
+         rtnAry = rtnAry.filter( topic => { 
+            return builtInTopicTest(topic, state)
+         });
          return {
             topics: rtnAry, 
             state: {
@@ -254,6 +257,18 @@ function injectUpworkStandardTopics (xhrTopics) {
    if (userSettings.domesticTopic) {
       xhrTopics.unshift( {id: 'domestic', name: 'Domestic' } )
    }
+}
+
+// Topic test for filter by user settings for hiding built in search topics
+function builtInTopicTest (topic, state) {
+   let userSettings = state.settings.ui.user
+   let topicPassed = true
+   if (topic.id === "myfeed" && !userSettings.myFeedTopic) {
+      topicPassed = false
+   } else if  ( (topic.id === "domestic" && !userSettings.domesticTopic)) {
+      topicPassed = false
+   }
+   return topicPassed      
 }
 
 // Define the default custom properties for a new topic (potentially moved to user settings)

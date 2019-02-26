@@ -5,6 +5,7 @@
 */
 import sysSettings from './settings.json';
 import chimp48 from './chimp48';
+
 export function logMsg(msg) {
    let m = msg instanceof Object ? msg : { msg: msg };
    console.log(m);
@@ -235,27 +236,36 @@ export function formatDate(dtIn) {
 
 export function removeOutdatedResults (store, topicId, callback) {
    let daysOldIgnore = 0
-   let topicResults = []
-   let topics = []
-   if (topicId) {
-      topics.push(store.getters.topicById(topicId))
-   } else {
-      topics = store.getters.topics
-   }
+   let topics = store.getters.topics
+   let doAllTopics = (typeof topicId === 'undefined')
+
+   // Always traverse all topics
    topics.forEach(topic => {
       daysOldIgnore = topic.custom.daysOldIgnore;
-      topicResults = topic.results
-      let curResults = topicResults.filter(result => {
-         return !topicResultTooOld(daysOldIgnore, result.publishedOn)
-      })
-      topic.results = curResults
+      if (doAllTopics) {
+         let curResults = filteredResults(topic.results, daysOldIgnore)
+         topic.results = curResults
+      } else if (topic.id === topicId) {
+         let curResults = filteredResults(topic.results, daysOldIgnore)
+         topic.results = curResults
+      }
    });
+
+   // Update and invoke callback
    store.commit('topics', topics);
    store.dispatch('persistToStorage', 'topics')
    .then(() => {
       if (typeof callback === 'function') callback()
    })
    .catch(err => { logErr(err); });
+}
+
+// Private func used by util func 'removeOutdatedResults'
+function filteredResults(topicResults, daysOldIgnore) {
+   let filtered = topicResults.filter(result => {
+      return !topicResultTooOld(daysOldIgnore, result.publishedOn)
+   })
+   return filtered
 }
 
 export function topicResultTooOld(days, jsonDate) {
