@@ -170,10 +170,8 @@ export const store = new Vuex.Store({
             // NOTE: 'payload' is string, representing the root key name,
             //       'settings' or 'topics'
             const objToPersist = getters[rootKeyName];
-            //utils.logMsg(utils.storeInfo('before persist', rootKeyName, objToPersist));
             browser.storage.local.set({ [rootKeyName]: objToPersist })
             .then(() => {
-               //utils.logMsg(utils.storeInfo('after persist', rootKeyName, objToPersist));
                resolve();
             })
             .catch(err => { utils.logErr(err); });
@@ -231,7 +229,11 @@ function newTopicResults(xhrResults, currentTopic) {
 // Process the captured xhrTopics array and return updated topics array.
 function processTopics(xhrTopics, currentTopics) {
    let rtnAry = [], xhrTopic = {}, curTopic = {};
-   injectUpworkStandardTopics(xhrTopics)
+
+   // Always inject standard, built-in topics
+   xhrTopics.unshift( {id: 'myfeed', name: 'My Feed' } )
+   xhrTopics.unshift( {id: 'domestic', name: 'Domestic' } )
+   
    for (let i = 0, len = xhrTopics.length; i < len; i++) {
       xhrTopic = xhrTopics[i];
       curTopic = currentTopics.find(t => t.id == xhrTopic.id);    // Use type coercion!
@@ -246,17 +248,6 @@ function processTopics(xhrTopics, currentTopics) {
       }
    }
    return rtnAry;
-}
-
-// Check settings and determine if Upwork standard topics should be injected
-function injectUpworkStandardTopics (xhrTopics) {
-   let userSettings = store.state.settings.ui.user
-   if (userSettings.myFeedTopic) {
-      xhrTopics.unshift( {id: 'myfeed', name: 'My Feed' } )
-   }
-   if (userSettings.domesticTopic) {
-      xhrTopics.unshift( {id: 'domestic', name: 'Domestic' } )
-   }
 }
 
 // Topic test for filter by user settings for hiding built in search topics

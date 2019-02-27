@@ -149,7 +149,7 @@
    }   
    .topics-table tr:nth-child(1),
    .topics-table tr:nth-child(2) {
-      height: 35px;
+      /* height: 35px; */
       vertical-align: top;
       padding: 0 0 0 0;
    }

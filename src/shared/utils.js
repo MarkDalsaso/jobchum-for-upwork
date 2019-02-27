@@ -17,29 +17,16 @@ export function logErr(err) {
    console.log({ Error: err });
 }
 
-export function storeInfo(type, name, value) {
-   let length = 'n/a';
-   if (Array.isArray(value)) {
-      length = value.length;
-   } else if (typeof value === 'object') {
-      length = Object.keys(value).length;
-   }
-   return {
-      [type]: {
-         '0-key': name,
-         '1-target': value,
-         '2-typeof target': typeof value,
-         '3-length of target': length
-      }
-   };
-}
-
 // Always sync-up main alarm to the main switch
 export function syncAlarmToMainSwitch(settings) {
    let alarm = settings.sys.mainAlarm
    if (settings.ui.auto.isOn) {
-      const delayInMinutes = alarm.info.delayInMinutes;
-      const periodInMinutes = alarm.info.periodInMinutes;
+      let delayInMinutes = 1;
+      let periodInMinutes = 1;
+      if (devMode) {
+         delayInMinutes = 0.01
+         periodInMinutes = 0.25
+      }
       browser.alarms.create(alarm.name, {
          delayInMinutes,
          periodInMinutes
@@ -59,7 +46,7 @@ function setDevMode() {
 
    // Logic for Firefox. 'getBrowserInfo' is only supported by Firefox
    if ( isFirefox() ) {
-      // Check for existence of the workd 'temporary' in Ext. id
+      // Check for existence of the word 'temporary' in Ext. id
       let id = browser.runtime.id;
       if (RegExp('temporary', 'i').test(id)) inDevMode = true;
 
@@ -70,7 +57,7 @@ function setDevMode() {
       if (typeof manifest.update_url == 'undefined') inDevMode = true;
    }
 
-   inDevMode = false;  // Fot testing non-DevMode
+   //inDevMode = false;  // Fot testing non-DevMode
    return inDevMode;
 }
 

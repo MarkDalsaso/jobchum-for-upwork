@@ -20,6 +20,12 @@ module.exports = {
          api: 'browser',
          usePolyfill: true,
          autoImportPolyfill: true,
+         manifestSync: [
+            'version', 'description'
+         ],
+         modesToSync: [
+            'production'
+         ],
          componentOptions: {
             background: {
                entry: 'src/background.js'

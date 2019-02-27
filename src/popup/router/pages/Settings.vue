@@ -75,7 +75,7 @@
                :onClick="removeOutdatedResults"
                :colorClass="'tpc-clr'"
             >Delete outdated topic results</v-btn>
-            <label>Use the 'Ignore after' field, (defined for each topic) to determine if the result is out of date. If so, it is deleted.</label>
+            <label>Uses the 'Ignore after' field, (defined for each topic) to determine if the result is out of date. If so, it is deleted.</label>
          </div>
       </section>
 
@@ -135,7 +135,23 @@
                if (typeof callback === 'function') callback()
             })
             .catch(err => { utils.logErr(err);});
+         },
+         switchOffBuiltInTopic (topicId) {
+            let topic = this.$store.getters.topicById(topicId);
+            topic.custom.enabled = false
+            this.$store.dispatch('persistToStorage', 'topics')
+            .catch(err => { utils.logErr(err); });            
          }
+      },
+      watch: {
+         "settings.ui.user.domesticTopic": function (newVal) {
+            // if newVal false, make sure to disable 'topic.custom.enabled' for 'domestic'
+            if (!newVal) { this.switchOffBuiltInTopic("domestic") }
+         },
+         "settings.ui.user.myFeedTopic": function (newVal) {
+            // if newVal false, make sure to disable 'topic.custom.enabled' for 'myfeed'
+            if (!newVal) { this.switchOffBuiltInTopic("myfeed") }
+         }         
       },
       computed: {
          settings() {

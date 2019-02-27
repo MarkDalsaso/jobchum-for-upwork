@@ -33,6 +33,12 @@
                   </tr>
                </tfoot>
             </table>
+            <div class="rpt-hdr" style="padding:5px">
+               <v-btn class="flt-rgt"
+                  :colorClass="'hdr-clr'"
+                  :onClick="() => {emptyNotificationsArray()}"
+               >Clear Notification Log</v-btn>
+            </div>            
          </div>
 
          <div v-if="rptInfo.name==='topic-results'">
@@ -41,9 +47,10 @@
                <v-btn class="flt-rgt"
                   :colorClass="'hdr-clr'"
                   :onClick="() => {removeOutdatedResults(topicResultsLog.id)}"
-               >{{removeBtnText}}</v-btn>
+               >{{removeOutdatedResultsBtnText}}</v-btn>
             </div>
          </div>
+
       </main>
    </div>
 </template>
@@ -131,15 +138,19 @@
          doTopicResultsLog() {
             this.topicResultsLog = this.$store.getters.topicById(this.rptInfo.topicId);
          },
+         emptyNotificationsArray () {
+            this.$store.commit('notifications', [])
+            this.$store.dispatch('persistToStorage', 'notifications')
+         },
          removeOutdatedResults(topicId) {
             utils.removeOutdatedResults(this.$store, topicId, () => {this.buildReport()} )
-         },
+         }
       },
       computed: {
          notifications() {
             return this.$store.getters.notifications;
          },
-         removeBtnText() {
+         removeOutdatedResultsBtnText() {
             let btnTxt = "Remove old results"
             if (this.topicResultsLog.custom) {
                btnTxt += " (results older than " + this.topicResultsLog.custom.daysOldIgnore + " day(s) will be deleted.)"
