@@ -112,7 +112,7 @@
                self.totalBytesInUse = bytes * 2   //char is UTF-16 (2 bytes)
                self.percentOfQuota = self.percentUsed(bytes, QUOTA_BYTES)
                browser.storage.local.getBytesInUse('notifications')
-               .then ( (bytes) => { this.notificationsBytes = bytes })
+               .then ( (bytes) => { this.notificationsBytes = bytes * 2 })
             })
             .catch(err => { utils.logErr(err);});
          },

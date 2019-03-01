@@ -264,7 +264,7 @@ function builtInTopicTest (topic, state) {
 
 // Define the default custom properties for a new topic (potentially moved to user settings)
 function defaultTopicConfig () {
-   return { enabled: false, qInterval: 10, qLastRequest: 0, daysOldIgnore: 7 }
+   return { enabled: false, qInterval: 10, qLastRequest: 0, daysOldIgnore: 3 }
 }
 
 // Topic object constructor (NOTE: some of these defaults should come from settings)

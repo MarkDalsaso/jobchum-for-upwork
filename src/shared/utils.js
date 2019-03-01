@@ -23,7 +23,8 @@ export function syncAlarmToMainSwitch(settings) {
    if (settings.ui.auto.isOn) {
       let delayInMinutes = 1;
       let periodInMinutes = 1;
-      if (devMode) {
+      let manifest = browser.runtime.getManifest();
+      if (typeof manifest.update_url == 'undefined') {
          delayInMinutes = 0.01
          periodInMinutes = 0.25
       }
@@ -57,7 +58,7 @@ function setDevMode() {
       if (typeof manifest.update_url == 'undefined') inDevMode = true;
    }
 
-   //inDevMode = false;  // Fot testing non-DevMode
+   inDevMode = false;  // For testing non-DevMode
    return inDevMode;
 }
 
