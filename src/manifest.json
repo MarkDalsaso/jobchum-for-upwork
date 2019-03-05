@@ -1,6 +1,6 @@
 {
    "name": "jobChum for Upwork",
-   "version": "1.0.0",
+   "version": "1.0.2",
    "manifest_version": 2,
    "homepage_url": "http://www.we-is.com/jobChum",
    "description": "This extension augments and enhances the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/).",

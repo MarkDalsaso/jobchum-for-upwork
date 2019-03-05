@@ -104,10 +104,15 @@
       padding: 0 3px;
       box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
    }
-   input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
+   
+   input[type=number] { 
+      -moz-appearance: textfield;
+      appearance: textfield;
    }
-
+   input[type=number]::-webkit-inner-spin-button, 
+   input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+   }
    .hdr-clr {
       background-color: rgb(221, 209, 192);
    }

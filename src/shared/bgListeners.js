@@ -37,7 +37,7 @@ function handleMessage(message, sender) {
                      break;
                   case 'rawResults':
                      // NOTE: only update topic results if main switch is on
-                     if (store.getters.settings.ui.auto.isOn) {
+                     if (store.getters.settings.ui.auto.isOn === true) {
                         store.dispatch('updateTopicResults', {
                            topicId: message.topicId,
                            results: message.arrayObject
@@ -50,10 +50,10 @@ function handleMessage(message, sender) {
             break;
          case 'activate_icon':
             // this guarantees popup click works correctly for page action
-            browser.pageAction.show(sender.tab.id);
-            utils.updateLastTabId(store, sender.tab.id)
             store.dispatch('fetchFromStorage', 'settings')
             .then( () => {
+               browser.pageAction.show(sender.tab.id);
+               utils.updateLastTabId(store, sender.tab.id)
                utils.setPageActionIcon(store.getters.settings)
             })
             break;
@@ -69,7 +69,7 @@ function handleAlarms(alarm) {
    store.dispatch('fetchFromStorage', 'settings')
    .then(() => {
       const settings = store.getters.settings;
-      if (alarm.name === settings.sys.mainAlarm.name && settings.ui.auto.isOn) {
+      if (alarm.name === settings.sys.mainAlarm.name && settings.ui.auto.isOn === true) {
          requeryMostOverdueTopic();
       }
    });

@@ -1,6 +1,6 @@
 {
    "name": "jobChumForUpwork",
-   "version": "1.0.0",
+   "version": "1.0.2",
    "description": "This extension augments and enhances the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/).",
    "private": true,
    "scripts": {

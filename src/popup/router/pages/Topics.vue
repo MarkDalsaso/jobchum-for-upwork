@@ -1,11 +1,15 @@
 <template>
    <div class="panel">
-      <topic
-         v-for="(topic) in topics"
-         v-bind:topic="topic"
-         v-bind:key="topic.id"
-         @topic-modified="updateTopics($event)"
-      ></topic>
+
+      <transition-group :name="transitionGroup">
+         <topic
+            class="slide"
+            v-for="(topic) in topics"
+            v-bind:topic="topic"
+            v-bind:key="topic.id"
+            @topic-modified="updateTopics($event)"
+         ></topic>
+      </transition-group>
       
       <div v-if="filter === 'all' && topics.length === 0"
            class="special-msg">
@@ -34,6 +38,7 @@
    export default {
       data () {
          return {
+            transitionGroup: 'slide',
             filter: this.$route.params.filter
          }
       },
@@ -55,6 +60,7 @@
       },
       methods: {
          updateTopics (event) {
+            //this.transitionGroup = 'slide'
             let topic = event.topic;
             this.$store
                .dispatch('persistToStorage', 'topics')
@@ -63,6 +69,7 @@
                   //utils.logMsg({"topic updated": "name" + topic.captured.name})
                })
                .catch(err => { utils.logErr(err); });
+               //this.transitionGroup = 'slideOff'
          },
          reloadSyncTopics () {
             const code = "window.location.replace('" +
@@ -89,6 +96,28 @@
 </script>
 
 <style scoped>
+   .slide {
+      transition: all .75s;
+      /* display: inline-block; */
+      display: flex;
+   }
+   .slide-enter {
+      opacity: 0;
+   }
+   .slide-enter-to {
+      transform: translateX(0);
+   }   
+   .slide-leave-to {
+      opacity: 0;
+      transform: translateX(-100%);
+   }
+   .slide-leave-active {
+      transition: all .75s;
+      position: absolute;
+   }
+   /* .slide-list-move {
+      transition: transform .75s
+   } */
    .special-msg {
       height: 185px; 
       width: 75%;

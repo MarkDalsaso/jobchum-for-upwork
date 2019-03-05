@@ -20,7 +20,7 @@ export function logErr(err) {
 // Always sync-up main alarm to the main switch
 export function syncAlarmToMainSwitch(settings) {
    let alarm = settings.sys.mainAlarm
-   if (settings.ui.auto.isOn) {
+   if (settings.ui.auto.isOn === true) {
       let delayInMinutes = 1;
       let periodInMinutes = 1;
       let manifest = browser.runtime.getManifest();
@@ -58,7 +58,7 @@ function setDevMode() {
       if (typeof manifest.update_url == 'undefined') inDevMode = true;
    }
 
-   inDevMode = false;  // For testing non-DevMode
+   //inDevMode = false;  // For testing non-DevMode
    return inDevMode;
 }
 
@@ -73,7 +73,7 @@ export function updateLastTabId (store, tabId) {
       store.state.settings.ui.auto.lastTabId = tabId
       store.dispatch("persistToStorage", "settings")
       .then (() => {
-         logMsg({'tabsId updated)': tabId})
+         //logMsg({'tabsId updated': tabId})
       })
       .catch(err => { logErr(err);});       
    }
@@ -193,7 +193,7 @@ export function setPageActionIcon(settings) {
 // ctx is the canvas context objext
 function updateContext(settings, ctx, title) {
    let uiAuto = settings.ui.auto
-   if (!uiAuto.isOn) {
+   if (uiAuto.isOn !== true) {
       ctx.strokeStyle = 'red';
       ctx.lineWidth = 4;
       ctx.beginPath();

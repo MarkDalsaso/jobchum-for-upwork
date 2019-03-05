@@ -20,6 +20,7 @@
             <td colspan="2">
                <label>Qry. interval</label>
                <input class="tpc-clr" type="number"
+                  title="# of minutes until next query"
                   v-model.number="topic.custom.qInterval"
                   @change="rowChg(topic)"
                   placeholder="minutes"
@@ -139,13 +140,16 @@
       background-color: rgb(186, 194, 207);
    }
    section {
-      margin: 6px;
-      padding-top: 2px;
-      border-radius: 3px;
+      margin: 7px;
+      padding: 5px;
+      /* padding-top: 2px; */
+      border-radius: 5px;
    }
    .topics-table {
       width: 100%;
       table-layout: fixed;
+      border-collapse: collapse;
+      border-spacing: 0; 
    }   
    .topics-table tr:nth-child(1),
    .topics-table tr:nth-child(2) {
