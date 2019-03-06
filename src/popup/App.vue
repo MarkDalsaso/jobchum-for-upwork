@@ -1,7 +1,9 @@
 <template>
    <div v-if="stateIsReady" style="max-width:450px">
       <router-view name="header-top"></router-view>
-      <router-view></router-view>
+      <transition name="fade" mode="out-in">
+         <router-view/>
+      </transition>
    </div>
 </template>
 
@@ -61,6 +63,14 @@
 </script>
 
  <style>
+   .fade-enter-active, .fade-leave-active {
+      transition-duration: 0.3s;
+      transition-property: opacity;
+      transition-timing-function: ease;
+   }
+   .fade-enter, .fade-leave-active {
+      opacity: 0
+   }
     html, body {
       margin: 0;
       padding: 0;

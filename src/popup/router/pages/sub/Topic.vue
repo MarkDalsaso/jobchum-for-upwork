@@ -142,7 +142,6 @@
    section {
       margin: 7px;
       padding: 5px;
-      /* padding-top: 2px; */
       border-radius: 5px;
    }
    .topics-table {

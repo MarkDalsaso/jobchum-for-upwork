@@ -13,7 +13,8 @@
       <span class="tool-links">
 
          <v-btn
-            :onClick="function () {$router.replace({ path: '/settings' })}"
+            v-bind:class='{ active: settingsActive }' 
+            :onClick="function () {$router.push({ path: '/settings' })}"
             :iconSrc="settingsIcon"
             :colorClass="'hdr-clr'"
             title="Settings"
@@ -164,6 +165,13 @@
          }
       },
       computed: {
+         settingsActive () {
+            if (this.$route.path==='/settings') {
+               return true
+            } else {
+               return false
+            }
+         },         
          current () {
             return this.$store.getters.current;
          },

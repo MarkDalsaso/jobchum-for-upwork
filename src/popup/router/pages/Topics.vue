@@ -98,15 +98,11 @@
 <style scoped>
    .slide {
       transition: all .75s;
-      /* display: inline-block; */
       display: flex;
    }
    .slide-enter {
       opacity: 0;
    }
-   .slide-enter-to {
-      transform: translateX(0);
-   }   
    .slide-leave-to {
       opacity: 0;
       transform: translateX(-100%);
@@ -115,9 +111,6 @@
       transition: all .75s;
       position: absolute;
    }
-   /* .slide-list-move {
-      transition: transform .75s
-   } */
    .special-msg {
       height: 185px; 
       width: 75%;
