@@ -1,5 +1,5 @@
 <template>     
-   <button :class="[colorClass]" @click="onClick" :style="{height: adjHeight }">
+   <button :class="[colorClass, { active: isActive }]" @click="onClick" :style="{height: adjHeight }">
       <img v-if="iconSrc" :src="iconSrc">
       <span>
          <slot></slot>
@@ -14,7 +14,8 @@
          height: { type: Number, default: 28 },
          onClick: { type: Function, required: false, default: function () {} },
          iconSrc: { type: String, required: false },
-         colorClass: { type: String, required: false, default: '' }
+         colorClass: { type: String, required: false, default: '' },
+         isActive: { type: Boolean, required: false, default: false }
       },
       computed: {
          adjHeight () {

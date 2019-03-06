@@ -13,10 +13,10 @@
       <span class="tool-links">
 
          <v-btn
-            v-bind:class='{ active: settingsActive }' 
             :onClick="function () {$router.push({ path: '/settings' })}"
             :iconSrc="settingsIcon"
             :colorClass="'hdr-clr'"
+            :isActive="settingsActive"
             title="Settings"
          ></v-btn>
 
