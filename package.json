@@ -1,7 +1,7 @@
 {
    "name": "jobChumForUpwork",
-   "version": "1.0.3",
-   "description": "This extension augments and enhances the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/).",
+   "version": "1.0.5",
+   "description": "Automates the Upwork 'Find Work' page for all saved searches. New job notifications (w.sound), logs indexed by date & search topic.",
    "private": true,
    "scripts": {
       "serve": "vue-cli-service build --mode development --watch",

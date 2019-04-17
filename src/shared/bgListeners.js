@@ -96,7 +96,6 @@ function requeryMostOverdueTopic() {
          overdueTopics.sort(function(a, b) {
             return a.custom.qLastRequest - b.custom.qLastRequest;
          });
-
          utils.reQueryById(store, overdueTopics[0].id);
          // utils.logMsg({
          //    "overdue topic id": overdueTopics[0].id,

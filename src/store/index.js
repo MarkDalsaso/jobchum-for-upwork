@@ -5,6 +5,7 @@ import sysSettings from '../shared/settings.json';
 import chimp128 from '../shared/chimp128';
 Vue.use(Vuex);
 
+// EmptyState constructor
 function EmptyState () {
    return {
       // These prop's "ARE" persisted to storage
@@ -129,15 +130,29 @@ export const store = new Vuex.Store({
                         doTopicsResultsNotification(topic, newResults)
                         doUpdateBadge()
                      }
+                     dispatch('persistToStorage', 'topics')
+                     .catch(err => { utils.logErr(err); });                     
                   }
                   // Always persist (to update qLastResult date). If Topics.vue is open
                   //    its browser.storage.onChange listener will catch and refresh
-                  dispatch('persistToStorage', 'topics')
-                  .catch(err => { utils.logErr(err); });
-                  
+                  // dispatch('persistToStorage', 'topics')
+                  // .catch(err => { utils.logErr(err); });
                })
                .catch(err => { utils.logErr(err); });
          }
+      },
+      updateTopicLastRequestDateTime: ({ getters, dispatch }, payloadTopicId) => {
+         dispatch('fetchFromStorage', 'topics')
+            .then(() => {
+               let topic = getters.topicById(payloadTopicId);
+               let mainSwitchIsOn = getters.settings.ui.auto.isOn
+               if (mainSwitchIsOn && topic.custom.enabled) {
+                  topic.custom.qLastRequest = Date.now();
+                  dispatch('persistToStorage', 'topics')
+                  .catch(err => { utils.logErr(err); });
+               }
+            })
+            .catch(err => { utils.logErr(err); });
       },
       updateNotifications: ({ getters, dispatch }, payload) => {
          dispatch('fetchFromStorage', 'notifications')

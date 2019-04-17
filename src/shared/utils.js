@@ -92,11 +92,12 @@ export function reQueryById(store, topicId) {
          codeObj.code = "window.location.replace('" + url + topicId + "')"
       }
       browser.tabs.executeScript(tab.id, codeObj)
+      store.dispatch('updateTopicLastRequestDateTime', topicId)
    })
-   .catch(err => { logErr(err); });;
+   .catch(err => { logErr(err);});
 }
 
-// Note: currently only used fo "My Feed". If left-side topics panel
+// Note: currently only used for "My Feed". If left-side topics panel
 //   is hidden, THIS WILL NOT WORK
 function clickSavedSearchJs(ssName) {
    const rtn = `

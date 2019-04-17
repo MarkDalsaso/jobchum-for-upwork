@@ -1,9 +1,9 @@
 {
    "name": "jobChum for Upwork",
-   "version": "1.0.3",
+   "version": "1.0.5",
    "manifest_version": 2,
    "homepage_url": "http://www.we-is.com/jobChum",
-   "description": "This extension augments and enhances the Upwork \"Find Work\" page (at https://www.upwork.com/ab/find-work/).",
+   "description": "Automates the Upwork 'Find Work' page for all saved searches. New job notifications (w.sound), logs indexed by date & search topic.",
    "permissions": [
       "notifications",
       "activeTab", 

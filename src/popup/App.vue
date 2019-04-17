@@ -1,5 +1,5 @@
 <template>
-   <div v-if="stateIsReady" style="max-width:450px">
+   <div v-if="stateIsReady" style="max-width:450px;">
       <router-view name="header-top"></router-view>
       <transition name="fade" mode="out-in">
          <router-view/>
@@ -63,6 +63,22 @@
 </script>
 
  <style>
+   ::-webkit-scrollbar {
+      width: 14px;
+      background-color: inherit;
+   }
+   ::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+      border-radius: 10px;
+   }
+   ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+      background: linear-gradient(to bottom,rgb(221, 209, 192),rgb(246, 232, 181));
+      
+   }
    .fade-enter-active, .fade-leave-active {
       transition-duration: 0.3s;
       transition-property: opacity;
@@ -71,7 +87,7 @@
    .fade-enter, .fade-leave-active {
       opacity: 0
    }
-    html, body {
+   html, body {
       margin: 0;
       padding: 0;
       color: #000;
