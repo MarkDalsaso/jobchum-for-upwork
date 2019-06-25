@@ -15,10 +15,13 @@ function handleInstall(details) {
    store.dispatch('loadStateFromStorage')
    .then ( () => {
       utils.logMsg( {"state initialized": store.state} )
-      utils.syncAlarmToMainSwitch(store.getters.settings);
-      const url = store.getters.settings.sys.requeryBaseUrl;
+      let settings = store.getters.settings
+      utils.syncAlarmToMainSwitch(settings);
+      const url = settings.sys.requeryBaseUrl;
       browser.tabs.create({ active: true, url: url })
-      //.then( () => { utils.logMsg("tabs.create fired") })
+      .then( () => { 
+         //utils.logMsg("tabs.create fired")
+       })
       .catch(err => { utils.logErr(err); });
    })
    .catch(err => { utils.logErr(err); });
@@ -53,8 +56,10 @@ function handleMessage(message, sender) {
             store.dispatch('fetchFromStorage', 'settings')
             .then( () => {
                browser.pageAction.show(sender.tab.id);
+               let settings = store.getters.settings
+               let ui = store.getters.settings.ui
                utils.updateLastTabId(store, sender.tab.id)
-               utils.setPageActionIcon(store.getters.settings)
+               utils.setPageActionIcon(store.getters.settings)                  
             })
             break;
       }

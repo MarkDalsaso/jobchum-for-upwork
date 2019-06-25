@@ -1,9 +1,8 @@
 <template>
    <div class="panel">
 
-      <transition-group :name="transitionGroup">
+      <transition-group name="slide">
          <topic
-            class="slide"
             v-for="(topic) in topics"
             v-bind:topic="topic"
             v-bind:key="topic.id"
@@ -38,7 +37,6 @@
    export default {
       data () {
          return {
-            transitionGroup: 'slide',
             filter: this.$route.params.filter
          }
       },
@@ -97,8 +95,10 @@
 
 <style scoped>
    .slide {
-      transition: all .75s;
       display: flex;
+   }
+   .slide-move {
+      transition: transform 0.8s;
    }
    .slide-enter {
       opacity: 0;
@@ -108,9 +108,10 @@
       transform: translateX(-100%);
    }
    .slide-leave-active {
-      transition: all .75s;
+      transition: all 1s;
       position: absolute;
    }
+   
    .special-msg {
       height: 185px; 
       width: 75%;

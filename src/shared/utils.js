@@ -68,14 +68,14 @@ export function isFirefox() {
 }
 
 export function updateLastTabId (store, tabId) {
-   //if (typeof tabId !== 'undefined') {
-   if (tabId) {
-      store.state.settings.ui.auto.lastTabId = tabId
+   let settings = store.getters.settings      
+   if (tabId && settings.ui) {
+      settings.ui.auto.lastTabId = tabId
       store.dispatch("persistToStorage", "settings")
       .then (() => {
-         //logMsg({'tabsId updated': tabId})
+         logMsg({'tabsId updated': tabId})
       })
-      .catch(err => { logErr(err);});       
+      .catch(err => { logErr(err);});
    }
 }
 
@@ -94,7 +94,9 @@ export function reQueryById(store, topicId) {
       browser.tabs.executeScript(tab.id, codeObj)
       store.dispatch('updateTopicLastRequestDateTime', topicId)
    })
-   .catch(err => { logErr(err);});
+   .catch(err => { 
+      logErr(err);
+   });
 }
 
 // Note: currently only used for "My Feed". If left-side topics panel

@@ -15,7 +15,7 @@ utils.xhrMp = (function(open, send) {
 
    // Monkey patch xhr "open" method, to capture request url, (for later use)
    XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
-      xhrOpenRequestUrl = url; // update request url, closure variable
+      xhrOpenRequestUrl = url;     // update request url, closure variable
       open.apply(this, arguments); // reset/reapply original open method
    };
 

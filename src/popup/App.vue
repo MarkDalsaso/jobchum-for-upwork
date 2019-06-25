@@ -1,9 +1,11 @@
 <template>
    <div v-if="stateIsReady" style="max-width:450px;">
       <router-view name="header-top"></router-view>
+
       <transition name="fade" mode="out-in">
          <router-view/>
       </transition>
+
    </div>
 </template>
 
@@ -62,31 +64,16 @@
    
 </script>
 
- <style>
-   ::-webkit-scrollbar {
-      width: 14px;
-      background-color: inherit;
-   }
-   ::-webkit-scrollbar-track {
-      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-      box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-      border-radius: 10px;
-   }
-   ::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-      box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-      background: linear-gradient(to bottom,rgb(221, 209, 192),rgb(246, 232, 181));
-      
-   }
+<style>
    .fade-enter-active, .fade-leave-active {
-      transition-duration: 0.3s;
+      transition-duration: .4s;
       transition-property: opacity;
-      transition-timing-function: ease;
+      transition-timing-function: ease-in-out;
    }
    .fade-enter, .fade-leave-active {
       opacity: 0
    }
+
    html, body {
       margin: 0;
       padding: 0;
@@ -130,7 +117,6 @@
       padding: 0 3px;
       box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
    }
-   
    input[type=number] { 
       -moz-appearance: textfield;
       appearance: textfield;
@@ -206,5 +192,19 @@
 .flt-rgt {
    float: right
 }
-
+::-webkit-scrollbar {
+   width: 14px;
+   background-color: inherit;
+}
+::-webkit-scrollbar-track {
+   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+   box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+   border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+   border-radius: 10px;
+   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+   box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+   background: linear-gradient(to bottom,rgb(221, 209, 192),rgb(246, 232, 181));
+}
 </style>

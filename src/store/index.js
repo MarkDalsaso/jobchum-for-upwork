@@ -25,11 +25,12 @@ function EmptyState () {
       initialized: false   // Used to delay DOM render until state is ready
    }
 }
-//const initialState = new EmptyState()
+
+const initialState = new EmptyState()
+//const initialState = EmptyState()
 
 export const store = new Vuex.Store({
-   // state: initialState,
-   state:  new EmptyState(),
+   state: initialState,
    getters: {
       settings: state => state.settings,
       topics: state => state.topics,
